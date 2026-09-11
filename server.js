@@ -4,7 +4,8 @@ const path = require('path');
 
 const IKAS_CLIENT_ID = process.env.IKAS_CLIENT_ID || 'ornek_client_id';
 const IKAS_CLIENT_SECRET = process.env.IKAS_CLIENT_SECRET || 'ornek_client_secret';
-const IKAS_REDIRECT_URI = process.env.IKAS_REDIRECT_URI || 'http://localhost:3000/auth/callback';
+const IKAS_REDIRECT_URI = process.env.IKAS_REDIRECT_URI || 'http://localhost:3000/api/oauth/callback/ikas';
+const IKAS_SCOPE = 'read_products read_orders';
 
 let settings = {
   badgeColor: '#1b4332',
@@ -20,7 +21,8 @@ async function getIkasAccessToken(code) {
         clientId: IKAS_CLIENT_ID,
         clientSecret: IKAS_CLIENT_SECRET,
         grant_type: code ? 'authorization_code' : 'client_credentials',
-        code: code
+        code: code,
+        scope: IKAS_SCOPE
       })
     });
     const data = await response.json();
@@ -70,7 +72,6 @@ async function analyzeBestSellers() {
       return { categories: [], bestSellers: {} };
     }
 
-    // Kategori bazli urun satislarini hesapla ve ilk 3'u belirle
     const categoryProductSales = {};
     data.orderItems.data.forEach(item => {
       const catId = item.categoryId || 'diger';
@@ -111,6 +112,14 @@ async function analyzeBestSellers() {
 const server = http.createServer(async (req, res) => {
   const urlObj = new URL(req.url, 'http://localhost:3000');
   
+  if (urlObj.pathname === '/api/oauth/callback/ikas') {
+    const code = urlObj.searchParams.get('code');
+    const token = await getIkasAccessToken(code);
+    res.writeHead(302, { 'Location': '/admin?success=1' });
+    res.end();
+    return;
+  }
+
   if (urlObj.pathname === '/auth/callback') {
     const code = urlObj.searchParams.get('code');
     const token = await getIkasAccessToken(code);
