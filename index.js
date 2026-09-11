@@ -1,1 +1,2 @@
-console.log('Kategori Yıldızı projesi başlatıldı.');
+require('./server.js');
+console.log('Kategori Yıldızı projesi server modunda başlatıldı.');

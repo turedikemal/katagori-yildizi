@@ -1,12 +1,12 @@
 {
   "name": "katagori-yildizi",
   "version": "1.0.0",
-  "description": "Kategori yildizi ilk tasarim",
+  "description": "ikas App Store Kategori Yildizi Uygulamasi",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["ikas", "bestseller", "widget"],
+  "author": "ikas Developer",
   "license": "ISC"
 }

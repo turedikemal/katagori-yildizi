@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kategori Yıldızı - ikas Yönetim Paneli</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 30px; background: #f4f6f8; color: #333; margin: 0; }
+    .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    h1 { color: #1b4332; margin-top: 0; font-size: 24px; }
+    .section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+    input[type="text"], input[type="number"], input[type="color"] { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+    input[type="color"] { height: 40px; padding: 2px; cursor: pointer; }
+    button { background: #1b4332; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; }
+    button:hover { background: #2d6a4f; }
+    .bestseller-list { background: #f9fbf9; padding: 15px; border-radius: 8px; border: 1px solid #d8f3dc; }
+    .bestseller-item { padding: 8px 0; border-bottom: 1px dashed #c9ada7; font-size: 14px; }
+    .bestseller-item:last-child { border-bottom: none; }
+    .alert { background: #d8f3dc; color: #1b4332; padding: 10px; border-radius: 6px; margin-bottom: 20px; display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Kategori Yıldızı Yönetim Paneli</h1>
+    <div id="alertBox" class="alert">Ayarlar başarıyla kaydedildi!</div>
+    
+    <div class="section">
+      <h3>Rozet ve Görünüm Ayarları</h3>
+      <div class="form-group">
+        <label for="badgeColor">Şerit ve Rozet Arka Plan Rengi</label>
+        <input type="color" id="badgeColor" value="#1b4332" />
+      </div>
+      <div class="form-group">
+        <label for="limitInput">Kategori Başına Listelenecek Çok Satan Limiti</label>
+        <input type="number" id="limitInput" value="3" min="1" max="5" />
+      </div>
+      <button onclick="saveSettings()">Ayarları Kaydet</button>
+    </div>
+
+    <div class="section">
+      <h3>Otomatik Tespit Edilen En Çok Satanlar (1., 2., 3. Ürünler)</h3>
+      <div class="bestseller-list" id="bestsellerContainer">
+        <p>Analiz verileri yükleniyor...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/settings');
+        const data = await res.json();
+        if (data.badgeColor) document.getElementById('badgeColor').value = data.badgeColor;
+        if (data.limit) document.getElementById('limitInput').value = data.limit;
+      } catch (e) {
+        console.error('Ayarlar yüklenemedi', e);
+      }
+    }
+
+    async function loadBestSellers() {
+      try {
+        const res = await fetch('/api/bestsellers');
+        const data = await res.json();
+        const container = document.getElementById('bestsellerContainer');
+        
+        if (data.error) {
+          container.innerHTML = `<p style="color: red;">Hata: ${data.error}</p>`;
+          return;
+        }
+
+        if (!data.bestSellers || Object.keys(data.bestSellers).length === 0) {
+          container.innerHTML = '<p>Henüz sipariş verisi bulunamadı.</p>';
+          return;
+        }
+
+        let html = '';
+        for (const [catId, ranks] of Object.entries(data.bestSellers)) {
+          const cat = data.categories.find(c => c.id === catId);
+          const catName = cat ? cat.name : 'Genel / Diğer';
+          html += `<div style="margin-bottom: 15px;"><strong>Kategori: ${catName}</strong>`;
+          ['first', 'second', 'third'].forEach((rankKey, idx) => {
+            const item = ranks[rankKey];
+            if (item) {
+              html += `<div class="bestseller-item">⭐ ${idx + 1}. Ürün: <strong>${item.productName}</strong> (Satış Adedi: ${item.totalSold})</div>`;
+            }
+          });
+          html += `</div>`;
+        }
+        container.innerHTML = html;
+      } catch (e) {
+        console.error('Çok satanlar yüklenemedi', e);
+      }
+    }
+
+    async function saveSettings() {
+      const badgeColor = document.getElementById('badgeColor').value;
+      const limit = document.getElementById('limitInput').value;
+
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ badgeColor, limit: parseInt(limit) })
+      });
+
+      if (res.ok) {
+        const alertBox = document.getElementById('alertBox');
+        alertBox.style.display = 'block';
+        setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
+      }
+    }
+
+    window.onload = () => {
+      loadSettings();
+      loadBestSellers();
+    };
+  </script>
+</body>
+</html>
