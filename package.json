@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node index.js"
   },
+  "dependencies": {
+    "pg": "^8.11.3"
+  },
   "keywords": ["ikas", "bestseller", "widget"],
   "author": "ikas Developer",
   "license": "ISC"
