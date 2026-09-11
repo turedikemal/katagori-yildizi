@@ -1,0 +1,1 @@
+console.log('Kategori Yıldızı projesi başlatıldı.');
