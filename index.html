@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kategori Yildizi - Canli Onizleme</title>
+  <link rel="stylesheet" href="widget.css">
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    .container { max-width: 800px; margin: 0 auto; }
+    .product-card { width: 220px; height: 280px; background: #fff; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; display: inline-block; position: relative; padding: 15px; box-sizing: border-box; }
+    .product-detail { background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #ddd; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ikas Kategori Yıldızı Canlı Demo</h1>
+    
+    <h3>Ürün Kartı Görünümü (Serit)</h3>
+    <div class="product-card" id="card-1">
+      <h4>Örnek Ürün Kartı</h4>
+      <p>Fiyat: 250 TL</p>
+    </div>
+
+    <h3>Ürün Detay Sayfası Görünümü (Oval Gradyan)</h3>
+    <div class="product-detail" id="detail-1">
+      <h2>Kablosuz Kulaklık</h2>
+      <p>Muazzam ses kalitesi ve konfor.</p>
+    </div>
+  </div>
+
+  <script src="widget.js"></script>
+  <script>
+    // Widget fonksiyonlarini test etme
+    document.addEventListener('DOMContentLoaded', () => {
+      window.IkasKategoriYildizi.initCardBadge('#card-1', 1);
+      window.IkasKategoriYildizi.initDetailBadge('#detail-1', 1);
+    });
+  </script>
+</body>
+</html>
