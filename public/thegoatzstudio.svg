@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="184" height="52" viewBox="0 0 184 52" role="img" aria-labelledby="title desc">
+  <title id="title">The Goatz Studio</title>
+  <desc id="desc">The Goatz Studio lacivert marka yazısı</desc>
+  <g fill="#243a8b" font-family="'Bricolage Grotesque','Arial Black',Arial,sans-serif">
+    <text x="1" y="15" font-size="13" font-weight="650" letter-spacing="-0.35">The</text>
+    <text x="1" y="36" font-size="20" font-weight="720" letter-spacing="-0.8">Goatz</text>
+    <text x="51" y="36" font-size="30" font-weight="800" letter-spacing="-1.5">Studio</text>
+  </g>
+</svg>
