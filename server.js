@@ -6,11 +6,13 @@ const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const IKAS_CLIENT_ID = process.env.IKAS_CLIENT_ID || '';
-const IKAS_CLIENT_SECRET = process.env.IKAS_CLIENT_SECRET || '';
-const REDIRECT_URI = process.env.REDIRECT_URI || 'https://katagori-yildizi-production.up.railway.app/api/oauth/callback/ikas';
+const IKAS_CLIENT_ID = process.env.CLIENT_ID || process.env.NEXT_PUBLIC_CLIENT_ID || process.env.IKAS_CLIENT_ID || '';
+const IKAS_CLIENT_SECRET = process.env.CLIENT_SECRET || process.env.IKAS_CLIENT_SECRET || '';
+const DEPLOY_URL = (process.env.NEXT_PUBLIC_DEPLOY_URL || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : 'https://katagori-yildizi-production.up.railway.app')).replace(/\/$/, '');
+const REDIRECT_URI = process.env.REDIRECT_URI || `${DEPLOY_URL}/api/oauth/callback/ikas`;
 const IKAS_SCOPE = 'read_products read_orders';
-const IKAS_GRAPHQL_ENDPOINT = process.env.IKAS_GRAPHQL_ENDPOINT || 'https://api.myikas.com/api/v1/admin/graphql';
+const IKAS_GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPH_API_URL || process.env.IKAS_GRAPHQL_ENDPOINT || 'https://api.myikas.com/api/v2/admin/graphql';
+const IKAS_ADMIN_URL = process.env.NEXT_PUBLIC_ADMIN_URL || 'https://admin.myikas.com';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'hello@thegoatzstudio.com';
 const PRIVACY_NOTICE_VERSION = '2026-09';
 
