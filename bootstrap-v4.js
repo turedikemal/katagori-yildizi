@@ -1,7 +1,6 @@
 const { Pool } = require('pg');
 const nativeFetch = global.fetch;
 
-// Deployment marker: reload current Railway ikas credentials.
 let tokenPool = null;
 if (process.env.DATABASE_URL) {
   tokenPool = new Pool({
@@ -58,8 +57,28 @@ if (typeof nativeFetch === 'function') {
       'https://api.myikas.com/api/v2/admin/graphql'
     );
 
-    if (typeof input === 'string') return nativeFetch(nextUrl, init);
-    return nativeFetch(new Request(nextUrl, input), init);
+    const request = typeof input === 'string' ? null : new Request(nextUrl, input);
+    const response = typeof input === 'string'
+      ? await nativeFetch(nextUrl, init)
+      : await nativeFetch(request, init);
+
+    if (nextUrl.includes('/api/v2/admin/graphql') && !response.ok) {
+      try {
+        const errorBody = await response.clone().text();
+        let operation = 'unknown';
+        const rawBody = init?.body?.toString?.() || (request ? await request.clone().text().catch(() => '') : '');
+        try {
+          const parsed = JSON.parse(rawBody || '{}');
+          const q = String(parsed.query || '');
+          operation = q.includes('listCategory') ? 'listCategory' : q.includes('listProduct') ? 'listProduct' : q.includes('listOrder') ? 'listOrder' : 'unknown';
+        } catch (_) {}
+        console.error(`[ikas GraphQL ${response.status}] ${operation}: ${errorBody.slice(0, 4000)}`);
+      } catch (error) {
+        console.error('[ikas GraphQL] hata gövdesi okunamadı:', error.message);
+      }
+    }
+
+    return response;
   };
 }
 
