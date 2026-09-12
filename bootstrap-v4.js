@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
 const nativeFetch = global.fetch;
 
+// Deployment marker: reload current Railway ikas credentials.
 let tokenPool = null;
 if (process.env.DATABASE_URL) {
   tokenPool = new Pool({
