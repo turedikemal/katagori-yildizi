@@ -1,581 +1,116 @@
-/**
- * Kategori Yıldızı - Reactive Admin State & Live Preview Engine
- * Full-scale SaaS Control Center
- */
-(function() {
-  'use strict';
+/** Kategori Yıldızı v3 — reactive admin editor */
+(function(){
+'use strict';
 
-  // SVG Icons
-  const ICONS = {
-    ribbon: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z"/><path d="m8.21 13.89-1.96 7.61 5.75-3.05 5.75 3.05-1.96-7.61"/></svg>`,
-    medal: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>`,
-    cup: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M6 3h12v7a6 6 0 0 1-12 0V3Z"/></svg>`,
-    crown: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>`,
-    star: `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
-    check: `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>`,
-    trend: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>`,
-    fire: `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="none"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`,
-    heart: `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`,
-    award: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>`,
-    leaf: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`
-  };
+const BLUE='#243a8b', RED='#ce3f44';
+const shop=(window.__KY_SHOP__||new URLSearchParams(location.search).get('shop')||'thegoatz').replace(/\.myikas\.com$/i,'');
+const API=location.origin;
+const byId=id=>document.getElementById(id);
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,Number(v)||0));
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const deepMerge=(a,b)=>{const out=Array.isArray(a)?[...a]:{...a}; if(!b||typeof b!=='object')return out; Object.keys(b).forEach(k=>{out[k]=(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a&&typeof a[k]==='object'&&!Array.isArray(a[k]))?deepMerge(a[k],b[k]):b[k];}); return out;};
+const setPath=(obj,path,val)=>{const parts=path.split('.'); let t=obj; parts.slice(0,-1).forEach(k=>t=t[k]||(t[k]={})); t[parts.at(-1)]=val;};
+const getPath=(obj,path,fallback)=>{try{return path.split('.').reduce((a,k)=>a?.[k],obj)??fallback}catch{return fallback}};
 
-  // State Management
-  let state = {
-    isDirty: false,
-    device: 'desktop', // desktop | mobile
-    viewMode: 'category', // category | pdp | single
-    activeSubpanel: null,
-    selectedCategoryIndex: 0,
-    categoriesData: [],
-    customTemplates: [],
-    undoStack: [],
-    redoStack: [],
-    config: null
-  };
+const DEFAULT={
+ templateId:'navy-pill',
+ ranking:{period:'30days',metric:'quantity',maxRank:3,excludeOutOfStock:true,excludeRefunded:true,minSalesThreshold:0},
+ placements:{homeCards:true,categoryCards:true,searchResults:true,productDetail:true,cardLocation:'image_overlay',detailLocation:'under_title',ninePointPosition:'top_left',offsetX:0,offsetY:0},
+ styling:{useStoreThemeFont:true,fontFamily:'Bricolage Grotesque',fontSize:12,fontWeight:700,bgColor:BLUE,textColor:'#ffffff',accentColor:RED,gradientEnabled:false,gradientColor1:BLUE,gradientColor2:RED,gradientAngle:135,borderColor:BLUE,borderWidth:0,borderRadius:9,shadow:'soft',opacity:100,paddingX:10,paddingY:5,scale:100},
+ texts:{productText:'En Çok Satan {rank}. Ürün',pdpPrefixText:'{category} Kategorisinde',pdpBadgeText:'En Çok Satan {rank}. Ürün'},
+ icon:{enabled:true,type:'award',size:14,mode:'mono',color:'#ffffff',accentColor:'#ffd166'},
+ animation:{entry:'fade',hover:'lift',durationMs:320},
+ responsive:{desktopEnabled:true,mobileEnabled:true,mobileFontSizeOffset:-1,mobileBadgeScale:92,mobilePaddingX:8,mobilePaddingY:4},
+ rules:{hideIfRankAbove:20,hideIfDiscounted:false,hideIfNewProduct:false,excludedProducts:[],excludedCategories:[]},
+ templateColors:{}
+};
 
-  const API_BASE = window.location.origin;
+const TEMPLATES=[
+ ['navy-pill','Lacivert Kapsül','pill',BLUE,'#fff',RED],['gradient-pill','Gradyan Oval','gradient','#243a8b','#fff','#ce3f44'],['glass-pill','Cam Kapsül','glass','#243a8b','#fff','#8aa2ff'],['split-pill','Çift Renk Kapsül','split','#243a8b','#fff','#ce3f44'],['modern-outline','Modern Outline','outline','#243a8b','#243a8b','#ce3f44'],['soft-blue','Soft Blue','soft','#243a8b','#243a8b','#8aa2ff'],['coral-pop','Coral Pop','pill','#ce3f44','#fff','#243a8b'],['sunset','Sunset','gradient','#f97316','#fff','#ec4899'],['ocean','Ocean','gradient','#0f4c81','#fff','#27a7e7'],['aurora','Aurora','gradient','#5b21b6','#fff','#14b8a6'],['mint','Mint Fresh','soft','#0f766e','#0f5f59','#5eead4'],['berry','Berry','gradient','#7c3aed','#fff','#e11d48'],['mono','Mono Modern','mono','#111827','#fff','#6b7280'],['shadow-pill','Floating Shadow','shadow','#243a8b','#fff','#8aa2ff'],['rank-block','Rank Block','split','#111827','#fff','#ce3f44'],['electric','Electric','gradient','#1d4ed8','#fff','#06b6d4'],['eco-clean','Eco Clean','soft','#2f6b4f','#245440','#a7d7b9'],['rose','Rose Soft','soft','#b4235a','#8d1846','#f9a8d4'],['amber','Amber','pill','#b45309','#fff','#fbbf24'],['sky','Sky','soft','#0369a1','#075985','#7dd3fc'],['violet','Violet','pill','#6d28d9','#fff','#c4b5fd'],['graphite','Graphite','pill','#374151','#fff','#9ca3af'],['dot-label','Dot Label','dot','#243a8b','#fff','#ce3f44'],['neon-edge','Neon Kenar','outline','#4f46e5','#4f46e5','#22d3ee'],['cream','Cream Label','soft','#6b4f3b','#5c4432','#f5e6d3'],['teal','Teal Capsule','pill','#0f766e','#fff','#2dd4bf'],['ruby','Ruby','pill','#be123c','#fff','#fb7185'],['holographic','Holografik','gradient','#4f46e5','#fff','#ec4899']
+].map(([id,name,variant,bg,text,accent])=>({id,name,variant,bg,text,accent}));
 
-  // Initialize
-  async function init() {
-    setupEventListeners();
-    await loadInitialSettings();
-    renderSubpanelNav();
-    updateLivePreview();
-  }
+const ICONS={none:'',award:'◆',crown:'♛',star:'★',medal:'◉',trophy:'♜',fire:'◆',sparkles:'✦',bolt:'ϟ',heart:'♥',gem:'⬥',ribbon:'⌑',trend:'↗',tag:'◇',cart:'▣',leaf:'◖',diamond:'◆',check:'✓',target:'◎',rocket:'▲'};
+let state={config:structuredClone(DEFAULT),categories:[],analytics:{},device:'desktop',view:'category',selectedCategory:0,dirty:false,undo:[],redo:[]};
 
-  // Load from Server
-  async function loadInitialSettings() {
-    try {
-      const res = await fetch(`${API_BASE}/api/admin/settings`);
-      const data = await res.json();
-      if (data.success) {
-        state.config = data.draftConfig;
-        state.categoriesData = data.categories || [];
-        state.isDirty = data.hasUnpublishedChanges || false;
-        updateStatusDot();
-        populateFormFields();
-        renderCategoriesList();
-      }
-    } catch (e) {
-      console.warn('Using local fallback state:', e);
-      state.config = getFallbackConfig();
-      populateFormFields();
-    }
-  }
-
-  function getFallbackConfig() {
-    return {
-      templateId: 'sage-ribbon',
-      ranking: { period: '30days', metric: 'quantity', maxRank: 3, excludeOutOfStock: true, excludeRefunded: true, minSalesThreshold: 3 },
-      placements: { categoryCards: true, productDetail: true, cardLocation: 'image_bottom_bar', detailLocation: 'under_title', ninePointPosition: 'bottom_center', offsetX: 0, offsetY: 0 },
-      styling: { fontFamily: 'Bricolage Grotesque', bgColor: '#3b4d47', textColor: '#ffffff', gradientEnabled: false, gradient: 'linear-gradient(135deg, #70d6ff, #ffd670, #ff70a6)', borderColor: 'transparent', borderWidth: 0, borderStyle: 'solid', borderRadius: 4, shadow: 'none', opacity: 100, paddingX: 10, paddingY: 5, scale: 100, rotation: 0 },
-      texts: { lang: 'tr', rank1Text: 'En Çok Satan 1. Ürün', rank2Text: 'En Çok Satan 2. Ürün', rank3Text: 'En Çok Satan 3. Ürün', pdpPrefixText: '{category} Kategorisinde', pdpBadgeText: 'En çok satan #{rank}. ürün >' },
-      icon: { enabled: true, type: 'ribbon', size: 14, color: '#ffffff', customSvg: '' },
-      animation: { entry: 'fade', hover: 'lift', speed: 'normal', durationMs: 300 },
-      responsive: { desktopEnabled: true, mobileEnabled: true, mobileFontSizeOffset: -1, mobileBadgeScale: 92, mobilePaddingX: 8, mobilePaddingY: 4 },
-      rules: { hideIfRankAbove: 3, hideIfDiscounted: false, hideIfNewProduct: false, excludedProducts: [], excludedCategories: [] }
-    };
-  }
-
-  // Push State to Undo Stack
-  function pushUndo() {
-    state.undoStack.push(JSON.stringify(state.config));
-    if (state.undoStack.length > 30) state.undoStack.shift();
-    state.redoStack = [];
-    markDirty();
-  }
-
-  function markDirty() {
-    state.isDirty = true;
-    updateStatusDot();
-  }
-
-  function updateStatusDot() {
-    const dot = document.getElementById('statusDot');
-    const text = document.getElementById('statusText');
-    if (state.isDirty) {
-      dot.className = 'ky-status-dot dirty';
-      text.innerText = 'Yayınlanmamış değişiklikler var';
-    } else {
-      dot.className = 'ky-status-dot';
-      text.innerText = 'Tüm değişiklikler yayında';
-    }
-  }
-
-  // Real-time Event Listeners
-  function setupEventListeners() {
-    // Device switch
-    document.querySelectorAll('.ky-device-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.ky-device-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        state.device = btn.dataset.device;
-        const canvas = document.getElementById('stageCanvas');
-        if (state.device === 'mobile') {
-          canvas.classList.add('mobile-view');
-        } else {
-          canvas.classList.remove('mobile-view');
-        }
-        updateLivePreview();
-      });
-    });
-
-    // View mode tabs
-    document.querySelectorAll('.ky-view-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.ky-view-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        state.viewMode = tab.dataset.view;
-        updateLivePreview();
-      });
-    });
-
-    // Category Selector in preview
-    const catSelect = document.getElementById('previewCategorySelect');
-    if (catSelect) {
-      catSelect.addEventListener('change', (e) => {
-        state.selectedCategoryIndex = parseInt(e.target.value) || 0;
-        updateLivePreview();
-      });
-    }
-
-    // Bottom Bar Actions
-    document.getElementById('btnSaveDraft').addEventListener('click', saveDraft);
-    document.getElementById('btnPublish').addEventListener('click', publishSettings);
-    document.getElementById('btnCopyCode').addEventListener('click', copyEmbedCode);
-
-    // Undo / Redo
-    document.getElementById('btnUndo').addEventListener('click', () => {
-      if (state.undoStack.length > 0) {
-        state.redoStack.push(JSON.stringify(state.config));
-        state.config = JSON.parse(state.undoStack.pop());
-        populateFormFields();
-        updateLivePreview();
-        showToast('Geri alındı');
-      }
-    });
-
-    document.getElementById('btnRedo').addEventListener('click', () => {
-      if (state.redoStack.length > 0) {
-        state.undoStack.push(JSON.stringify(state.config));
-        state.config = JSON.parse(state.redoStack.pop());
-        populateFormFields();
-        updateLivePreview();
-        showToast('Yinelendi');
-      }
-    });
-
-    // Reset to Default
-    document.getElementById('btnResetDefault').addEventListener('click', () => {
-      if (confirm('Tüm ayarları varsayılana döndürmek istediğinize emin misiniz?')) {
-        pushUndo();
-        state.config = getFallbackConfig();
-        populateFormFields();
-        updateLivePreview();
-        showToast('Varsayılana dönüldü');
-      }
-    });
-  }
-
-  // Populate Form Controls from state.config
-  function populateFormFields() {
-    const c = state.config;
-    if (!c) return;
-
-    // Styling
-    setVal('cfgBgColor', c.styling.bgColor);
-    setVal('cfgBgColorHex', c.styling.bgColor);
-    setVal('cfgTextColor', c.styling.textColor);
-    setVal('cfgTextColorHex', c.styling.textColor);
-    setVal('cfgBorderRadius', c.styling.borderRadius);
-    setVal('cfgBorderWidth', c.styling.borderWidth);
-    setVal('cfgPaddingX', c.styling.paddingX);
-    setVal('cfgPaddingY', c.styling.paddingY);
-    setVal('cfgOpacity', c.styling.opacity);
-    setVal('cfgScale', c.styling.scale);
-    setVal('cfgFontFamily', c.styling.fontFamily);
-
-    // Texts
-    setVal('cfgRank1Text', c.texts.rank1Text);
-    setVal('cfgRank2Text', c.texts.rank2Text);
-    setVal('cfgRank3Text', c.texts.rank3Text);
-    setVal('cfgPdpPrefix', c.texts.pdpPrefixText);
-    setVal('cfgPdpBadge', c.texts.pdpBadgeText);
-
-    // Ranking
-    setVal('cfgPeriod', c.ranking.period);
-    setVal('cfgMetric', c.ranking.metric);
-    setVal('cfgMaxRank', c.ranking.maxRank);
-
-    // Position
-    setVal('cfgCardLocation', c.placements.cardLocation);
-    setVal('cfgOffsetX', c.placements.offsetX);
-    setVal('cfgOffsetY', c.placements.offsetY);
-
-    // Icon & Animation
-    setVal('cfgIconType', c.icon.type);
-    setVal('cfgIconSize', c.icon.size);
-    setVal('cfgAnimEntry', c.animation.entry);
-    setVal('cfgAnimHover', c.animation.hover);
-  }
-
-  function setVal(id, val) {
-    const el = document.getElementById(id);
-    if (el) {
-      if (el.type === 'checkbox') el.checked = Boolean(val);
-      else el.value = val;
-      const numSpan = document.querySelector(`span[data-bind="${id}"]`);
-      if (numSpan) numSpan.innerText = val;
-    }
-  }
-
-  // Bind live form changes to state & preview
-  window.handleInput = function(keyPath, value, bindSpanId) {
-    pushUndo();
-    const parts = keyPath.split('.');
-    let target = state.config;
-    for (let i = 0; i < parts.length - 1; i++) {
-      if (!target[parts[i]]) target[parts[i]] = {};
-      target = target[parts[i]];
-    }
-    target[parts[parts.length - 1]] = value;
-
-    if (bindSpanId) {
-      const sp = document.querySelector(`span[data-bind="${bindSpanId}"]`);
-      if (sp) sp.innerText = value;
-    }
-
-    updateLivePreview();
-  };
-
-  // Color Sync Helpers
-  window.syncColor = function(pickerId, hexId, keyPath) {
-    const picker = document.getElementById(pickerId);
-    const hex = document.getElementById(hexId);
-    if (picker && hex) {
-      picker.addEventListener('input', (e) => {
-        hex.value = e.target.value;
-        window.handleInput(keyPath, e.target.value);
-      });
-      hex.addEventListener('input', (e) => {
-        if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
-          picker.value = e.target.value;
-          window.handleInput(keyPath, e.target.value);
-        }
-      });
-    }
-  };
-
-  // Template Selection
-  window.selectTemplate = function(tplId) {
-    pushUndo();
-    state.config.templateId = tplId;
-    document.querySelectorAll('.ky-tpl-card').forEach(c => {
-      if (c.dataset.tpl === tplId) c.classList.add('active');
-      else c.classList.remove('active');
-    });
-
-    // Apply template signature defaults
-    if (tplId === 'sage-ribbon') {
-      state.config.styling.bgColor = '#3b4d47';
-      state.config.styling.textColor = '#ffffff';
-      state.config.styling.borderRadius = 4;
-      state.config.placements.cardLocation = 'image_bottom_bar';
-    } else if (tplId === 'gradient-pill') {
-      state.config.styling.bgColor = '#ffffff';
-      state.config.styling.textColor = '#111111';
-      state.config.styling.borderRadius = 24;
-      state.config.styling.borderWidth = 1.5;
-    } else if (tplId === 'luxury-gold') {
-      state.config.styling.bgColor = '#111827';
-      state.config.styling.textColor = '#fef08a';
-      state.config.styling.borderColor = '#eab308';
-      state.config.styling.borderWidth = 1;
-      state.config.styling.borderRadius = 2;
-    } else if (tplId === 'fire-trending') {
-      state.config.styling.bgColor = '#ea580c';
-      state.config.styling.textColor = '#ffffff';
-      state.config.icon.type = 'fire';
-    }
-    populateFormFields();
-    updateLivePreview();
-    showToast(`"${tplId}" şablonu uygulandı`);
-  };
-
-  // 9-Point Grid Selector
-  window.selectGridPos = function(pos) {
-    pushUndo();
-    state.config.placements.ninePointPosition = pos;
-    document.querySelectorAll('.ky-grid-btn').forEach(btn => {
-      if (btn.dataset.pos === pos) btn.classList.add('active');
-      else btn.classList.remove('active');
-    });
-    updateLivePreview();
-  };
-
-  // Render Subpanel Navigation
-  function renderSubpanelNav() {
-    document.querySelectorAll('.ky-menu-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const targetId = card.dataset.target;
-        openSubpanel(targetId);
-      });
-    });
-
-    document.querySelectorAll('.ky-btn-back').forEach(btn => {
-      btn.addEventListener('click', () => {
-        closeSubpanels();
-      });
-    });
-  }
-
-  function openSubpanel(panelId) {
-    document.getElementById('menuList').style.display = 'none';
-    document.querySelectorAll('.ky-subpanel').forEach(p => p.classList.remove('active'));
-    const target = document.getElementById(panelId);
-    if (target) {
-      target.classList.add('active');
-      state.activeSubpanel = panelId;
-    }
-  }
-
-  function closeSubpanels() {
-    document.querySelectorAll('.ky-subpanel').forEach(p => p.classList.remove('active'));
-    document.getElementById('menuList').style.display = 'flex';
-    state.activeSubpanel = null;
-  }
-
-  // UPDATE LIVE PREVIEW (Real-time HTML & CSS Injection)
-  function updateLivePreview() {
-    const c = state.config;
-    if (!c) return;
-
-    const canvas = document.getElementById('stageCanvas');
-    const currCat = state.categoriesData[state.selectedCategoryIndex] || {
-      name: "Mutfak Dekorasyonu",
-      products: [
-        { id: "p1", name: "El Yapımı Seramik Meyve Sepeti", rank: 1, price: "850 TL", image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=500&auto=format&fit=crop&q=60" },
-        { id: "p2", name: "Adaçayı Yeşili Sunum Tabağı", rank: 2, price: "420 TL", image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=500&auto=format&fit=crop&q=60" },
-        { id: "p3", name: "Ham Dokulu Seramik Fincan", rank: 3, price: "320 TL", image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop&q=60" }
-      ]
-    };
-
-    // Calculate Dynamic CSS Variables
-    const styleBlock = document.getElementById('kyPreviewDynamicStyles') || document.createElement('style');
-    styleBlock.id = 'kyPreviewDynamicStyles';
-    styleBlock.innerHTML = `
-      #stageCanvas {
-        --ky-primary-bg: ${c.styling.bgColor};
-        --ky-primary-text: ${c.styling.textColor};
-        --ky-border-color: ${c.styling.borderColor};
-        --ky-border-width: ${c.styling.borderWidth}px;
-        --ky-border-radius: ${c.styling.borderRadius}px;
-        --ky-font-family: '${c.styling.fontFamily}', sans-serif;
-        --ky-padding-x: ${state.device === 'mobile' ? (c.styling.paddingX - 2) : c.styling.paddingX}px;
-        --ky-padding-y: ${state.device === 'mobile' ? (c.styling.paddingY - 1) : c.styling.paddingY}px;
-        --ky-scale: ${(c.styling.scale || 100) / 100};
-        --ky-opacity: ${(c.styling.opacity || 100) / 100};
-        --ky-anim-dur: ${c.animation.durationMs || 300}ms;
-      }
-    `;
-    if (!document.getElementById('kyPreviewDynamicStyles')) document.head.appendChild(styleBlock);
-
-    const iconSvg = c.icon.enabled && ICONS[c.icon.type] ? ICONS[c.icon.type] : (c.icon.type === 'custom_svg' ? c.icon.customSvg : '');
-    const tplClass = `ky-tpl-${c.templateId || 'sage-ribbon'}`;
-    const animClass = `ky-anim-${c.animation.entry || 'fade'} ky-hover-${c.animation.hover || 'lift'}`;
-
-    if (state.viewMode === 'pdp') {
-      // Render Product Detail Page
-      const p = currCat.products[0];
-      canvas.innerHTML = `
-        <div class="ky-mock-pdp">
-          <div class="ky-pdp-gallery">
-            <img src="${p.image}" alt="${p.name}">
-          </div>
-          <div class="ky-pdp-info">
-            <span style="font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 1px;">THE GOATZ STUDIO</span>
-            <h1 class="ky-pdp-h1">${p.name}</h1>
-            
-            <div class="ky-tpl-category-context ${animClass}" style="margin: 8px 0 16px 0;">
-              <a href="#" class="ky-cat-anchor">
-                ${iconSvg}
-                <span>${c.texts.pdpPrefixText.replace('{category}', currCat.name)}</span>
-              </a>
-              <div class="ky-pill-part">
-                ${ICONS.check}
-                <span>${c.texts.pdpBadgeText.replace('{rank}', p.rank).replace('{category}', currCat.name)}</span>
-              </div>
-            </div>
-
-            <div class="ky-pdp-price">${p.price}</div>
-            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 16px;">
-              Çanakkale stüdyomuzda elde şekillendirilen, gıdaya uygun doğal sırla fırınlanan özel koleksiyon ürünüdür.
-            </p>
-            <button class="ky-pdp-btn">Sepete Ekle</button>
-          </div>
-        </div>
-      `;
-    } else {
-      // Render Category Product Grid
-      let cardsHtml = '';
-      currCat.products.slice(0, 3).forEach((prod, i) => {
-        const rank = prod.rank;
-        const text = rank === 1 ? c.texts.rank1Text : (rank === 2 ? c.texts.rank2Text : c.texts.rank3Text);
-        
-        let badgeHtml = `
-          <div class="ky-badge-root ${tplClass} ${animClass}">
-            ${iconSvg}
-            <span>${text}</span>
-          </div>
-        `;
-
-        let posClass = 'ky-pos-bottom-full';
-        if (c.placements.cardLocation === 'image_corner') posClass = 'ky-pos-top-left';
-        else if (c.placements.cardLocation === 'nine_point') posClass = `ky-pos-${c.placements.ninePointPosition.replace('_', '-')}`;
-
-        cardsHtml += `
-          <div class="ky-mock-card">
-            <div class="ky-mock-img-wrap ky-pos-parent">
-              <img src="${prod.image}" alt="${prod.name}">
-              <div class="${posClass}" style="transform: translate(${c.placements.offsetX}px, ${c.placements.offsetY}px);">
-                ${badgeHtml}
-              </div>
-            </div>
-            <div class="ky-mock-details">
-              <div class="ky-mock-title">${prod.name}</div>
-              <div class="ky-mock-price">${prod.price}</div>
-            </div>
-          </div>
-        `;
-      });
-
-      canvas.innerHTML = `
-        <div style="margin-bottom: 18px;">
-          <h2 style="font-size: 18px; font-weight: 800; color: #0f172a;">${currCat.name}</h2>
-          <span style="font-size: 12px; color: #64748b;">${currCat.products.length} ürün listeleniyor</span>
-        </div>
-        <div class="ky-mock-grid">
-          ${cardsHtml}
-        </div>
-      `;
-    }
-  }
-
-  // Render Categories in Subpanel
-  function renderCategoriesList() {
-    const list = document.getElementById('categoriesListContainer');
-    if (!list) return;
-    let html = '';
-    state.categoriesData.forEach((cat, idx) => {
-      html += `
-        <div class="ky-group">
-          <div class="ky-group-title">
-            <span>📁 ${cat.name}</span>
-            <span style="font-size: 11px; color: #243a8b; font-weight: 600;">${cat.products.length} Ürün</span>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            ${cat.products.map(p => `
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; background: #f8fafc; border-radius: 6px; font-size: 12px;">
-                <span style="font-weight: 600; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                  #${p.rank} - ${p.name}
-                </span>
-                <div style="display: flex; gap: 4px;">
-                  <button class="ky-btn-secondary" style="padding: 2px 6px; font-size: 10px;" onclick="pinProduct('${cat.id}', '${p.id}', 1)">#1 Sabitle</button>
-                  <button class="ky-btn-secondary" style="padding: 2px 6px; font-size: 10px; color: #ef4444;" onclick="hideProduct('${cat.id}', '${p.id}')">Gizle</button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    });
-    list.innerHTML = html;
-  }
-
-  window.pinProduct = function(catId, prodId, rank) {
-    fetch(`${API_BASE}/api/admin/categories/override`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ categoryId: catId, productId: prodId, manualRank: rank })
-    }).then(() => {
-      showToast('Ürün 1. sıraya sabitlendi');
-      loadInitialSettings();
-    });
-  };
-
-  window.hideProduct = function(catId, prodId) {
-    fetch(`${API_BASE}/api/admin/categories/override`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ categoryId: catId, productId: prodId, hidden: true })
-    }).then(() => {
-      showToast('Rozet gizlendi');
-      loadInitialSettings();
-    });
-  };
-
-  // Save Draft
-  async function saveDraft() {
-    try {
-      const res = await fetch(`${API_BASE}/api/admin/settings/draft`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ config: state.config })
-      });
-      const data = await res.json();
-      if (data.success) {
-        state.isDirty = true;
-        updateStatusDot();
-        showToast('Ayarlar taslak olarak kaydedildi');
-      }
-    } catch (e) {
-      showToast('Taslak kaydedildi (Yerel)');
-    }
-  }
-
-  // Publish to Storefront
-  async function publishSettings() {
-    try {
-      const res = await fetch(`${API_BASE}/api/admin/settings/publish`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ config: state.config })
-      });
-      const data = await res.json();
-      if (data.success) {
-        state.isDirty = false;
-        updateStatusDot();
-        showToast('🎉 Canlı Mağazada Başarıyla Yayınlandı!');
-      }
-    } catch (e) {
-      state.isDirty = false;
-      updateStatusDot();
-      showToast('Yayınlandı (Yerel mod)');
-    }
-  }
-
-  // Copy Storefront Embed Script
-  function copyEmbedCode() {
-    const code = `<link rel="stylesheet" href="${API_BASE}/widget.css">\n<script src="${API_BASE}/widget.js" defer></script>`;
-    navigator.clipboard.writeText(code).then(() => {
-      showToast('📋 Storefront kodu panoya kopyalandı!');
-    });
-  }
-
-  function showToast(msg) {
-    let t = document.getElementById('kyToast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'kyToast';
-      t.className = 'ky-toast';
-      document.body.appendChild(t);
-    }
-    t.innerText = msg;
-    t.style.display = 'block';
-    setTimeout(() => { t.style.display = 'none'; }, 3000);
-  }
-
-  // Run when DOM ready
-  document.addEventListener('DOMContentLoaded', init);
+function ensureV3Assets(){
+ if(!document.querySelector('link[href="/admin-v3.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/admin-v3.css?v=4';document.head.appendChild(l);}
+ const logo=document.querySelector('#btnBrandHome img'); if(logo){logo.src='/thegoatzstudio.png';logo.className='ky-brand-image';logo.removeAttribute('style');}
+ const favicon=document.querySelector('link[rel="icon"]'); if(favicon){favicon.href='/thegoatzstudio.png';favicon.type='image/png';}
+ const copy=byId('btnCopyCode'); if(copy){copy.textContent='Kurulum otomatik';copy.disabled=true;copy.title='Rozetler uygulama tarafından otomatik uygulanır.';}
+}
+async function api(path,opts={}){const url=new URL(path,API); if(!url.searchParams.has('shop'))url.searchParams.set('shop',shop);const init={...opts,headers:{...(opts.headers||{})}};if(init.body&&typeof init.body!=='string'){init.headers['Content-Type']='application/json';init.body=JSON.stringify({...init.body,shop});}const r=await fetch(url.toString(),init);let data={};try{data=await r.json()}catch{}if(!r.ok)throw new Error(data.message||data.error||('HTTP '+r.status));return data;}
+function normalizeConfig(raw){const c=deepMerge(DEFAULT,raw||{});if(!c.texts.productText)c.texts.productText=c.texts.rankOtherText||c.texts.rank1Text||DEFAULT.texts.productText;if(c.styling.fontSize==null)c.styling.fontSize=12;if(c.styling.useStoreThemeFont==null)c.styling.useStoreThemeFont=true;c.ranking.maxRank=clamp(c.ranking.maxRank||3,1,20);c.rules.hideIfRankAbove=clamp(c.rules.hideIfRankAbove||20,1,20);return c;}
+async function init(){ensureV3Assets();buildAllPanels();bindGlobal();restorePanel();try{const data=await api('/api/admin/settings');state.config=normalizeConfig(data.draftConfig);state.categories=Array.isArray(data.categories)?data.categories:[];state.analytics=data.analytics||{};state.dirty=!!data.hasUnpublishedChanges;setConnection(true,data.shop||shop);}catch(e){state.config=structuredClone(DEFAULT);setConnection(false,shop);toast('Ayarlar alınamadı: '+e.message,'error');}renderAll();}
+function setConnection(ok,label){const old=byId('connectionStatus');if(!old)return;old.className='ky-connection'+(ok?' connected':'');old.innerHTML=`<span class="ky-connection-dot"></span><span class="ky-connection-copy"><strong>${ok?'Bağlı':'Bağlantı kontrol ediliyor'}</strong><span>${esc(label||shop)}</span></span>`;}
+function buildAllPanels(){
+ panel('panelRanking','Sıralama Sistemi & Hesaplama',`<div class="ky-group"><div class="ky-field"><label class="ky-label">Hesaplama Dönemi</label><select class="ky-select" id="v3Period"><option value="7days">Son 7 Gün</option><option value="30days">Son 30 Gün</option><option value="90days">Son 90 Gün</option><option value="365days">Son 365 Gün</option><option value="all_time">Tüm Zamanlar</option></select></div><div class="ky-field"><label class="ky-label">Sıralama Ölçütü</label><select class="ky-select" id="v3Metric"><option value="quantity">Satılan Ürün Adedi</option><option value="orders">Sipariş Sayısı</option><option value="revenue">Toplam Ciro</option><option value="category_share">Kategori İçi Satış Payı</option></select></div><div class="ky-field"><label class="ky-label">Maksimum Rozet Limiti <span class="value" id="v3MaxRankVal">3</span></label><input class="ky-slider" id="v3MaxRank" type="range" min="1" max="20" step="1"></div>${toggleHtml('v3Stock','Stokta olmayanları çıkar')}${toggleHtml('v3Refund','İptal / iade siparişleri hariç tut')}</div>`);
+ panel('panelTemplates','Şablon Galerisi',`<div class="ky-inline-help" style="margin-bottom:10px">Bir şablona dokunun. O şablonun renkleri hemen altında açılır ve canlı önizleme anında güncellenir.</div><div id="v3Templates" class="ky-template-gallery-v3"></div><div id="v3TemplateEditor"></div>`);
+ panel('panelTexts','Metinler & Dinamik Değişkenler',`<div class="ky-group"><div class="ky-field"><label class="ky-label">Ürün Metni</label><input class="ky-input" id="v3ProductText" placeholder="En Çok Satan {rank}. Ürün"><div class="ky-inline-help">Tek metin tüm sıralar için kullanılır. Örn. {rank} → 1, 2, 3 … 20.</div></div><div class="ky-field"><label class="ky-label">Ürün Detay Kategori Başlığı</label><input class="ky-input" id="v3PdpPrefix" placeholder="{category} Kategorisinde"></div><div class="ky-field"><label class="ky-label">Ürün Detay Rozet Metni</label><input class="ky-input" id="v3PdpBadge" placeholder="En Çok Satan {rank}. Ürün"></div><div class="ky-inline-help">Kullanılabilir: <code>{rank}</code> <code>{category}</code> <code>{product}</code> <code>{sales}</code> <code>{period}</code></div></div>`);
+ panel('panelTypography','Tipografi & Yazı Fontu',`<div class="ky-theme-font-bar"><div><strong>Tema fontunu kullan</strong><small>Mağazanızın mevcut fontunu otomatik miras alır.</small></div>${switchOnly('v3ThemeFont')}</div><div class="ky-font-controls" id="v3FontControls"><div class="ky-group"><div class="ky-field"><label class="ky-label">Google Fonts</label><input class="ky-input ky-font-search" id="v3FontSearch" placeholder="Font ara…"><select class="ky-select" id="v3Font" size="8" style="height:190px"></select><div class="ky-font-count" id="v3FontCount">Google Fonts yükleniyor…</div></div></div></div><div class="ky-group"><div class="ky-field"><label class="ky-label">Font Boyutu <span class="value" id="v3FontSizeVal"></span></label><input class="ky-slider" id="v3FontSize" type="range" min="8" max="28" step="1"></div><div class="ky-field"><label class="ky-label">Font Ağırlığı</label><select class="ky-select" id="v3FontWeight"><option value="400">Regular 400</option><option value="500">Medium 500</option><option value="600">SemiBold 600</option><option value="700">Bold 700</option><option value="800">ExtraBold 800</option></select></div></div>`);
+ panel('panelIcons','İkon Kütüphanesi',`<div class="ky-group"><div class="ky-toggle-wrap"><span>İkon göster</span>${switchOnly('v3IconEnabled')}</div><div class="ky-icon-grid" id="v3Icons"></div><div class="ky-icon-editor"><div class="ky-field"><label class="ky-label">İkon Stili</label><div class="ky-segment"><button id="v3IconMono" type="button">Siyah / Beyaz</button><button id="v3IconColor" type="button">Renkli</button></div></div><div class="ky-two-col" id="v3IconColors"></div><div class="ky-field"><label class="ky-label">İkon Boyutu <span class="value" id="v3IconSizeVal"></span></label><input class="ky-slider" id="v3IconSize" type="range" min="8" max="32" step="1"></div></div></div>`);
+ panel('panelColors','Arka Plan, Renkler & Gradyan',`<div class="ky-group">${colorField('v3Bg','Rozet Arka Planı')}${colorField('v3TextColor','Metin Rengi')}${colorField('v3Accent','Vurgu Rengi')}<div class="ky-toggle-wrap"><span>Gradyan kullan</span>${switchOnly('v3Gradient')}</div><div id="v3GradientFields">${colorField('v3Grad1','Gradyan 1')}${colorField('v3Grad2','Gradyan 2')}<div class="ky-field"><label class="ky-label">Gradyan Açısı <span class="value" id="v3GradAngleVal"></span></label><input class="ky-slider" id="v3GradAngle" type="range" min="0" max="360" step="1"></div></div></div>`);
+ panel('panelBorders','Çerçeve & Gölge',`<div class="ky-group">${colorField('v3BorderColor','Çerçeve Rengi')}<div class="ky-field"><label class="ky-label">Köşe Yuvarlaklığı <span class="value" id="v3RadiusVal"></span></label><input class="ky-slider" id="v3Radius" type="range" min="0" max="40"></div><div class="ky-field"><label class="ky-label">Çerçeve Kalınlığı <span class="value" id="v3BorderWidthVal"></span></label><input class="ky-slider" id="v3BorderWidth" type="range" min="0" max="8" step="1"></div><div class="ky-field"><label class="ky-label">Gölge</label><select class="ky-select" id="v3Shadow"><option value="none">Yok</option><option value="soft">Yumuşak</option><option value="medium">Orta</option><option value="strong">Belirgin</option><option value="glow">Glow</option></select></div><div class="ky-field"><label class="ky-label">Opaklık <span class="value" id="v3OpacityVal"></span></label><input class="ky-slider" id="v3Opacity" type="range" min="10" max="100"></div></div>`);
+ panel('panelSizing','Boyutlar & Boşluklar',`<div class="ky-group"><div class="ky-field"><label class="ky-label">Yatay İç Boşluk <span class="value" id="v3PadXVal"></span></label><input class="ky-slider" id="v3PadX" type="range" min="0" max="30"></div><div class="ky-field"><label class="ky-label">Dikey İç Boşluk <span class="value" id="v3PadYVal"></span></label><input class="ky-slider" id="v3PadY" type="range" min="0" max="20"></div><div class="ky-field"><label class="ky-label">Rozet Ölçeği <span class="value" id="v3ScaleVal"></span></label><input class="ky-slider" id="v3Scale" type="range" min="50" max="180"></div></div>`);
+ panel('panelPosition','Konumlandırma',`<div class="ky-group"><div class="ky-field"><label class="ky-label">Ürün Kartı Konumu</label><select class="ky-select" id="v3CardLocation"><option value="image_overlay">Görsel Köşesi / Üzeri</option><option value="image_bottom_bar">Görsel Alt Şeridi</option></select></div><div class="ky-field"><label class="ky-label">Konum Noktası</label><div class="ky-nine-grid" id="v3NineGrid">${[['top_left','↖'],['top_center','↑'],['top_right','↗'],['middle_left','←'],['center','•'],['middle_right','→'],['bottom_left','↙'],['bottom_center','↓'],['bottom_right','↘']].map(([v,l])=>`<button class="ky-grid-btn" data-pos="${v}" type="button">${l}</button>`).join('')}</div></div><div class="ky-two-col"><div class="ky-field"><label class="ky-label">Yatay X <span class="value" id="v3OffsetXVal"></span></label><input class="ky-slider" id="v3OffsetX" type="range" min="-50" max="50"></div><div class="ky-field"><label class="ky-label">Dikey Y <span class="value" id="v3OffsetYVal"></span></label><input class="ky-slider" id="v3OffsetY" type="range" min="-50" max="50"></div></div></div>`);
+ panel('panelAnimation','Animasyonlar & Efektler',`<div class="ky-group"><div class="ky-field"><label class="ky-label">Giriş Animasyonu</label><select class="ky-select" id="v3Entry"><option value="none">Yok</option><option value="fade">Fade</option><option value="slide-up">Aşağıdan Gel</option><option value="slide-down">Yukarıdan Gel</option><option value="slide-left">Sağdan Gel</option><option value="pop">Pop</option><option value="flip">Flip</option><option value="bounce">Bounce</option></select></div><div class="ky-field"><label class="ky-label">Hover Efekti</label><select class="ky-select" id="v3Hover"><option value="none">Yok</option><option value="lift">Yukarı Kalk</option><option value="scale">Büyüt</option><option value="glow">Glow</option><option value="shadow">Gölge</option><option value="tilt">Eğim</option><option value="pulse">Nabız</option></select></div><div class="ky-field"><label class="ky-label">Animasyon Süresi <span class="value" id="v3DurationVal"></span></label><input class="ky-slider" id="v3Duration" type="range" min="100" max="1200" step="50"></div></div>`);
+ panel('panelResponsive','Responsive (Masaüstü / Mobil)',`<div class="ky-group">${toggleHtml('v3Desktop','Masaüstünde göster')}${toggleHtml('v3Mobile','Mobilde göster')}<div class="ky-field"><label class="ky-label">Mobil Rozet Ölçeği <span class="value" id="v3MobileScaleVal"></span></label><input class="ky-slider" id="v3MobileScale" type="range" min="50" max="130"></div><div class="ky-field"><label class="ky-label">Mobil Font Farkı <span class="value" id="v3MobileFontVal"></span></label><input class="ky-slider" id="v3MobileFont" type="range" min="-6" max="6"></div></div>`);
+ panel('panelCategories','Kategoriler & Sıralamalar',`<div class="ky-category-intro"><strong>Bu bölüm ne yapar?</strong><br>1. ikas kategorilerinizi ve satış sırasını otomatik getirir.<br>2. Sistem seçtiğiniz döneme göre ürünleri sıralar.<br>3. İsterseniz bir ürünü belirli sıraya sabitleyebilir veya rozetini gizleyebilirsiniz.</div><button class="ky-btn ky-btn-secondary" id="v3Sync" style="width:100%;margin-bottom:10px">↻ TheGoatz verilerini şimdi senkronize et</button><div id="v3Categories"></div>`);
+ panel('panelRules','Gelişmiş Görünürlük Kuralları',`<div class="ky-group">${toggleHtml('v3HideDiscount','İndirimli ürünlerde gizle')}${toggleHtml('v3HideNew','Yeni ürünlerde gizle')}<div class="ky-field"><label class="ky-label">Bu sıradan sonrasını gizle <span class="value" id="v3HideRankVal"></span></label><input class="ky-slider" id="v3HideRank" type="range" min="1" max="20"></div><div class="ky-field"><label class="ky-label">Minimum satış adedi</label><input class="ky-input" id="v3MinSales" type="number" min="0" max="9999"></div></div>`);
+ panel('panelPlacement','Mağazada Gösterim',`<div class="ky-group"><div class="ky-inline-help" style="margin-bottom:9px">Uygulama kod yapıştırmadan çalışacak şekilde hazırlanır. Seçtiğiniz alanlardaki uygun ürün kartlarına rozet otomatik uygulanır.</div>${toggleHtml('v3Home','Ana sayfa ürün kartları')}${toggleHtml('v3Category','Kategori sayfaları')}${toggleHtml('v3Search','Arama sonuçları')}${toggleHtml('v3Pdp','Ürün detay sayfası')}<div style="margin-top:12px;padding:11px;border:1px solid rgba(18,183,106,.2);background:#ecfdf3;border-radius:10px;color:#067647;font-size:10px;font-weight:700">● Kurulum modeli: otomatik storefront entegrasyonu</div></div>`);
+ enhanceProfileAndSupport();
+}
+function panel(id,title,body){const p=byId(id);if(!p)return;p.innerHTML=`<div class="ky-subpanel-header"><button class="ky-btn-back" type="button">← Geri</button><div class="ky-subpanel-title">${title}</div></div>${body}`;}
+function toggleHtml(id,label){return `<div class="ky-toggle-wrap"><span>${label}</span>${switchOnly(id)}</div>`}
+function switchOnly(id){return `<label class="ky-switch"><input type="checkbox" id="${id}"><span class="ky-switch-slider"></span></label>`}
+function colorField(id,label){return `<div class="ky-field"><label class="ky-label">${label}</label><div class="ky-color-row"><input type="color" id="${id}Picker"><input class="ky-input" type="text" id="${id}Hex" maxlength="7" placeholder="#243a8b"></div></div>`}
+function enhanceProfileAndSupport(){const pd=byId('profileDialog');if(pd){pd.className='ky-modal';pd.innerHTML=`<div class="ky-modal-head"><div><h3>Profilim</h3><p>İletişim profiliniz mağazanıza bağlı olarak saklanır.</p></div><button class="ky-btn-icon-only" data-close-dialog="profileDialog" type="button">×</button></div><div class="ky-modal-body"><div class="ky-two-col"><div class="ky-field"><label class="ky-label">Mağaza</label><input class="ky-input" id="v3ProfileStore" disabled value="${esc(shop)}"></div><div class="ky-field"><label class="ky-label">Yetkili Ad Soyad</label><input class="ky-input" id="v3ProfileName"></div><div class="ky-field"><label class="ky-label">E-posta</label><input class="ky-input" id="v3ProfileEmail" type="email"></div><div class="ky-field"><label class="ky-label">Telefon</label><input class="ky-input" id="v3ProfilePhone"></div></div><div class="ky-field"><label class="ky-label">Görev / Ünvan</label><input class="ky-input" id="v3ProfileRole"></div><div class="ky-profile-error" id="v3ProfileError"></div><div style="display:flex;justify-content:flex-end;gap:7px;margin-top:14px"><button class="ky-btn ky-btn-secondary" data-close-dialog="profileDialog" type="button">Vazgeç</button><button class="ky-btn ky-btn-publish" id="v3ProfileSave" type="button">Profili kaydet</button></div></div>`;}const sd=byId('supportDialog');if(sd){sd.className='ky-modal';sd.innerHTML=`<div class="ky-modal-head"><div><h3>Yardım & Destek</h3><p>Talebiniz hello@thegoatzstudio.com destek akışına iletilir.</p></div><button class="ky-btn-icon-only" data-close-dialog="supportDialog" type="button">×</button></div><div class="ky-modal-body"><div class="ky-support-note">Destek yanıtları profilinizde kayıtlı e-posta adresine gönderilir.</div><div class="ky-field"><label class="ky-label">Konu türü</label><select class="ky-select" id="v3SupportCategory"><option value="TECHNICAL">Teknik sorun</option><option value="SETUP">Kurulum</option><option value="FEATURE">Özellik talebi</option><option value="PAYMENT">Ödeme</option><option value="COMPLAINT">Şikayet</option><option value="OTHER">Diğer</option></select></div><div class="ky-field"><label class="ky-label">Konu</label><input class="ky-input" id="v3SupportSubject" maxlength="120"></div><div class="ky-field"><label class="ky-label">Mesaj</label><textarea class="ky-textarea" id="v3SupportMessage" maxlength="3000" rows="7"></textarea></div><div class="ky-profile-error" id="v3SupportError"></div><div style="display:flex;justify-content:flex-end;gap:7px;margin-top:14px"><button class="ky-btn ky-btn-secondary" data-close-dialog="supportDialog" type="button">Vazgeç</button><button class="ky-btn ky-btn-publish" id="v3SupportSend" type="button">Destek talebi gönder</button></div></div>`;}}
+function bindGlobal(){document.querySelectorAll('.ky-menu-card').forEach(card=>card.onclick=()=>openPanel(card.dataset.target));document.addEventListener('click',e=>{const b=e.target.closest('.ky-btn-back');if(b){closePanels();sessionStorage.removeItem('ky-active-panel');}const c=e.target.closest('[data-close-dialog]');if(c)byId(c.dataset.closeDialog)?.close();});document.querySelectorAll('.ky-device-btn').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.ky-device-btn').forEach(x=>x.classList.remove('active'));btn.classList.add('active');state.device=btn.dataset.device;byId('stageCanvas')?.classList.toggle('mobile-view',state.device==='mobile');renderPreview();});document.querySelectorAll('.ky-view-tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.ky-view-tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');state.view=btn.dataset.view;renderPreview();});byId('previewCategorySelect')?.addEventListener('change',e=>{state.selectedCategory=Number(e.target.value)||0;renderPreview();});byId('btnUndo')?.addEventListener('click',undo);byId('btnRedo')?.addEventListener('click',redo);byId('btnResetDefault')?.addEventListener('click',()=>{if(confirm('Tüm ayarlar varsayılana dönsün mü?')){pushUndo();state.config=structuredClone(DEFAULT);state.dirty=true;renderAll();}});byId('btnSaveDraft')?.addEventListener('click',saveDraft);byId('btnPublish')?.addEventListener('click',publish);byId('btnProfile')?.addEventListener('click',async()=>{await loadProfile();byId('profileDialog')?.showModal();});byId('btnSupport')?.addEventListener('click',()=>byId('supportDialog')?.showModal());setTimeout(bindPanelControls,0);}
+function bindPanelControls(){bindSelect('v3Period','ranking.period');bindSelect('v3Metric','ranking.metric');bindRange('v3MaxRank','ranking.maxRank','v3MaxRankVal','');bindCheck('v3Stock','ranking.excludeOutOfStock');bindCheck('v3Refund','ranking.excludeRefunded');bindInput('v3ProductText','texts.productText');bindInput('v3PdpPrefix','texts.pdpPrefixText');bindInput('v3PdpBadge','texts.pdpBadgeText');bindCheck('v3ThemeFont','styling.useStoreThemeFont',()=>updateFontUI());bindSelect('v3Font','styling.fontFamily',v=>loadFont(v));bindRange('v3FontSize','styling.fontSize','v3FontSizeVal',' px');bindSelect('v3FontWeight','styling.fontWeight',v=>Number(v));bindCheck('v3IconEnabled','icon.enabled');bindRange('v3IconSize','icon.size','v3IconSizeVal',' px');bindColor('v3Bg','styling.bgColor');bindColor('v3TextColor','styling.textColor');bindColor('v3Accent','styling.accentColor');bindCheck('v3Gradient','styling.gradientEnabled',updateGradientUI);bindColor('v3Grad1','styling.gradientColor1');bindColor('v3Grad2','styling.gradientColor2');bindRange('v3GradAngle','styling.gradientAngle','v3GradAngleVal','°');bindColor('v3BorderColor','styling.borderColor');bindRange('v3Radius','styling.borderRadius','v3RadiusVal',' px');bindRange('v3BorderWidth','styling.borderWidth','v3BorderWidthVal',' px');bindSelect('v3Shadow','styling.shadow');bindRange('v3Opacity','styling.opacity','v3OpacityVal','%');bindRange('v3PadX','styling.paddingX','v3PadXVal',' px');bindRange('v3PadY','styling.paddingY','v3PadYVal',' px');bindRange('v3Scale','styling.scale','v3ScaleVal','%');bindSelect('v3CardLocation','placements.cardLocation');bindRange('v3OffsetX','placements.offsetX','v3OffsetXVal',' px');bindRange('v3OffsetY','placements.offsetY','v3OffsetYVal',' px');bindSelect('v3Entry','animation.entry');bindSelect('v3Hover','animation.hover');bindRange('v3Duration','animation.durationMs','v3DurationVal',' ms');bindCheck('v3Desktop','responsive.desktopEnabled');bindCheck('v3Mobile','responsive.mobileEnabled');bindRange('v3MobileScale','responsive.mobileBadgeScale','v3MobileScaleVal','%');bindRange('v3MobileFont','responsive.mobileFontSizeOffset','v3MobileFontVal',' px');bindCheck('v3HideDiscount','rules.hideIfDiscounted');bindCheck('v3HideNew','rules.hideIfNewProduct');bindRange('v3HideRank','rules.hideIfRankAbove','v3HideRankVal','');bindInput('v3MinSales','ranking.minSalesThreshold',v=>Number(v));bindCheck('v3Home','placements.homeCards');bindCheck('v3Category','placements.categoryCards');bindCheck('v3Search','placements.searchResults');bindCheck('v3Pdp','placements.productDetail');byId('v3NineGrid')?.addEventListener('click',e=>{const b=e.target.closest('[data-pos]');if(!b)return;change('placements.ninePointPosition',b.dataset.pos);renderPositionButtons();});byId('v3IconMono')?.addEventListener('click',()=>{change('icon.mode','mono');renderIconEditor();});byId('v3IconColor')?.addEventListener('click',()=>{change('icon.mode','color');renderIconEditor();});byId('v3Sync')?.addEventListener('click',syncRankings);byId('v3ProfileSave')?.addEventListener('click',saveProfile);byId('v3SupportSend')?.addEventListener('click',sendSupport);byId('v3FontSearch')?.addEventListener('input',e=>filterFonts(e.target.value));}
+function bindSelect(id,path,cast=v=>v){const el=byId(id);if(!el)return;el.onchange=()=>change(path,cast(el.value));}
+function bindInput(id,path,cast=v=>v){const el=byId(id);if(!el)return;el.oninput=()=>change(path,cast(el.value));}
+function bindCheck(id,path,after){const el=byId(id);if(!el)return;el.onchange=()=>{change(path,el.checked);after?.();}}
+function bindRange(id,path,valId,suffix){const el=byId(id);if(!el)return;el.oninput=()=>{change(path,Number(el.value),false);const v=byId(valId);if(v)v.textContent=el.value+suffix;};el.onchange=()=>state.dirty=true;}
+function bindColor(id,path){const p=byId(id+'Picker'),h=byId(id+'Hex');if(!p||!h)return;p.oninput=()=>{h.value=p.value;change(path,p.value,false)};h.oninput=()=>{if(/^#[0-9a-f]{6}$/i.test(h.value)){p.value=h.value;change(path,h.value,false)}};}
+function pushUndo(){state.undo.push(JSON.stringify(state.config));if(state.undo.length>40)state.undo.shift();state.redo=[];}
+function change(path,val,withUndo=true){if(withUndo)pushUndo();setPath(state.config,path,val);state.dirty=true;updateStatus();renderPreview();}
+function undo(){if(!state.undo.length)return;state.redo.push(JSON.stringify(state.config));state.config=JSON.parse(state.undo.pop());state.dirty=true;renderAll();toast('Geri alındı');}
+function redo(){if(!state.redo.length)return;state.undo.push(JSON.stringify(state.config));state.config=JSON.parse(state.redo.pop());state.dirty=true;renderAll();toast('Yinelendi');}
+function renderAll(){fillControls();renderTemplates();renderIcons();renderCategories();renderPreviewSelectors();renderPositionButtons();updateFontUI();updateGradientUI();renderPreview();updateStatus();loadGoogleFonts();}
+function fillControls(){const c=state.config;const map={v3Period:c.ranking.period,v3Metric:c.ranking.metric,v3MaxRank:c.ranking.maxRank,v3ProductText:c.texts.productText,v3PdpPrefix:c.texts.pdpPrefixText,v3PdpBadge:c.texts.pdpBadgeText,v3ThemeFont:c.styling.useStoreThemeFont,v3Font:c.styling.fontFamily,v3FontSize:c.styling.fontSize,v3FontWeight:String(c.styling.fontWeight),v3IconEnabled:c.icon.enabled,v3IconSize:c.icon.size,v3Gradient:c.styling.gradientEnabled,v3GradAngle:c.styling.gradientAngle,v3Radius:c.styling.borderRadius,v3BorderWidth:c.styling.borderWidth,v3Shadow:c.styling.shadow,v3Opacity:c.styling.opacity,v3PadX:c.styling.paddingX,v3PadY:c.styling.paddingY,v3Scale:c.styling.scale,v3CardLocation:c.placements.cardLocation,v3OffsetX:c.placements.offsetX,v3OffsetY:c.placements.offsetY,v3Entry:c.animation.entry,v3Hover:c.animation.hover,v3Duration:c.animation.durationMs,v3Desktop:c.responsive.desktopEnabled,v3Mobile:c.responsive.mobileEnabled,v3MobileScale:c.responsive.mobileBadgeScale,v3MobileFont:c.responsive.mobileFontSizeOffset,v3HideDiscount:c.rules.hideIfDiscounted,v3HideNew:c.rules.hideIfNewProduct,v3HideRank:c.rules.hideIfRankAbove,v3MinSales:c.ranking.minSalesThreshold,v3Home:c.placements.homeCards,v3Category:c.placements.categoryCards,v3Search:c.placements.searchResults,v3Pdp:c.placements.productDetail,v3Stock:c.ranking.excludeOutOfStock,v3Refund:c.ranking.excludeRefunded};Object.entries(map).forEach(([id,v])=>{const el=byId(id);if(!el)return;if(el.type==='checkbox')el.checked=!!v;else el.value=v??'';});[['v3MaxRankVal',c.ranking.maxRank,''],['v3FontSizeVal',c.styling.fontSize,' px'],['v3IconSizeVal',c.icon.size,' px'],['v3GradAngleVal',c.styling.gradientAngle,'°'],['v3RadiusVal',c.styling.borderRadius,' px'],['v3BorderWidthVal',c.styling.borderWidth,' px'],['v3OpacityVal',c.styling.opacity,'%'],['v3PadXVal',c.styling.paddingX,' px'],['v3PadYVal',c.styling.paddingY,' px'],['v3ScaleVal',c.styling.scale,'%'],['v3OffsetXVal',c.placements.offsetX,' px'],['v3OffsetYVal',c.placements.offsetY,' px'],['v3DurationVal',c.animation.durationMs,' ms'],['v3MobileScaleVal',c.responsive.mobileBadgeScale,'%'],['v3MobileFontVal',c.responsive.mobileFontSizeOffset,' px'],['v3HideRankVal',c.rules.hideIfRankAbove,'']].forEach(([id,v,s])=>{if(byId(id))byId(id).textContent=v+s});[['v3Bg','styling.bgColor'],['v3TextColor','styling.textColor'],['v3Accent','styling.accentColor'],['v3Grad1','styling.gradientColor1'],['v3Grad2','styling.gradientColor2'],['v3BorderColor','styling.borderColor']].forEach(([id,p])=>setColor(id,getPath(c,p,'#243a8b')));}
+function setColor(id,v){if(!/^#[0-9a-f]{6}$/i.test(v||''))v='#243a8b';if(byId(id+'Picker'))byId(id+'Picker').value=v;if(byId(id+'Hex'))byId(id+'Hex').value=v;}
+function renderTemplates(){const host=byId('v3Templates');if(!host)return;host.innerHTML=TEMPLATES.map(t=>{const tc=templateColor(t);return `<button class="ky-template-card-v3 ${state.config.templateId===t.id?'active':''}" data-template="${t.id}" type="button"><span class="preview"><span class="ky-v3-badge ${t.variant}" style="--badge-bg:${tc.bg};--badge-text:${tc.text};--badge-accent:${tc.accent};--grad-a:${tc.bg};--grad-b:${tc.accent};font-size:9px;padding:5px 8px">${iconHtml('award',10)} <span>#1 Çok Satan</span></span></span><span class="name">${t.name}</span>${['gradient','glass','split'].includes(t.variant)?'<span class="tag">Yeni</span>':''}</button>`}).join('');host.querySelectorAll('[data-template]').forEach(b=>b.onclick=()=>{change('templateId',b.dataset.template);renderTemplates();renderTemplateEditor();});renderTemplateEditor();}
+function templateColor(t){return state.config.templateColors?.[t.id]||{bg:t.bg,text:t.text,accent:t.accent};}
+function renderTemplateEditor(){const host=byId('v3TemplateEditor');if(!host)return;const t=TEMPLATES.find(x=>x.id===state.config.templateId)||TEMPLATES[0];const c=templateColor(t);host.innerHTML=`<div class="ky-template-editor"><div class="ky-template-editor-title"><strong>${t.name} renkleri</strong><span>Yalnızca bu şablona uygulanır</span></div>${tplColor('tplBg','Ana Renk',c.bg)}${tplColor('tplText','Metin',c.text)}${tplColor('tplAccent','Vurgu / 2. Renk',c.accent)}</div>`;['Bg','Text','Accent'].forEach(k=>{const p=byId('tpl'+k+'Picker'),h=byId('tpl'+k+'Hex');const field=k==='Bg'?'bg':k==='Text'?'text':'accent';const apply=v=>{if(!state.config.templateColors)state.config.templateColors={};state.config.templateColors[t.id]={...c,[field]:v};state.dirty=true;renderPreview();renderTemplatesNoEditor();};p.oninput=()=>{h.value=p.value;apply(p.value)};h.oninput=()=>{if(/^#[0-9a-f]{6}$/i.test(h.value)){p.value=h.value;apply(h.value)}};});}
+function renderTemplatesNoEditor(){const host=byId('v3Templates');if(!host)return;host.querySelectorAll('[data-template]').forEach(b=>b.classList.toggle('active',b.dataset.template===state.config.templateId));}
+function tplColor(id,label,v){return `<div class="ky-field"><label class="ky-label">${label}</label><div class="ky-color-row"><input id="${id}Picker" type="color" value="${v}"><input id="${id}Hex" class="ky-input" value="${v}"></div></div>`}
+function renderIcons(){const host=byId('v3Icons');if(!host)return;host.innerHTML=Object.keys(ICONS).map(k=>`<button class="ky-icon-choice ${state.config.icon.type===k?'active':''}" data-icon="${k}" type="button"><b style="font-size:18px">${ICONS[k]||'×'}</b><span>${k==='none'?'İkonsuz':k}</span></button>`).join('');host.querySelectorAll('[data-icon]').forEach(b=>b.onclick=()=>{change('icon.type',b.dataset.icon);state.config.icon.enabled=b.dataset.icon!=='none';renderIcons();renderIconEditor();});renderIconEditor();}
+function renderIconEditor(){byId('v3IconMono')?.classList.toggle('active',state.config.icon.mode!=='color');byId('v3IconColor')?.classList.toggle('active',state.config.icon.mode==='color');const host=byId('v3IconColors');if(host){host.innerHTML=state.config.icon.mode==='color'?`${colorField('v3IconC1','İkon Rengi 1')}${colorField('v3IconC2','İkon Rengi 2')}`:`${colorField('v3IconC1','İkon Rengi')}`;bindColor('v3IconC1','icon.color');setColor('v3IconC1',state.config.icon.color);if(state.config.icon.mode==='color'){bindColor('v3IconC2','icon.accentColor');setColor('v3IconC2',state.config.icon.accentColor);}}}
+function iconHtml(type,size){if(!state.config.icon.enabled||type==='none')return '';const glyph=ICONS[type]||'◆';const c1=state.config.icon.color||'#fff',c2=state.config.icon.accentColor||'#ffd166';return state.config.icon.mode==='color'?`<span aria-hidden="true" style="font-size:${size}px;line-height:1;color:${c1};text-shadow:1px 1px 0 ${c2}">${glyph}</span>`:`<span aria-hidden="true" style="font-size:${size}px;line-height:1;color:currentColor">${glyph}</span>`;}
+let allFonts=[];
+async function loadGoogleFonts(){if(allFonts.length)return filterFonts('');try{const r=await fetch('https://fonts.google.com/metadata/fonts');const txt=await r.text();const json=JSON.parse(txt.replace(/^\)\]\}'\n?/,'').trim());allFonts=(json.familyMetadataList||[]).map(x=>x.family).filter(Boolean).sort((a,b)=>a.localeCompare(b));}catch{allFonts=['Bricolage Grotesque','Inter','Poppins','Montserrat','Roboto','Open Sans','Lato','Nunito Sans','DM Sans','Manrope','Work Sans','Raleway','Playfair Display','Merriweather','Oswald','Rubik','Figtree','Archivo','Urbanist','Space Grotesk'];}filterFonts('');}
+function filterFonts(q){const sel=byId('v3Font');if(!sel)return;const query=(q||'').toLowerCase();const list=allFonts.filter(f=>f.toLowerCase().includes(query));sel.innerHTML=list.map(f=>`<option value="${esc(f)}" ${f===state.config.styling.fontFamily?'selected':''}>${esc(f)}</option>`).join('');if(byId('v3FontCount'))byId('v3FontCount').textContent=`${list.length} font gösteriliyor${allFonts.length?` / ${allFonts.length} toplam`:''}`;}
+function loadFont(f){if(!f||state.config.styling.useStoreThemeFont)return;const id='ky-font-'+f.replace(/\W/g,'-');if(byId(id))return;const l=document.createElement('link');l.id=id;l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(f).replace(/%20/g,'+')+':wght@400;500;600;700;800&display=swap';document.head.appendChild(l);}
+function updateFontUI(){const fc=byId('v3FontControls');if(fc)fc.hidden=!!state.config.styling.useStoreThemeFont;if(!state.config.styling.useStoreThemeFont)loadFont(state.config.styling.fontFamily);}
+function updateGradientUI(){if(byId('v3GradientFields'))byId('v3GradientFields').style.display=state.config.styling.gradientEnabled?'block':'none';}
+function renderCategories(){const host=byId('v3Categories');if(!host)return;if(!state.categories.length){host.innerHTML='<div class="ky-preview-empty"><div><strong>Henüz gerçek kategori verisi yok</strong>“TheGoatz verilerini şimdi senkronize et” düğmesine basın.</div></div>';return;}host.innerHTML=state.categories.map(cat=>`<div class="ky-category-card"><div class="ky-category-head"><div><strong>${esc(cat.name)}</strong><span>${(cat.products||[]).length} ürün</span></div></div>${(cat.products||[]).slice(0,20).map(p=>`<div class="ky-rank-row"><span class="ky-rank-num">${p.rank||'—'}</span><div class="ky-rank-product"><strong>${esc(p.name)}</strong><small>${Number(p.sales||0)} satış</small></div><select class="ky-select ky-rank-select" data-rank-cat="${esc(cat.id)}" data-rank-product="${esc(p.id)}"><option value="">Otomatik</option>${Array.from({length:20},(_,i)=>`<option value="${i+1}" ${(p.manual&&Number(p.rank)===i+1)?'selected':''}>#${i+1}</option>`).join('')}</select><label class="ky-switch" title="Rozeti gizle"><input type="checkbox" data-hide-cat="${esc(cat.id)}" data-hide-product="${esc(p.id)}" ${p.hidden?'checked':''}><span class="ky-switch-slider"></span></label></div>`).join('')}</div>`).join('');host.querySelectorAll('[data-rank-product]').forEach(el=>el.onchange=()=>overrideProduct(el.dataset.rankCat,el.dataset.rankProduct,el.value?Number(el.value):undefined,undefined));host.querySelectorAll('[data-hide-product]').forEach(el=>el.onchange=()=>overrideProduct(el.dataset.hideCat,el.dataset.hideProduct,undefined,el.checked));}
+async function overrideProduct(categoryId,productId,manualRank,hidden){try{const d=await api('/api/admin/categories/override',{method:'POST',body:{categoryId,productId,manualRank,hidden}});if(Array.isArray(d.categories))state.categories=d.categories;renderCategories();renderPreview();toast('Ürün sıralaması güncellendi');}catch(e){toast(e.message,'error')}}
+async function syncRankings(){const btn=byId('v3Sync');if(btn){btn.disabled=true;btn.textContent='Senkronize ediliyor…';}try{const d=await api('/api/admin/rankings/sync',{method:'POST',body:{}});if(Array.isArray(d.categories))state.categories=d.categories;renderCategories();renderPreviewSelectors();renderPreview();toast('ikas verileri senkronize edildi');}catch(e){toast('Senkronizasyon başarısız: '+e.message,'error')}finally{if(btn){btn.disabled=false;btn.textContent='↻ TheGoatz verilerini şimdi senkronize et';}}}
+function renderPreviewSelectors(){const sel=byId('previewCategorySelect');if(!sel)return;const prev=state.selectedCategory;sel.innerHTML=state.categories.length?state.categories.map((c,i)=>`<option value="${i}">${esc(c.name)}</option>`).join(''):'<option value="0">Veri bekleniyor</option>';state.selectedCategory=Math.min(prev,Math.max(0,state.categories.length-1));sel.value=String(state.selectedCategory);}
+function renderPositionButtons(){byId('v3NineGrid')?.querySelectorAll('[data-pos]').forEach(b=>b.classList.toggle('active',b.dataset.pos===state.config.placements.ninePointPosition));}
+function renderPreview(){const canvas=byId('stageCanvas');if(!canvas)return;canvas.classList.toggle('mobile-view',state.device==='mobile');const c=state.config;if(state.device==='desktop'&&!c.responsive.desktopEnabled){canvas.innerHTML='<div class="ky-preview-empty"><div><strong>Masaüstü gösterimi kapalı</strong>Responsive bölümünden açabilirsiniz.</div></div>';return;}if(state.device==='mobile'&&!c.responsive.mobileEnabled){canvas.innerHTML='<div class="ky-preview-empty"><div><strong>Mobil gösterim kapalı</strong>Responsive bölümünden açabilirsiniz.</div></div>';return;}const cat=state.categories[state.selectedCategory]||state.categories[0];if(!cat){canvas.innerHTML='<div class="ky-preview-empty"><div><strong>Mağaza verisi bekleniyor</strong>Gerçek ikas ürünleri geldiğinde burada görüntülenecek.</div></div>';return;}if(state.view==='pdp'){const p=(cat.products||[])[0];canvas.innerHTML=p?`<div class="ky-mock-pdp"><div class="ky-pdp-gallery"><img src="${esc(p.image||'')}" alt=""></div><div class="ky-pdp-info"><div style="font-size:10px;color:#667085;margin-bottom:6px">${esc(fillText(c.texts.pdpPrefixText,p,cat))}</div><div class="ky-pdp-h1">${esc(p.name)}</div><div style="margin-top:10px">${badgeHTML(p,cat)}</div><div class="ky-pdp-price">${esc(p.price||'')}</div><button class="ky-pdp-btn">Sepete Ekle</button></div></div>`:'<div class="ky-preview-empty">Ürün yok</div>';return;}const products=(cat.products||[]).slice(0,Math.max(4,Math.min(12,c.ranking.maxRank)));canvas.innerHTML=`<div style="font-size:20px;font-weight:800;color:${BLUE};margin-bottom:4px">${esc(cat.name)}</div><div style="font-size:10px;color:#667085;margin-bottom:18px">${products.length} ürün önizleniyor</div><div class="ky-mock-grid">${products.slice(0,6).map(p=>`<div class="ky-mock-card"><div class="ky-mock-img-wrap"><img src="${esc(p.image||'')}" alt="">${Number(p.rank)<=Number(c.ranking.maxRank)&&!p.hidden?badgePositionHTML(p,cat):''}</div><div class="ky-mock-details"><div class="ky-mock-title">${esc(p.name)}</div><div class="ky-mock-price">${esc(p.price||'')}</div></div></div>`).join('')}</div>`;}
+function badgePositionHTML(p,cat){const pos=state.config.placements.cardLocation==='image_bottom_bar'?'bottom-bar':state.config.placements.ninePointPosition;let cls=pos==='bottom-bar'?'pos-bottom-bar align-full':'pos-'+pos.replaceAll('_','-');return `<div class="ky-v3-badge-position ${cls}" style="--ox:${state.config.placements.offsetX}px;--oy:${state.config.placements.offsetY}px">${badgeHTML(p,cat)}</div>`;}
+function badgeHTML(p,cat){const c=state.config,t=TEMPLATES.find(x=>x.id===c.templateId)||TEMPLATES[0],tc=templateColor(t),mobile=state.device==='mobile',fs=Math.max(7,Number(c.styling.fontSize)+(mobile?Number(c.responsive.mobileFontSizeOffset||0):0)),scale=(Number(c.styling.scale)/100)*(mobile?Number(c.responsive.mobileBadgeScale||100)/100:1),px=mobile?Number(c.responsive.mobilePaddingX||c.styling.paddingX):Number(c.styling.paddingX),py=mobile?Number(c.responsive.mobilePaddingY||c.styling.paddingY):Number(c.styling.paddingY),font=c.styling.useStoreThemeFont?'inherit':`'${c.styling.fontFamily}',sans-serif`,bg=c.styling.gradientEnabled?c.styling.gradientColor1:tc.bg,text=tc.text||c.styling.textColor,accent=tc.accent||c.styling.accentColor,shadow=c.styling.shadow==='soft'?'0 5px 12px rgba(16,24,40,.12)':c.styling.shadow==='medium'?'0 9px 20px rgba(16,24,40,.18)':c.styling.shadow==='strong'?'0 12px 28px rgba(16,24,40,.26)':c.styling.shadow==='glow'?`0 0 18px ${accent}77`:'none';const entry=c.animation.entry&&c.animation.entry!=='none'?'ky-entry-'+c.animation.entry:'';const hover=c.animation.hover&&c.animation.hover!=='none'?'ky-hover-'+c.animation.hover:'';const variant=c.styling.gradientEnabled?'gradient':t.variant;const style=`--badge-bg:${bg};--badge-text:${text};--badge-accent:${accent};--badge-border:${c.styling.borderColor};--badge-border-width:${c.styling.borderWidth}px;--badge-radius:${c.styling.borderRadius}px;--badge-opacity:${c.styling.opacity/100};--badge-scale:${scale};--badge-px:${px}px;--badge-py:${py}px;--badge-font-size:${fs}px;--badge-font:${font};--badge-shadow:${shadow};--grad-a:${c.styling.gradientColor1||tc.bg};--grad-b:${c.styling.gradientColor2||tc.accent};--grad-angle:${c.styling.gradientAngle}deg;--anim-dur:${c.animation.durationMs}ms;font-weight:${c.styling.fontWeight}`;return `<span class="ky-v3-badge ${variant} ${entry} ${hover}" style="${style}">${iconHtml(c.icon.type,Number(c.icon.size))}<span>${esc(fillText(state.view==='pdp'?c.texts.pdpBadgeText:c.texts.productText,p,cat))}</span></span>`;}
+function fillText(t,p,cat){return String(t||'').replaceAll('{rank}',p.rank??'').replaceAll('{category}',cat?.name||'').replaceAll('{product}',p.name||'').replaceAll('{sales}',p.sales||0).replaceAll('{period}',state.config.ranking.period||'');}
+function updateStatus(){const dot=byId('statusDot'),txt=byId('statusText');if(dot)dot.className='ky-status-dot'+(state.dirty?' dirty':'');if(txt)txt.textContent=state.dirty?'Yayınlanmamış değişiklikler var':'Tüm değişiklikler yayında';}
+async function saveDraft(){try{await api('/api/admin/settings/draft',{method:'POST',body:{config:state.config}});state.dirty=false;updateStatus();toast('Taslak kaydedildi');}catch(e){toast('Taslak kaydedilemedi: '+e.message,'error')}}
+async function publish(){try{await api('/api/admin/settings/publish',{method:'POST',body:{config:state.config}});state.dirty=false;updateStatus();toast('Ayarlar canlıya yayınlandı');}catch(e){toast('Yayınlama başarısız: '+e.message,'error')}}
+function openPanel(id){document.querySelectorAll('.ky-subpanel').forEach(p=>p.classList.remove('active'));byId('menuList').style.display='none';byId(id)?.classList.add('active');sessionStorage.setItem('ky-active-panel',id);renderAll();}
+function closePanels(){document.querySelectorAll('.ky-subpanel').forEach(p=>p.classList.remove('active'));if(byId('menuList'))byId('menuList').style.display='flex';}
+function restorePanel(){const id=sessionStorage.getItem('ky-active-panel');if(id&&byId(id))openPanel(id);}
+async function loadProfile(){const err=byId('v3ProfileError');if(err){err.classList.remove('show');err.textContent='';}try{const d=await api('/api/profile');const p=d.profile||d.data?.profile||{};if(byId('v3ProfileName'))byId('v3ProfileName').value=p.contactName||'';if(byId('v3ProfileEmail'))byId('v3ProfileEmail').value=p.email||'';if(byId('v3ProfilePhone'))byId('v3ProfilePhone').value=p.phone||'';if(byId('v3ProfileRole'))byId('v3ProfileRole').value=p.role||'';}catch(e){if(err){err.textContent='Profil servisi henüz bağlanmadı: '+e.message;err.classList.add('show');}}}
+async function saveProfile(){const err=byId('v3ProfileError');try{await api('/api/profile',{method:'POST',body:{storeName:shop,contactName:byId('v3ProfileName')?.value,email:byId('v3ProfileEmail')?.value,phone:byId('v3ProfilePhone')?.value,role:byId('v3ProfileRole')?.value}});byId('profileDialog')?.close();toast('Profil kaydedildi');}catch(e){if(err){err.textContent=e.message;err.classList.add('show');}}}
+async function sendSupport(){const err=byId('v3SupportError');try{const subject=byId('v3SupportSubject')?.value.trim(),message=byId('v3SupportMessage')?.value.trim();if(!subject||subject.length<3)throw new Error('Konu en az 3 karakter olmalı.');if(!message||message.length<10)throw new Error('Mesaj en az 10 karakter olmalı.');const d=await api('/api/support',{method:'POST',body:{category:byId('v3SupportCategory')?.value,subject,message}});byId('supportDialog')?.close();toast(d.ticketNumber?`Talep gönderildi: ${d.ticketNumber}`:'Destek talebi gönderildi');}catch(e){if(err){err.textContent=e.message;err.classList.add('show');}}}
+function toast(msg,type='ok'){let t=byId('kyV3Toast');if(!t){t=document.createElement('div');t.id='kyV3Toast';t.className='ky-toast';document.body.appendChild(t);}t.textContent=msg;t.style.background=type==='error'?'#b42318':'#17213a';t.style.display='block';clearTimeout(toast._t);toast._t=setTimeout(()=>t.style.display='none',3200);}
+window.handleInput=(path,val)=>change(path,val);window.syncColor=()=>{};window.selectTemplate=id=>{if(TEMPLATES.some(t=>t.id===id)){change('templateId',id);renderTemplates();}};window.selectNinePosition=pos=>{change('placements.ninePointPosition',pos);renderPositionButtons();};window.selectIcon=type=>{change('icon.type',type);renderIcons();};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
