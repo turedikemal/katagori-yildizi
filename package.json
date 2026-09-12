@@ -1,14 +1,18 @@
 {
   "name": "katagori-yildizi",
-  "version": "2.0.0",
-  "description": "ikas Bestseller Badge & Category Ranking SaaS App",
+  "version": "3.0.0",
+  "description": "ikas App Store - kategori bazli cok satan urun siralama ve storefront rozet uygulamasi",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "check": "node --check server.js && node --check public/admin.js && node --check public/widget.js"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2",
-    "pg": "^8.12.0",
-    "cors": "^2.8.5"
+    "pg": "^8.12.0"
   }
 }
