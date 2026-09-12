@@ -7,6 +7,12 @@
   <meta name="robots" content="noindex,nofollow">
   <script>
     (function () {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'CLOSE_LOADER' }, '*');
+        }
+      } catch (e) {}
+
       var query = window.location.search || '';
       window.location.replace('/admin' + query);
     })();
