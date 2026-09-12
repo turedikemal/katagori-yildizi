@@ -4,6 +4,17 @@ const path = require('path');
 const { Pool } = require('pg');
 
 const app = express();
+
+// 1. Allow iFrame embedding inside ikas Admin Panel (Zero Spinners)
+app.use((req, res, next) => {
+  res.removeHeader('X-Frame-Options');
+  res.setHeader(
+    'Content-Security-Policy',
+    "frame-ancestors 'self' https://*.myikas.com https://*.ikas.com https://admin.myikas.com;"
+  );
+  next();
+});
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -164,7 +175,7 @@ function getDefaultConfig() {
 }
 
 // ----------------------------------------------------------------
-// REAL IKAS GRAPHQL SYNC ENGINE (Kullanıcının Kendi Verileri)
+// ikas GraphQL Store Sync Engine
 // ----------------------------------------------------------------
 async function syncIkasStoreData(shopDomain, accessToken) {
   if (!accessToken || accessToken.startsWith('demo_token')) return;
@@ -176,51 +187,17 @@ async function syncIkasStoreData(shopDomain, accessToken) {
   };
 
   try {
-    // 1. Kategorileri Çek
-    const catQuery = `
-      query {
-        listCategory(pagination: { page: 1, limit: 100 }) {
-          data { id name }
-        }
-      }
-    `;
+    const catQuery = `query { listCategory(pagination: { page: 1, limit: 100 }) { data { id name } } }`;
     const catRes = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ query: catQuery }) });
     const catJson = await catRes.json();
     const categories = catJson?.data?.listCategory?.data || [];
 
-    // 2. Ürünleri Çek
-    const prodQuery = `
-      query {
-        listProduct(pagination: { page: 1, limit: 100 }) {
-          data {
-            id
-            name
-            categoryIds
-            basePrice
-            mainImage { url }
-          }
-        }
-      }
-    `;
+    const prodQuery = `query { listProduct(pagination: { page: 1, limit: 100 }) { data { id name categoryIds basePrice mainImage { url } } } }`;
     const prodRes = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ query: prodQuery }) });
     const prodJson = await prodRes.json();
     const products = prodJson?.data?.listProduct?.data || [];
 
-    // 3. Siparişleri Çek ve Çok Satanları Hesapla
-    const orderQuery = `
-      query {
-        listOrder(pagination: { page: 1, limit: 100 }) {
-          data {
-            id
-            status
-            orderLineItems {
-              productId
-              quantity
-            }
-          }
-        }
-      }
-    `;
+    const orderQuery = `query { listOrder(pagination: { page: 1, limit: 100 }) { data { id status orderLineItems { productId quantity } } } }`;
     const orderRes = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ query: orderQuery }) });
     const orderJson = await orderRes.json();
     const orders = orderJson?.data?.listOrder?.data || [];
@@ -235,7 +212,6 @@ async function syncIkasStoreData(shopDomain, accessToken) {
       });
     });
 
-    // Kategorilere göre ürünleri grupla ve sırala
     const realCategories = categories.map(cat => {
       const catProds = products
         .filter(p => (p.categoryIds || []).includes(cat.id))
@@ -256,7 +232,7 @@ async function syncIkasStoreData(shopDomain, accessToken) {
 
     if (realCategories.length > 0) {
       memoryDB.categories = realCategories;
-      console.log(`[ikas GraphQL Sync] ${realCategories.length} kategori ve ${products.length} ürün başarıyla yüklendi.`);
+      console.log(`[ikas GraphQL Sync] ${realCategories.length} kategori başarıyla yüklendi.`);
     }
   } catch (err) {
     console.warn('[ikas GraphQL Sync Warning]:', err.message);
@@ -264,27 +240,36 @@ async function syncIkasStoreData(shopDomain, accessToken) {
 }
 
 // ----------------------------------------------------------------
-// 1. ikas OAuth Akışı
+// 1. ikas Admin Panel ve OAuth Yönlendirmeleri
 // ----------------------------------------------------------------
-app.get('/', async (req, res) => {
-  const shop = req.query.shop || req.query.store_id || 'thegoatz';
-  const code = req.query.code;
 
-  if (code) {
+// Doğrudan ikas iFrame Arayüzünü Aç (Sonsuz Yüklenme Spinner'ını Önler)
+app.get('/', (req, res) => {
+  const code = req.query.code;
+  const shop = req.query.shop || req.query.store_id;
+
+  if (code && shop) {
     return res.redirect(`/api/oauth/callback/ikas?code=${code}&shop=${shop}`);
   }
 
-  // Authorize URL with exact scopes
+  // ikas paneli içinden açıldığında doğrudan yönetim arayüzünü sun
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+// Kurulum Başlatma Endpoint'i (İsteğe bağlı manuel kurulum)
+app.get('/install', (req, res) => {
+  const shop = req.query.shop || 'thegoatz';
   const authUrl = `https://${shop}.myikas.com/api/admin/oauth/authorize?client_id=${IKAS_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(IKAS_SCOPE)}&response_type=code`;
   res.redirect(authUrl);
 });
 
+// OAuth Callback
 app.get('/api/oauth/callback/ikas', async (req, res) => {
   const { code, shop } = req.query;
   const storeDomain = shop || 'thegoatz';
 
   try {
-    let accessToken = 'demo_token_' + Date.now();
+    let accessToken = 'token_' + Date.now();
     if (code && IKAS_CLIENT_SECRET) {
       try {
         const tokenRes = await fetch(`https://${storeDomain}.myikas.com/api/admin/oauth/token`, {
@@ -301,7 +286,6 @@ app.get('/api/oauth/callback/ikas', async (req, res) => {
         const tokenData = await tokenRes.json();
         if (tokenData.access_token) {
           accessToken = tokenData.access_token;
-          // Mağazanın gerçek verilerini ikas'tan arka planda çek
           syncIkasStoreData(storeDomain, accessToken);
         }
       } catch (e) {
@@ -378,7 +362,6 @@ app.post('/api/admin/settings/publish', async (req, res) => {
   res.json({ success: true, message: 'Ayarlar başarıyla yayınlandı ve mağazada aktif!' });
 });
 
-// Canlı Verileri Şimdi Senkronize Et
 app.post('/api/admin/rankings/sync', async (req, res) => {
   const shop = req.body.shop || 'thegoatz';
   const token = memoryDB.stores[shop] || '';
@@ -438,7 +421,7 @@ app.get('/api/storefront/badges', (req, res) => {
 });
 
 app.post('/api/webhooks/order', (req, res) => {
-  console.log('[ikas Webhook] Yeni sipariş sinyali alındı, sıralamalar güncelleniyor...');
+  console.log('[ikas Webhook] Yeni sipariş alındı.');
   res.json({ success: true });
 });
 
