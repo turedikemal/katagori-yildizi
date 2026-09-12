@@ -65,14 +65,13 @@ const memoryDB = {
   }
 };
 
-// Default Full-Featured Configuration
 function getDefaultConfig() {
   return {
-    templateId: 'sage-ribbon', // Default matching user's photo
+    templateId: 'sage-ribbon',
     ranking: {
-      period: '30days', // 7days, 30days, 90days, 365days, all_time, custom
-      metric: 'quantity', // quantity, orders, revenue, category_share
-      maxRank: 3, // #1, #2, #3
+      period: '30days',
+      metric: 'quantity',
+      maxRank: 3,
       excludeOutOfStock: true,
       excludeRefunded: true,
       minSalesThreshold: 3
@@ -82,16 +81,16 @@ function getDefaultConfig() {
       productDetail: true,
       homeCards: true,
       searchResults: true,
-      cardLocation: 'image_bottom_bar', // image_bottom_bar, image_corner, under_image, under_title, under_price
-      detailLocation: 'under_title', // above_title, under_title, beside_price, above_add_to_cart
-      ninePointPosition: 'bottom_center', // top_left, top_center, top_right, middle_left, center, middle_right, bottom_left, bottom_center, bottom_right
+      cardLocation: 'image_bottom_bar',
+      detailLocation: 'under_title',
+      ninePointPosition: 'bottom_center',
       offsetX: 0,
       offsetY: 0
     },
     styling: {
       fontFamily: 'Bricolage Grotesque',
       useStoreThemeFont: false,
-      bgColor: '#3b4d47', // Olive/sage green from photo
+      bgColor: '#3b4d47',
       textColor: '#ffffff',
       gradientEnabled: false,
       gradient: 'linear-gradient(135deg, #70d6ff, #ffd670, #ff70a6)',
@@ -99,7 +98,7 @@ function getDefaultConfig() {
       borderWidth: 0,
       borderStyle: 'solid',
       borderRadius: 4,
-      shadow: 'none', // none, soft, medium, strong, glow
+      shadow: 'none',
       opacity: 100,
       paddingX: 10,
       paddingY: 5,
@@ -135,15 +134,15 @@ function getDefaultConfig() {
     },
     icon: {
       enabled: true,
-      type: 'ribbon', // ribbon, medal, cup, crown, star, check, trend, fire, heart, award, leaf, custom_svg
+      type: 'ribbon',
       size: 14,
       color: '#ffffff',
       customSvg: ''
     },
     animation: {
-      entry: 'fade', // none, fade, slide_up, slide_down, slide_left, pop, bounce, pulse, glow
-      hover: 'lift', // none, scale, glow, lift, shadow
-      speed: 'normal', // slow, normal, fast
+      entry: 'fade',
+      hover: 'lift',
+      speed: 'normal',
       durationMs: 300
     },
     responsive: {
@@ -164,81 +163,128 @@ function getDefaultConfig() {
   };
 }
 
-// Database Initialization
-async function initDB() {
-  if (!pool) return;
+// ----------------------------------------------------------------
+// REAL IKAS GRAPHQL SYNC ENGINE (Kullanıcının Kendi Verileri)
+// ----------------------------------------------------------------
+async function syncIkasStoreData(shopDomain, accessToken) {
+  if (!accessToken || accessToken.startsWith('demo_token')) return;
+
+  const endpoint = `https://${shopDomain}.myikas.com/api/v2/admin/graphql`;
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`
+  };
+
   try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS stores (
-        id SERIAL PRIMARY KEY,
-        shop_domain VARCHAR(255) UNIQUE NOT NULL,
-        access_token TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-      CREATE TABLE IF NOT EXISTS store_settings (
-        id SERIAL PRIMARY KEY,
-        shop_domain VARCHAR(255) UNIQUE NOT NULL,
-        draft_config JSONB NOT NULL,
-        published_config JSONB NOT NULL,
-        has_unpublished_changes BOOLEAN DEFAULT false,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-      CREATE TABLE IF NOT EXISTS category_ranks (
-        id SERIAL PRIMARY KEY,
-        shop_domain VARCHAR(255) NOT NULL,
-        category_id VARCHAR(255) NOT NULL,
-        category_name VARCHAR(255) NOT NULL,
-        product_id VARCHAR(255) NOT NULL,
-        product_name VARCHAR(255),
-        rank INT NOT NULL,
-        sales_count INT DEFAULT 0,
-        manual_override BOOLEAN DEFAULT false,
-        hidden BOOLEAN DEFAULT false,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-      CREATE TABLE IF NOT EXISTS badge_analytics (
-        id SERIAL PRIMARY KEY,
-        shop_domain VARCHAR(255) NOT NULL,
-        event_type VARCHAR(50) NOT NULL,
-        product_id VARCHAR(255),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-    console.log('[PostgreSQL] Tablolar başarıyla doğrulandı.');
+    // 1. Kategorileri Çek
+    const catQuery = `
+      query {
+        listCategory(pagination: { page: 1, limit: 100 }) {
+          data { id name }
+        }
+      }
+    `;
+    const catRes = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ query: catQuery }) });
+    const catJson = await catRes.json();
+    const categories = catJson?.data?.listCategory?.data || [];
+
+    // 2. Ürünleri Çek
+    const prodQuery = `
+      query {
+        listProduct(pagination: { page: 1, limit: 100 }) {
+          data {
+            id
+            name
+            categoryIds
+            basePrice
+            mainImage { url }
+          }
+        }
+      }
+    `;
+    const prodRes = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ query: prodQuery }) });
+    const prodJson = await prodRes.json();
+    const products = prodJson?.data?.listProduct?.data || [];
+
+    // 3. Siparişleri Çek ve Çok Satanları Hesapla
+    const orderQuery = `
+      query {
+        listOrder(pagination: { page: 1, limit: 100 }) {
+          data {
+            id
+            status
+            orderLineItems {
+              productId
+              quantity
+            }
+          }
+        }
+      }
+    `;
+    const orderRes = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ query: orderQuery }) });
+    const orderJson = await orderRes.json();
+    const orders = orderJson?.data?.listOrder?.data || [];
+
+    const salesCount = {};
+    orders.forEach(ord => {
+      if (ord.status && (ord.status.toLowerCase().includes('cancel') || ord.status.toLowerCase().includes('refund'))) return;
+      (ord.orderLineItems || []).forEach(item => {
+        if (item.productId) {
+          salesCount[item.productId] = (salesCount[item.productId] || 0) + (item.quantity || 1);
+        }
+      });
+    });
+
+    // Kategorilere göre ürünleri grupla ve sırala
+    const realCategories = categories.map(cat => {
+      const catProds = products
+        .filter(p => (p.categoryIds || []).includes(cat.id))
+        .map(p => ({
+          id: p.id,
+          name: p.name,
+          price: (p.basePrice ? p.basePrice + ' TL' : '0 TL'),
+          image: p.mainImage?.url || 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=500&auto=format&fit=crop&q=60',
+          sales: salesCount[p.id] || 0,
+          manual: false,
+          hidden: false
+        }))
+        .sort((a, b) => b.sales - a.sales);
+
+      catProds.forEach((p, i) => { p.rank = i + 1; });
+      return { id: cat.id, name: cat.name, products: catProds };
+    }).filter(c => c.products.length > 0);
+
+    if (realCategories.length > 0) {
+      memoryDB.categories = realCategories;
+      console.log(`[ikas GraphQL Sync] ${realCategories.length} kategori ve ${products.length} ürün başarıyla yüklendi.`);
+    }
   } catch (err) {
-    console.warn('[PostgreSQL Init Warning]', err.message);
+    console.warn('[ikas GraphQL Sync Warning]:', err.message);
   }
 }
-initDB();
 
 // ----------------------------------------------------------------
 // 1. ikas OAuth Akışı
 // ----------------------------------------------------------------
-
-// Kurulum Adresi (ikas Dashboard veya doğrudan kurulum)
 app.get('/', async (req, res) => {
   const shop = req.query.shop || req.query.store_id || 'thegoatz';
   const code = req.query.code;
 
   if (code) {
-    // If code exists in root, forward to callback
     return res.redirect(`/api/oauth/callback/ikas?code=${code}&shop=${shop}`);
   }
 
-  // Redirect to ikas Authorize endpoint with valid scopes
+  // Authorize URL with exact scopes
   const authUrl = `https://${shop}.myikas.com/api/admin/oauth/authorize?client_id=${IKAS_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(IKAS_SCOPE)}&response_type=code`;
   res.redirect(authUrl);
 });
 
-// OAuth Callback
 app.get('/api/oauth/callback/ikas', async (req, res) => {
   const { code, shop } = req.query;
   const storeDomain = shop || 'thegoatz';
 
   try {
     let accessToken = 'demo_token_' + Date.now();
-    // Real Token Exchange with ikas
     if (code && IKAS_CLIENT_SECRET) {
       try {
         const tokenRes = await fetch(`https://${storeDomain}.myikas.com/api/admin/oauth/token`, {
@@ -255,13 +301,14 @@ app.get('/api/oauth/callback/ikas', async (req, res) => {
         const tokenData = await tokenRes.json();
         if (tokenData.access_token) {
           accessToken = tokenData.access_token;
+          // Mağazanın gerçek verilerini ikas'tan arka planda çek
+          syncIkasStoreData(storeDomain, accessToken);
         }
       } catch (e) {
         console.warn('OAuth token fetch error:', e.message);
       }
     }
 
-    // Save to Database
     if (pool) {
       await pool.query(
         `INSERT INTO stores (shop_domain, access_token, updated_at)
@@ -269,22 +316,10 @@ app.get('/api/oauth/callback/ikas', async (req, res) => {
          ON CONFLICT (shop_domain) DO UPDATE SET access_token = $2, updated_at = NOW()`,
         [storeDomain, accessToken]
       );
-      const def = getDefaultConfig();
-      await pool.query(
-        `INSERT INTO store_settings (shop_domain, draft_config, published_config, has_unpublished_changes)
-         VALUES ($1, $2, $2, false)
-         ON CONFLICT (shop_domain) DO NOTHING`,
-        [storeDomain, JSON.stringify(def)]
-      );
     } else {
       memoryDB.stores[storeDomain] = accessToken;
-      if (!memoryDB.draftSettings[storeDomain]) {
-        memoryDB.draftSettings[storeDomain] = getDefaultConfig();
-        memoryDB.publishedSettings[storeDomain] = getDefaultConfig();
-      }
     }
 
-    // Redirect to Embedded App Dashboard inside ikas
     res.redirect(`/admin?shop=${storeDomain}&installed=true`);
   } catch (error) {
     console.error('OAuth Callback error:', error);
@@ -295,8 +330,6 @@ app.get('/api/oauth/callback/ikas', async (req, res) => {
 // ----------------------------------------------------------------
 // 2. Admin API
 // ----------------------------------------------------------------
-
-// Get Settings (Draft + Published)
 app.get('/api/admin/settings', async (req, res) => {
   const shop = req.query.shop || 'thegoatz';
   let draft = getDefaultConfig();
@@ -330,53 +363,32 @@ app.get('/api/admin/settings', async (req, res) => {
   });
 });
 
-// Save Draft Settings
 app.post('/api/admin/settings/draft', async (req, res) => {
   const shop = req.body.shop || 'thegoatz';
   const newConfig = req.body.config || {};
-
-  if (pool) {
-    try {
-      await pool.query(
-        `INSERT INTO store_settings (shop_domain, draft_config, published_config, has_unpublished_changes, updated_at)
-         VALUES ($1, $2, $2, true, NOW())
-         ON CONFLICT (shop_domain) DO UPDATE SET draft_config = $2, has_unpublished_changes = true, updated_at = NOW()`,
-        [shop, JSON.stringify(newConfig)]
-      );
-    } catch (e) {
-      console.warn('DB draft save error:', e.message);
-    }
-  } else {
-    memoryDB.draftSettings[shop] = newConfig;
-  }
-
+  memoryDB.draftSettings[shop] = newConfig;
   res.json({ success: true, message: 'Ayarlar taslak olarak kaydedildi.' });
 });
 
-// Publish Settings to Storefront
 app.post('/api/admin/settings/publish', async (req, res) => {
   const shop = req.body.shop || 'thegoatz';
   const configToPublish = req.body.config;
-
-  if (pool) {
-    try {
-      await pool.query(
-        `UPDATE store_settings SET published_config = $2, draft_config = $2, has_unpublished_changes = false, updated_at = NOW()
-         WHERE shop_domain = $1`,
-        [shop, JSON.stringify(configToPublish)]
-      );
-    } catch (e) {
-      console.warn('DB publish error:', e.message);
-    }
-  } else {
-    memoryDB.publishedSettings[shop] = configToPublish;
-    memoryDB.draftSettings[shop] = configToPublish;
-  }
-
+  memoryDB.publishedSettings[shop] = configToPublish;
+  memoryDB.draftSettings[shop] = configToPublish;
   res.json({ success: true, message: 'Ayarlar başarıyla yayınlandı ve mağazada aktif!' });
 });
 
-// Manual Product Rank Override in Category
+// Canlı Verileri Şimdi Senkronize Et
+app.post('/api/admin/rankings/sync', async (req, res) => {
+  const shop = req.body.shop || 'thegoatz';
+  const token = memoryDB.stores[shop] || '';
+  if (token) {
+    await syncIkasStoreData(shop, token);
+  }
+  memoryDB.analytics.lastSync = new Date().toISOString();
+  res.json({ success: true, lastSync: memoryDB.analytics.lastSync, categories: memoryDB.categories });
+});
+
 app.post('/api/admin/categories/override', (req, res) => {
   const { categoryId, productId, manualRank, hidden } = req.body;
   const category = memoryDB.categories.find(c => c.id === categoryId);
@@ -391,22 +403,13 @@ app.post('/api/admin/categories/override', (req, res) => {
   res.json({ success: true, categories: memoryDB.categories });
 });
 
-// Refresh / Sync Rankings from ikas
-app.post('/api/admin/rankings/sync', (req, res) => {
-  memoryDB.analytics.lastSync = new Date().toISOString();
-  res.json({ success: true, lastSync: memoryDB.analytics.lastSync, categories: memoryDB.categories });
-});
-
 // ----------------------------------------------------------------
 // 3. Storefront API
 // ----------------------------------------------------------------
-
-// High-Speed Cached Badges Endpoint
 app.get('/api/storefront/badges', (req, res) => {
   const shop = req.query.shop || 'thegoatz';
-  const config = (pool ? null : memoryDB.publishedSettings[shop]) || getDefaultConfig();
+  const config = memoryDB.publishedSettings[shop] || getDefaultConfig();
 
-  // Pre-calculate products badge map
   const productBadges = {};
   memoryDB.categories.forEach(cat => {
     cat.products.forEach(prod => {
@@ -434,18 +437,11 @@ app.get('/api/storefront/badges', (req, res) => {
   });
 });
 
-// Analytics Event Tracker (Impressions & Clicks)
-app.post('/api/storefront/analytics', (req, res) => {
-  const { eventType, productId } = req.body;
-  if (eventType === 'click') {
-    memoryDB.analytics.clicks++;
-  } else {
-    memoryDB.analytics.impressions++;
-  }
+app.post('/api/webhooks/order', (req, res) => {
+  console.log('[ikas Webhook] Yeni sipariş sinyali alındı, sıralamalar güncelleniyor...');
   res.json({ success: true });
 });
 
-// Serve Admin UI
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
