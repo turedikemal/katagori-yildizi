@@ -2,118 +2,684 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Kategori Yıldızı - ikas Yönetim Paneli</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 30px; background: #f4f6f8; color: #333; margin: 0; }
-    .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    h1 { color: #1b4332; margin-top: 0; font-size: 24px; }
-    .section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
-    .form-group { margin-bottom: 20px; }
-    label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
-    input[type="text"], input[type="number"], input[type="color"] { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
-    input[type="color"] { height: 40px; padding: 2px; cursor: pointer; }
-    button { background: #1b4332; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; }
-    button:hover { background: #2d6a4f; }
-    .bestseller-list { background: #f9fbf9; padding: 15px; border-radius: 8px; border: 1px solid #d8f3dc; }
-    .bestseller-item { padding: 8px 0; border-bottom: 1px dashed #c9ada7; font-size: 14px; }
-    .bestseller-item:last-child { border-bottom: none; }
-    .alert { background: #d8f3dc; color: #1b4332; padding: 10px; border-radius: 6px; margin-bottom: 20px; display: none; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kategori Yıldızı — ikas Yönetim Paneli</title>
+  <link rel="stylesheet" href="/admin.css">
+  <link rel="stylesheet" href="/widget.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Kategori Yıldızı Yönetim Paneli</h1>
-    <div id="alertBox" class="alert">Ayarlar başarıyla kaydedildi!</div>
+
+  <!-- 1. TOP HEADER -->
+  <header class="ky-admin-header">
+    <div class="ky-header-left">
+      <div class="ky-header-logo">KY</div>
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h1 class="ky-header-title">Kategori Yıldızı</h1>
+          <span class="ky-header-badge">v2.0 • ikas Suite</span>
+        </div>
+        <div style="font-size: 11px; color: #64748b;">Otomatik Çok Satan & Kategori Sıralama Rozet Motoru</div>
+      </div>
+    </div>
+
+    <div class="ky-header-right">
+      <div class="ky-sync-status">
+        <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #10b981;"></span>
+        <span>Son Senkronizasyon: <strong>12 Eylül 2026, 20:35</strong></span>
+      </div>
+
+      <div class="ky-device-switch">
+        <button class="ky-device-btn active desktop" data-device="desktop">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+          Masaüstü
+        </button>
+        <button class="ky-device-btn mobile" data-device="mobile">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+          Mobil
+        </button>
+      </div>
+
+      <button class="ky-btn-icon-only" id="btnUndo" title="Geri Al (Undo)">↩</button>
+      <button class="ky-btn-icon-only" id="btnRedo" title="Yinele (Redo)">↪</button>
+      <button class="ky-btn-secondary" id="btnResetDefault" style="font-size: 12px; padding: 6px 10px;">Varsayılana Dön</button>
+    </div>
+  </header>
+
+  <!-- 2. MAIN TWO-COLUMN WORKSPACE -->
+  <main class="ky-admin-main">
     
-    <div class="section">
-      <h3>Rozet ve Görünüm Ayarları</h3>
-      <div class="form-group">
-        <label for="badgeColor">Şerit ve Rozet Arka Plan Rengi</label>
-        <input type="color" id="badgeColor" value="#1b4332" />
+    <!-- LEFT COLUMN: Settings Sidebar -->
+    <aside class="ky-sidebar">
+      <div class="ky-sidebar-content">
+
+        <!-- Master Menu List (15 Sections) -->
+        <div class="ky-menu-list" id="menuList">
+          <div class="ky-menu-card" data-target="panelDashboard">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">📊</div>
+              <div>
+                <div class="ky-menu-title">Genel Görünüm & İstatistikler</div>
+                <div class="ky-menu-subtitle">Aktif rozetler, tıklama, görüntülenme</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelRanking">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">⚡</div>
+              <div>
+                <div class="ky-menu-title">Sıralama Sistemi & Hesaplama</div>
+                <div class="ky-menu-subtitle">Dönem, metrik, stok ve iade filtreleri</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelTemplates">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">🎨</div>
+              <div>
+                <div class="ky-menu-title">Şablon Galerisi (18 Tasarım)</div>
+                <div class="ky-menu-subtitle">Şerit, oval gradyan, köşe flaması vb.</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelTexts">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">✍️</div>
+              <div>
+                <div class="ky-menu-title">Metinler & Dinamik Değişkenler</div>
+                <div class="ky-menu-subtitle">{category}, {rank}, sıra bazlı metinler</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelTypography">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">🔤</div>
+              <div>
+                <div class="ky-menu-title">Tipografi & Yazı Fontu</div>
+                <div class="ky-menu-subtitle">Google fontları, boyut, ağırlık</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelIcons">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">🏅</div>
+              <div>
+                <div class="ky-menu-title">İkon Kütüphanesi & SVG</div>
+                <div class="ky-menu-subtitle">12 hazır ikon veya özel SVG</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelColors">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">🌈</div>
+              <div>
+                <div class="ky-menu-title">Arka Plan, Renkler & Gradyan</div>
+                <div class="ky-menu-subtitle">Presetler, renk seçici, opaklık</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelBorders">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">🔲</div>
+              <div>
+                <div class="ky-menu-title">Çerçeve ve Gölge Efektleri</div>
+                <div class="ky-menu-subtitle">Border radius, glow, yumuşak gölge</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelSizing">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">📏</div>
+              <div>
+                <div class="ky-menu-title">Boyutlar ve Boşluklar</div>
+                <div class="ky-menu-subtitle">Padding, scale, genişlik ayarı</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelPosition">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">📍</div>
+              <div>
+                <div class="ky-menu-title">Konumlandırma (9 Noktalı Grid)</div>
+                <div class="ky-menu-subtitle">Görsel üzeri matris, offset X/Y</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelAnimation">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">✨</div>
+              <div>
+                <div class="ky-menu-title">Animasyonlar & Efektler</div>
+                <div class="ky-menu-subtitle">Giriş animasyonu, hover lift, glow</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelResponsive">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">📱</div>
+              <div>
+                <div class="ky-menu-title">Responsive (Masaüstü/Mobil)</div>
+                <div class="ky-menu-subtitle">Cihaz bazlı bağımsız ölçekler</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelCategories">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">📁</div>
+              <div>
+                <div class="ky-menu-title">Kategoriler & Manuel Sabitleme</div>
+                <div class="ky-menu-subtitle">Ürün sıralamaları, pinleme, gizleme</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelRules">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">⚙️</div>
+              <div>
+                <div class="ky-menu-title">Gelişmiş Görünürlük Kuralları</div>
+                <div class="ky-menu-subtitle">Min satış eşiği, indirim kuralı</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="ky-menu-card" data-target="panelPlacement">
+            <div class="ky-menu-card-left">
+              <div class="ky-menu-icon">🏪</div>
+              <div>
+                <div class="ky-menu-title">Mağazada Gösterim & Kurulum</div>
+                <div class="ky-menu-subtitle">Vitrin alanları, durum, script kodu</div>
+              </div>
+            </div>
+            <span>›</span>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 1: Dashboard & Stats -->
+        <div class="ky-subpanel" id="panelDashboard">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Genel Görünüm & İstatistikler</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px;">
+            <div class="ky-group" style="margin: 0; padding: 10px;">
+              <div style="font-size: 11px; color: #64748b; font-weight: 700;">AKTİF ROZET</div>
+              <div style="font-size: 22px; font-weight: 800; color: var(--ky-brand);">24</div>
+            </div>
+            <div class="ky-group" style="margin: 0; padding: 10px;">
+              <div style="font-size: 11px; color: #64748b; font-weight: 700;">GÖSTERİLEN ÜRÜN</div>
+              <div style="font-size: 22px; font-weight: 800; color: #059669;">72</div>
+            </div>
+            <div class="ky-group" style="margin: 0; padding: 10px;">
+              <div style="font-size: 11px; color: #64748b; font-weight: 700;">GÖRÜNTÜLENME</div>
+              <div style="font-size: 22px; font-weight: 800; color: #1e293b;">14.280</div>
+            </div>
+            <div class="ky-group" style="margin: 0; padding: 10px;">
+              <div style="font-size: 11px; color: #64748b; font-weight: 700;">ORTALAMA CTR</div>
+              <div style="font-size: 22px; font-weight: 800; color: #d97706;">%8.37</div>
+            </div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-group-title"><span>📈 Son Sıralama Değişimleri</span></div>
+            <div style="font-size: 12px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span>Seramik Meyve Sepeti</span>
+                <span style="color: #059669; font-weight: 700;">#3 → #1 (↑ 2 Sıra)</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Pop-Up Soya Mumu</span>
+                <span style="color: #059669; font-weight: 700;">#2 → #1 (↑ 1 Sıra)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 2: Ranking Engine -->
+        <div class="ky-subpanel" id="panelRanking">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Sıralama Sistemi & Hesaplama</div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-field">
+              <label class="ky-label">Hesaplama Dönemi</label>
+              <select class="ky-select" id="cfgPeriod" onchange="handleInput('ranking.period', this.value)">
+                <option value="7days">Son 7 Gün</option>
+                <option value="30days">Son 30 Gün (Önerilen)</option>
+                <option value="90days">Son 90 Gün</option>
+                <option value="365days">Son 365 Gün</option>
+                <option value="all_time">Tüm Zamanlar</option>
+              </select>
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Sıralama Ölçütü</label>
+              <select class="ky-select" id="cfgMetric" onchange="handleInput('ranking.metric', this.value)">
+                <option value="quantity">Satılan Ürün Adedi</option>
+                <option value="orders">Sipariş Sayısı</option>
+                <option value="revenue">Toplam Ciro</option>
+                <option value="category_share">Kategori İçi Satış Payı (%)</option>
+              </select>
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Maksimum Rozet Limiti</label>
+              <select class="ky-select" id="cfgMaxRank" onchange="handleInput('ranking.maxRank', parseInt(this.value))">
+                <option value="1">Sadece #1 Lider Ürün</option>
+                <option value="2">İlk 2 Ürün</option>
+                <option value="3">İlk 3 Ürün (Varsayılan)</option>
+                <option value="5">İlk 5 Ürün</option>
+                <option value="10">İlk 10 Ürün</option>
+              </select>
+            </div>
+            <div class="ky-toggle-wrap">
+              <span style="font-size: 13px; font-weight: 600;">Stokta Olmayanları Sıralamadan Çıkar</span>
+              <label class="ky-switch"><input type="checkbox" id="cfgExcludeStock" checked onchange="handleInput('ranking.excludeOutOfStock', this.checked)"><span class="ky-switch-slider"></span></label>
+            </div>
+            <div class="ky-toggle-wrap">
+              <span style="font-size: 13px; font-weight: 600;">İptal / İade Siparişleri Hariç Tut</span>
+              <label class="ky-switch"><input type="checkbox" id="cfgExcludeRefund" checked onchange="handleInput('ranking.excludeRefunded', this.checked)"><span class="ky-switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 3: Template Gallery -->
+        <div class="ky-subpanel" id="panelTemplates">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Şablon Galerisi</div>
+          </div>
+          <div class="ky-template-gallery">
+            <div class="ky-tpl-card active" data-tpl="sage-ribbon" onclick="selectTemplate('sage-ribbon')">
+              <div class="ky-tpl-preview-box"><span class="ky-badge-root ky-tpl-sage-ribbon" style="font-size: 10px; padding: 3px 6px;">🏅 En Çok Satan</span></div>
+              <div class="ky-tpl-name">Adaçayı Şerit</div>
+            </div>
+            <div class="ky-tpl-card" data-tpl="gradient-pill" onclick="selectTemplate('gradient-pill')">
+              <div class="ky-tpl-preview-box"><span class="ky-badge-root ky-tpl-gradient-pill" style="font-size: 10px; padding: 2px 8px;">✓ #1. Ürün &gt;</span></div>
+              <div class="ky-tpl-name">Gradyan Oval</div>
+            </div>
+            <div class="ky-tpl-card" data-tpl="luxury-gold" onclick="selectTemplate('luxury-gold')">
+              <div class="ky-tpl-preview-box"><span class="ky-badge-root ky-tpl-luxury-gold" style="font-size: 9px; padding: 2px 6px;">#1 BESTSELLER</span></div>
+              <div class="ky-tpl-name">Lüks Gold</div>
+            </div>
+            <div class="ky-tpl-card" data-tpl="fire-trending" onclick="selectTemplate('fire-trending')">
+              <div class="ky-tpl-preview-box"><span class="ky-badge-root ky-tpl-fire-trending" style="font-size: 10px; padding: 2px 6px;">🔥 Çok Satan</span></div>
+              <div class="ky-tpl-name">Alev Trend</div>
+            </div>
+            <div class="ky-tpl-card" data-tpl="minimal-text" onclick="selectTemplate('minimal-text')">
+              <div class="ky-tpl-preview-box"><span class="ky-badge-root ky-tpl-minimal-text" style="font-size: 10px;">#1 LİDER</span></div>
+              <div class="ky-tpl-name">Minimal Çizgili</div>
+            </div>
+            <div class="ky-tpl-card" data-tpl="outline-badge" onclick="selectTemplate('outline-badge')">
+              <div class="ky-tpl-preview-box"><span class="ky-badge-root ky-tpl-outline-badge" style="font-size: 10px; padding: 2px 6px;">En Çok Satan</span></div>
+              <div class="ky-tpl-name">Çerçeveli Outline</div>
+            </div>
+            <div class="ky-tpl-card" data-tpl="eco-natural" onclick="selectTemplate('eco-natural')">
+              <div class="ky-tpl-preview-box"><span class="ky-badge-root ky-tpl-eco-natural" style="font-size: 10px; padding: 2px 8px;">🌿 Doğal Favori</span></div>
+              <div class="ky-tpl-name">Eko Doğal</div>
+            </div>
+            <div class="ky-tpl-card" data-tpl="cyber-neon" onclick="selectTemplate('cyber-neon')">
+              <div class="ky-tpl-preview-box"><span class="ky-badge-root ky-tpl-cyber-neon" style="font-size: 9px; padding: 2px 6px;">RANK_01</span></div>
+              <div class="ky-tpl-name">Siber Neon</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 4: Texts & Dynamic Variables -->
+        <div class="ky-subpanel" id="panelTexts">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Metinler & Değişkenler</div>
+          </div>
+          <div class="ky-group">
+            <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">Kullanılabilir Değişkenler: <code>{category}</code>, <code>{rank}</code>, <code>{sales}</code></div>
+            <div class="ky-field">
+              <label class="ky-label">#1 Lider Ürün Metni</label>
+              <input type="text" class="ky-input" id="cfgRank1Text" oninput="handleInput('texts.rank1Text', this.value)">
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">#2 Ürün Metni</label>
+              <input type="text" class="ky-input" id="cfgRank2Text" oninput="handleInput('texts.rank2Text', this.value)">
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">#3 Ürün Metni</label>
+              <input type="text" class="ky-input" id="cfgRank3Text" oninput="handleInput('texts.rank3Text', this.value)">
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Ürün Detay Kategori Başlığı</label>
+              <input type="text" class="ky-input" id="cfgPdpPrefix" oninput="handleInput('texts.pdpPrefixText', this.value)">
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Ürün Detay Oval Rozet Metni</label>
+              <input type="text" class="ky-input" id="cfgPdpBadge" oninput="handleInput('texts.pdpBadgeText', this.value)">
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 5: Typography -->
+        <div class="ky-subpanel" id="panelTypography">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Tipografi & Yazı Fontu</div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-field">
+              <label class="ky-label">Font Ailesi</label>
+              <select class="ky-select" id="cfgFontFamily" onchange="handleInput('styling.fontFamily', this.value)">
+                <option value="Bricolage Grotesque">Bricolage Grotesque (ikas Standardı)</option>
+                <option value="Inter">Inter (Temiz & Modern)</option>
+                <option value="Poppins">Poppins (Geometrik)</option>
+                <option value="Playfair Display">Playfair Display (Lüks & Butik)</option>
+                <option value="inherit">Mağaza Temasının Fontunu Kullan</option>
+              </select>
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Font Boyutu <span class="value" data-bind="cfgFontSize">12px</span></label>
+              <input type="range" class="ky-slider" min="10" max="22" value="12" id="cfgFontSize" oninput="handleInput('styling.fontSize', parseInt(this.value), 'cfgFontSize')">
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 6: Icons -->
+        <div class="ky-subpanel" id="panelIcons">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">İkon Kütüphanesi</div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-field">
+              <label class="ky-label">İkon Seçimi</label>
+              <select class="ky-select" id="cfgIconType" onchange="handleInput('icon.type', this.value)">
+                <option value="ribbon">Kurdele / Flama (Ribbon)</option>
+                <option value="medal">Madalya (Medal)</option>
+                <option value="cup">Kupa (Trophy)</option>
+                <option value="crown">Taç (Crown)</option>
+                <option value="star">Yıldız (Star)</option>
+                <option value="check">Onay Rozeti (Check)</option>
+                <option value="fire">Alev (Fire)</option>
+                <option value="trend">Trend Yükseliş</option>
+                <option value="leaf">Doğal Yaprak</option>
+              </select>
+            </div>
+            <div class="ky-toggle-wrap">
+              <span style="font-size: 13px; font-weight: 600;">İkonu Göster</span>
+              <label class="ky-switch"><input type="checkbox" id="cfgIconEnabled" checked onchange="handleInput('icon.enabled', this.checked)"><span class="ky-switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 7: Colors & Background -->
+        <div class="ky-subpanel" id="panelColors">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Arka Plan & Renkler</div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-field">
+              <label class="ky-label">Rozet Arka Plan Rengi</label>
+              <div class="ky-color-wrap">
+                <input type="color" class="ky-color-picker" id="cfgBgColor" value="#3b4d47">
+                <input type="text" class="ky-input" id="cfgBgColorHex" value="#3b4d47">
+              </div>
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Yazı Rengi</label>
+              <div class="ky-color-wrap">
+                <input type="color" class="ky-color-picker" id="cfgTextColor" value="#ffffff">
+                <input type="text" class="ky-input" id="cfgTextColorHex" value="#ffffff">
+              </div>
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Opaklık (Saydamlık) <span class="value" data-bind="cfgOpacity">100%</span></label>
+              <input type="range" class="ky-slider" min="20" max="100" value="100" id="cfgOpacity" oninput="handleInput('styling.opacity', parseInt(this.value), 'cfgOpacity')">
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 8: Borders & Shadow -->
+        <div class="ky-subpanel" id="panelBorders">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Çerçeve ve Gölge</div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-field">
+              <label class="ky-label">Köşe Yuvarlaklığı (Radius) <span class="value" data-bind="cfgBorderRadius">4px</span></label>
+              <input type="range" class="ky-slider" min="0" max="40" value="4" id="cfgBorderRadius" oninput="handleInput('styling.borderRadius', parseInt(this.value), 'cfgBorderRadius')">
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Çerçeve Kalınlığı <span class="value" data-bind="cfgBorderWidth">0px</span></label>
+              <input type="range" class="ky-slider" min="0" max="6" value="0" id="cfgBorderWidth" oninput="handleInput('styling.borderWidth', parseInt(this.value), 'cfgBorderWidth')">
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 9: Sizing & Spacing -->
+        <div class="ky-subpanel" id="panelSizing">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Boyutlar ve Boşluklar</div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-field">
+              <label class="ky-label">Yatay İç Boşluk (Padding X) <span class="value" data-bind="cfgPaddingX">10px</span></label>
+              <input type="range" class="ky-slider" min="4" max="28" value="10" id="cfgPaddingX" oninput="handleInput('styling.paddingX', parseInt(this.value), 'cfgPaddingX')">
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Dikey İç Boşluk (Padding Y) <span class="value" data-bind="cfgPaddingY">5px</span></label>
+              <input type="range" class="ky-slider" min="2" max="18" value="5" id="cfgPaddingY" oninput="handleInput('styling.paddingY', parseInt(this.value), 'cfgPaddingY')">
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Rozet Ölçeği (Scale) <span class="value" data-bind="cfgScale">%100</span></label>
+              <input type="range" class="ky-slider" min="70" max="130" value="100" id="cfgScale" oninput="handleInput('styling.scale', parseInt(this.value), 'cfgScale')">
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 10: Positioning -->
+        <div class="ky-subpanel" id="panelPosition">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Konumlandırma</div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-field">
+              <label class="ky-label">Ürün Kartı Yerleşim Tipi</label>
+              <select class="ky-select" id="cfgCardLocation" onchange="handleInput('placements.cardLocation', this.value)">
+                <option value="image_bottom_bar">Görsel Alt Şeridi (Tam Genişlik)</option>
+                <option value="image_corner">Görsel Köşesi (Floating)</option>
+                <option value="nine_point">9 Noktalı Özel Matris</option>
+              </select>
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">9 Noktalı Konum Matrisi</label>
+              <div class="ky-nine-grid">
+                <button class="ky-grid-btn" data-pos="top_left" onclick="selectGridPos('top_left')">↖ Sol Üst</button>
+                <button class="ky-grid-btn" data-pos="top_center" onclick="selectGridPos('top_center')">↑ Üst</button>
+                <button class="ky-grid-btn" data-pos="top_right" onclick="selectGridPos('top_right')">↗ Sağ Üst</button>
+                <button class="ky-grid-btn" data-pos="middle_left" onclick="selectGridPos('middle_left')">← Sol</button>
+                <button class="ky-grid-btn" data-pos="center" onclick="selectGridPos('center')">· Orta</button>
+                <button class="ky-grid-btn" data-pos="middle_right" onclick="selectGridPos('middle_right')">→ Sağ</button>
+                <button class="ky-grid-btn" data-pos="bottom_left" onclick="selectGridPos('bottom_left')">↙ Sol Alt</button>
+                <button class="ky-grid-btn active" data-pos="bottom_center" onclick="selectGridPos('bottom_center')">↓ Alt</button>
+                <button class="ky-grid-btn" data-pos="bottom_right" onclick="selectGridPos('bottom_right')">↘ Sağ Alt</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 11: Animations -->
+        <div class="ky-subpanel" id="panelAnimation">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Animasyonlar & Efektler</div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-field">
+              <label class="ky-label">Sayfa Açılış Animasyonu</label>
+              <select class="ky-select" id="cfgAnimEntry" onchange="handleInput('animation.entry', this.value)">
+                <option value="none">Yok (Statik)</option>
+                <option value="fade">Yumuşak Belirme (Fade In)</option>
+                <option value="slide_up">Aşağıdan Yukarı Kayma</option>
+                <option value="pop">Hafif Zıplama (Pop)</option>
+                <option value="pulse">Darbe Nabız (Pulse)</option>
+              </select>
+            </div>
+            <div class="ky-field">
+              <label class="ky-label">Üzerine Gelince (Hover) Efekti</label>
+              <select class="ky-select" id="cfgAnimHover" onchange="handleInput('animation.hover', this.value)">
+                <option value="lift">Yukarı Yükselme & Gölge (Lift)</option>
+                <option value="scale">Hafif Büyüme (Scale)</option>
+                <option value="glow">Altın Parıltı (Glow)</option>
+                <option value="none">Efekt Yok</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 12: Responsive -->
+        <div class="ky-subpanel" id="panelResponsive">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Responsive Kontroller</div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-toggle-wrap">
+              <span style="font-size: 13px; font-weight: 600;">Masaüstünde Göster</span>
+              <label class="ky-switch"><input type="checkbox" id="cfgRespDesktop" checked onchange="handleInput('responsive.desktopEnabled', this.checked)"><span class="ky-switch-slider"></span></label>
+            </div>
+            <div class="ky-toggle-wrap">
+              <span style="font-size: 13px; font-weight: 600;">Mobilde Göster</span>
+              <label class="ky-switch"><input type="checkbox" id="cfgRespMobile" checked onchange="handleInput('responsive.mobileEnabled', this.checked)"><span class="ky-switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 13: Categories & Manual Overrides -->
+        <div class="ky-subpanel" id="panelCategories">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Kategoriler & Sıralamalar</div>
+          </div>
+          <div id="categoriesListContainer">
+            <!-- Dynamically populated categories -->
+          </div>
+        </div>
+
+        <!-- SUBPANEL 14: Rules -->
+        <div class="ky-subpanel" id="panelRules">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Gelişmiş Görünürlük Kuralları</div>
+          </div>
+          <div class="ky-group">
+            <div class="ky-toggle-wrap">
+              <span style="font-size: 13px; font-weight: 600;">Sadece İndirimsiz Ürünlerde Göster</span>
+              <label class="ky-switch"><input type="checkbox" onchange="handleInput('rules.hideIfDiscounted', this.checked)"><span class="ky-switch-slider"></span></label>
+            </div>
+            <div class="ky-toggle-wrap">
+              <span style="font-size: 13px; font-weight: 600;">Yeni Eklenen Ürünlerde Rozeti Gizle</span>
+              <label class="ky-switch"><input type="checkbox" onchange="handleInput('rules.hideIfNewProduct', this.checked)"><span class="ky-switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBPANEL 15: Storefront Placement & Setup -->
+        <div class="ky-subpanel" id="panelPlacement">
+          <div class="ky-subpanel-header">
+            <button class="ky-btn-back">← Geri</button>
+            <div class="ky-subpanel-title">Mağazada Gösterim & Kurulum</div>
+          </div>
+          <div class="ky-group">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></span>
+              <span style="font-size: 13px; font-weight: 700; color: #065f46;">Kurulum Durumu: Aktif (Otomatik Bağlı)</span>
+            </div>
+            <p style="font-size: 12px; color: #64748b; line-height: 1.5; margin-bottom: 12px;">
+              ikas uygulamanız aktif olduğunda rozetler temanıza otomatik enjekte edilir. İhtiyaç halinde tek satırlık kodu mağazanızın "Özel Kodlar" alanına ekleyebilirsiniz.
+            </p>
+            <button class="ky-btn ky-btn-secondary" style="width: 100%; justify-content: center;" onclick="document.getElementById('btnCopyCode').click()">
+              📋 Storefront Kodunu Kopyala
+            </button>
+          </div>
+        </div>
+
       </div>
-      <div class="form-group">
-        <label for="limitInput">Kategori Başına Listelenecek Çok Satan Limiti</label>
-        <input type="number" id="limitInput" value="3" min="1" max="5" />
+    </aside>
+
+    <!-- RIGHT COLUMN: Real-Time Live Preview Stage -->
+    <section class="ky-preview-pane">
+      
+      <!-- Preview Mode Toolbar -->
+      <div class="ky-preview-toolbar">
+        <div class="ky-view-mode-tabs">
+          <button class="ky-view-tab active" data-view="category">📑 Kategori Sayfası</button>
+          <button class="ky-view-tab" data-view="pdp">🛍️ Ürün Detay Sayfası</button>
+        </div>
+
+        <div class="ky-preview-selectors">
+          <span style="font-size: 12px; font-weight: 600; color: #64748b;">Kategori:</span>
+          <select class="ky-select" style="width: auto; padding: 4px 10px;" id="previewCategorySelect">
+            <option value="0">Mutfak Dekorasyonu</option>
+            <option value="1">Doğal Soya Mumları</option>
+            <option value="2">Tasarım Vazolar</option>
+          </select>
+        </div>
       </div>
-      <button onclick="saveSettings()">Ayarları Kaydet</button>
+
+      <!-- Canvas Stage -->
+      <div class="ky-preview-stage">
+        <div class="ky-stage-canvas" id="stageCanvas">
+          <!-- Dynamically rendered live store simulation -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- 3. STICKY BOTTOM ACTION BAR -->
+  <footer class="ky-admin-footer">
+    <div class="ky-footer-status">
+      <span class="ky-status-dot" id="statusDot"></span>
+      <span id="statusText">Tüm değişiklikler yayında</span>
     </div>
 
-    <div class="section">
-      <h3>Otomatik Tespit Edilen En Çok Satanlar (1., 2., 3. Ürünler)</h3>
-      <div class="bestseller-list" id="bestsellerContainer">
-        <p>Analiz verileri yükleniyor...</p>
-      </div>
+    <div class="ky-footer-actions">
+      <button class="ky-btn ky-btn-secondary" id="btnCopyCode">📋 Kodu Kopyala</button>
+      <button class="ky-btn ky-btn-draft" id="btnSaveDraft">💾 Taslağı Kaydet</button>
+      <button class="ky-btn ky-btn-publish" id="btnPublish">🚀 Canlıda Yayınla</button>
     </div>
-  </div>
+  </footer>
 
+  <script src="/admin.js"></script>
   <script>
-    async function loadSettings() {
-      try {
-        const res = await fetch('/api/settings');
-        const data = await res.json();
-        if (data.badgeColor) document.getElementById('badgeColor').value = data.badgeColor;
-        if (data.limit) document.getElementById('limitInput').value = data.limit;
-      } catch (e) {
-        console.error('Ayarlar yüklenemedi', e);
-      }
-    }
-
-    async function loadBestSellers() {
-      try {
-        const res = await fetch('/api/bestsellers');
-        const data = await res.json();
-        const container = document.getElementById('bestsellerContainer');
-        
-        if (data.error) {
-          container.innerHTML = `<p style="color: red;">Hata: ${data.error}</p>`;
-          return;
-        }
-
-        if (!data.bestSellers || Object.keys(data.bestSellers).length === 0) {
-          container.innerHTML = '<p>Henüz sipariş verisi bulunamadı.</p>';
-          return;
-        }
-
-        let html = '';
-        for (const [catId, ranks] of Object.entries(data.bestSellers)) {
-          const cat = data.categories.find(c => c.id === catId);
-          const catName = cat ? cat.name : 'Genel / Diğer';
-          html += `<div style="margin-bottom: 15px;"><strong>Kategori: ${catName}</strong>`;
-          ['first', 'second', 'third'].forEach((rankKey, idx) => {
-            const item = ranks[rankKey];
-            if (item) {
-              html += `<div class="bestseller-item">⭐ ${idx + 1}. Ürün: <strong>${item.productName}</strong> (Satış Adedi: ${item.totalSold})</div>`;
-            }
-          });
-          html += `</div>`;
-        }
-        container.innerHTML = html;
-      } catch (e) {
-        console.error('Çok satanlar yüklenemedi', e);
-      }
-    }
-
-    async function saveSettings() {
-      const badgeColor = document.getElementById('badgeColor').value;
-      const limit = document.getElementById('limitInput').value;
-
-      const res = await fetch('/api/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ badgeColor, limit: parseInt(limit) })
-      });
-
-      if (res.ok) {
-        const alertBox = document.getElementById('alertBox');
-        alertBox.style.display = 'block';
-        setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
-      }
-    }
-
-    window.onload = () => {
-      loadSettings();
-      loadBestSellers();
-    };
+    // Color Pickers Real-Time Sync
+    syncColor('cfgBgColor', 'cfgBgColorHex', 'styling.bgColor');
+    syncColor('cfgTextColor', 'cfgTextColorHex', 'styling.textColor');
   </script>
 </body>
 </html>

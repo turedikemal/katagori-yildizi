@@ -1,15 +1,14 @@
 {
   "name": "katagori-yildizi",
-  "version": "1.0.0",
-  "description": "ikas App Store Kategori Yildizi Uygulamasi",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "ikas Bestseller Badge & Category Ranking SaaS App",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "dependencies": {
-    "pg": "^8.11.3"
-  },
-  "keywords": ["ikas", "bestseller", "widget"],
-  "author": "ikas Developer",
-  "license": "ISC"
+    "express": "^4.19.2",
+    "pg": "^8.12.0",
+    "cors": "^2.8.5"
+  }
 }
