@@ -1,0 +1,2 @@
+Approved The Goatz Studio logo asset: /public/thegoatzstudio.png
+Use the supplied logo as-is; preserve aspect ratio and full tagline.
