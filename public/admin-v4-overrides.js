@@ -23,7 +23,6 @@ const originalTemplates=[
   ['eco-clean','Eko Doğal','Orijinal'],
   ['neon-edge','Siber Neon','Orijinal']
 ];
-
 const preferredModern=[
   ['glass-pill','Cam Kapsül'],['split-pill','Çift Renk Kapsül'],['soft-blue','Soft Blue'],['sunset','Sunset'],['ocean','Ocean'],['aurora','Aurora'],['berry','Berry'],['shadow-pill','Floating Shadow'],['electric','Electric'],['rose','Rose Soft'],['sky','Sky'],['violet','Violet'],['graphite','Graphite'],['dot-label','Dot Label'],['cream','Cream Label'],['teal','Teal Capsule'],['ruby','Ruby'],['holographic','Holografik']
 ];
@@ -33,19 +32,37 @@ function restoreTemplates(){
   if(!host || !host.children.length) return;
   const cards=new Map(qsa('[data-template]',host).map(card=>[card.dataset.template,card]));
   const order=[...originalTemplates,...preferredModern];
+  let changed=false;
+
   for(const [id,name,tag] of order){
     const card=cards.get(id); if(!card) continue;
-    const label=qs('.name',card); if(label) label.textContent=name;
+    const label=qs('.name',card);
+    if(label && label.textContent!==name){ label.textContent=name; changed=true; }
     const oldTag=qs('.tag',card);
-    if(tag){ if(oldTag) oldTag.textContent=tag; else { const t=document.createElement('span');t.className='tag';t.textContent=tag;card.appendChild(t);} }
-    else if(oldTag && oldTag.textContent==='Yeni') oldTag.remove();
-    host.appendChild(card);
+    if(tag){
+      if(oldTag){ if(oldTag.textContent!==tag){ oldTag.textContent=tag; changed=true; } }
+      else { const t=document.createElement('span');t.className='tag';t.textContent=tag;card.appendChild(t);changed=true; }
+    } else if(oldTag && oldTag.textContent==='Yeni') { oldTag.remove(); changed=true; }
   }
+
+  const desiredIds=order.map(([id])=>id).filter(id=>cards.has(id));
+  const currentIds=qsa('[data-template]',host).map(card=>card.dataset.template);
+  const currentKnown=currentIds.filter(id=>desiredIds.includes(id));
+  if(currentKnown.join('|')!==desiredIds.join('|')){
+    const frag=document.createDocumentFragment();
+    desiredIds.forEach(id=>frag.appendChild(cards.get(id)));
+    currentIds.filter(id=>!desiredIds.includes(id)).forEach(id=>frag.appendChild(cards.get(id)));
+    host.appendChild(frag);
+    changed=true;
+  }
+  return changed;
 }
 
 function categoryCopy(){
   const intro=qs('#panelCategories .ky-category-intro');
-  if(intro) intro.innerHTML='<strong>Kategori sıralamaları nasıl çalışır?</strong><br>ikas satışları otomatik analiz edilir ve her ürün kendi kategorisi içinde sıralanır. Aşağıdaki listeden yalnızca istisna gerektiğinde sıralamayı sabitleyebilir veya belirli bir ürünün rozetini gizleyebilirsiniz. Veriler arka planda otomatik güncellenir.';
+  if(!intro) return;
+  const html='<strong>Kategori sıralamaları nasıl çalışır?</strong><br>ikas satışları otomatik analiz edilir ve her ürün kendi kategorisi içinde sıralanır. Aşağıdaki listeden yalnızca istisna gerektiğinde sıralamayı sabitleyebilir veya belirli bir ürünün rozetini gizleyebilirsiniz. Veriler arka planda otomatik güncellenir.';
+  if(intro.innerHTML!==html) intro.innerHTML=html;
 }
 
 function imageFallbacks(){
@@ -83,33 +100,42 @@ function enhanceProfile(){
     if(role && role.tagName==='INPUT'){
       const sel=document.createElement('select');sel.id='accountRole';sel.className='ky-select';
       ['Marka sahibi','Kurucu / Ortak','E-ticaret yöneticisi','Pazarlama','Ajans / Danışman','Diğer'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o)});
-      const current=role.value;if(current && ![...sel.options].some(o=>o.value===current)){const o=document.createElement('option');o.value=current;o.textContent=current;sel.appendChild(o)}
+      const current=role.value;
+      if(current && ![...sel.options].some(o=>o.value===current)){const o=document.createElement('option');o.value=current;o.textContent=current;sel.appendChild(o)}
       sel.value=current||'Marka sahibi';role.replaceWith(sel);
     }
     const actions=qs('.ky-profile-actions',form);
     if(actions){
       const box=document.createElement('div');box.className='ky-privacy-box';box.innerHTML='<label><input type="checkbox" id="kyPrivacyRequired" checked> <span>Kişisel verilerimin hesabın çalıştırılması, destek sunulması ve güvenlik amacıyla işlenmesine ilişkin aydınlatma metnini okudum. <strong>(zorunlu)</strong></span></label><label><input type="checkbox" id="kyMarketingVisual"> <span>Ürün haberleri ve kampanyalar için benimle iletişime geçilmesini istiyorum. <strong>(isteğe bağlı)</strong></span></label>';
       actions.parentElement.insertBefore(box,actions);
-      const market=qs('#accountMarketing',form);const visual=qs('#kyMarketingVisual',form);if(market&&visual){visual.checked=market.checked;visual.onchange=()=>{market.checked=visual.checked;market.dispatchEvent(new Event('change',{bubbles:true}))};market.closest('label')?.style.setProperty('display','none','important');}
-      const required=qs('#kyPrivacyRequired',form),save=qs('#accountProfileSave',form);const sync=()=>{if(save)save.disabled=!required.checked};required.addEventListener('change',sync);sync();
+      const market=qs('#accountMarketing',form),visual=qs('#kyMarketingVisual',form);
+      if(market&&visual){visual.checked=market.checked;visual.onchange=()=>{market.checked=visual.checked;market.dispatchEvent(new Event('change',{bubbles:true}))};market.closest('label')?.style.setProperty('display','none','important');}
+      const required=qs('#kyPrivacyRequired',form),save=qs('#accountProfileSave',form);
+      const sync=()=>{if(save)save.disabled=!required.checked};required.addEventListener('change',sync);sync();
     }
   }
 }
 
 function supportPolish(){
-  const d=qs('#accountSupportDialog');
-  if(!d) return;
-  const note=qs('.ky-support-note',d);if(note)note.textContent='Destek talebin doğrudan The Goatz Studio destek akışına gider. Yanıtlar profilinde kayıtlı e-posta adresine gönderilir.';
+  const d=qs('#accountSupportDialog');if(!d)return;
+  const note=qs('.ky-support-note',d);
+  if(note && !note.dataset.kyPolished){note.dataset.kyPolished='1';note.textContent='Destek talebin doğrudan The Goatz Studio destek akışına gider. Yanıtlar profilinde kayıtlı e-posta adresine gönderilir.';}
 }
 
-function removeBackHandlersVisual(){ qsa('.ky-btn-back').forEach(b=>b.setAttribute('aria-hidden','true')); }
-
+function removeBackHandlersVisual(){qsa('.ky-btn-back').forEach(b=>{if(b.getAttribute('aria-hidden')!=='true')b.setAttribute('aria-hidden','true')});}
 function run(){deviceIcons();restoreTemplates();categoryCopy();imageFallbacks();enhanceProfile();supportPolish();removeBackHandlersVisual();}
 
-const mo=new MutationObserver(()=>run());
-mo.observe(document.documentElement,{subtree:true,childList:true});
+let scheduled=false;
+function scheduleRun(){
+  if(scheduled)return;
+  scheduled=true;
+  requestAnimationFrame(()=>{scheduled=false;run();});
+}
+
+const mo=new MutationObserver(scheduleRun);
+mo.observe(document.body,{subtree:true,childList:true});
 run();
-setTimeout(run,100);
-setTimeout(run,600);
-setInterval(()=>{deviceIcons();imageFallbacks();restoreTemplates();},2500);
+setTimeout(run,150);
+setTimeout(run,700);
+setInterval(()=>{deviceIcons();imageFallbacks();},3000);
 })();
