@@ -63,10 +63,17 @@ async function openProfile(){
 }
 function closeProfile(){byId('accountProfileLayer')?.classList.remove('open')}
 async function saveProfile(){
-  const err=byId('accountProfileError');err.classList.remove('show');err.textContent='';const btn=byId('accountProfileSave');btn.disabled=true;btn.textContent='Kaydediliyor…';
+  const err=byId('accountProfileError');err.classList.remove('show');err.textContent='';const btn=byId('accountProfileSave');btn.disabled=true;btn.textContent='Mağaza hazırlanıyor…';
   try{
     await request('/api/profile',{method:'POST',body:{storeName:byId('accountStore').value||shop,contactName:byId('accountName').value,email:byId('accountEmail').value,phone:byId('accountPhone').value,role:byId('accountRole').value,marketingConsent:byId('accountMarketing').checked}});
-    closeProfile();toast('Profil kaydedildi.');
+    try{
+      await request('/api/admin/rankings/sync',{method:'POST',body:{shop}});
+      closeProfile();toast('Profil kaydedildi. Mağaza verileri otomatik yüklendi.');
+      setTimeout(()=>location.reload(),450);
+    }catch(syncError){
+      closeProfile();toast('Profil kaydedildi. Mağaza verileri arka planda hazırlanıyor.');
+      setTimeout(()=>location.reload(),700);
+    }
   }catch(e){err.textContent=e.message;err.classList.add('show')}finally{btn.disabled=false;btn.textContent='Profili kaydet'}
 }
 function mountSupport(){
