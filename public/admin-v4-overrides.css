@@ -1,0 +1,93 @@
+/* Kategori Yıldızı v4 visual corrections */
+
+/* Requested: no back button inside settings panels. Keep the active panel persistent. */
+.ky-subpanel-header .ky-btn-back{display:none!important}
+.ky-subpanel-header{padding-left:16px!important}
+
+/* Device switch must always show real desktop/mobile icons. */
+.ky-preview-toolbar .ky-device-switch{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.ky-device-btn{width:38px!important;height:38px!important;min-width:38px!important;display:grid!important;place-items:center!important;font-size:0!important;overflow:visible!important}
+.ky-device-btn .ky-device-svg{width:18px!important;height:18px!important;display:block!important;stroke:currentColor!important;fill:none!important;stroke-width:1.9!important}
+.ky-device-btn.active.desktop{background:#243a8b!important;color:#fff!important;border-color:#243a8b!important}
+.ky-device-btn.active.mobile{background:#ce3f44!important;color:#fff!important;border-color:#ce3f44!important}
+
+/* Cleaner toolbar similar to the user's working app. */
+.ky-preview-toolbar{min-height:58px!important;padding:9px 18px!important;gap:10px!important;background:#fff!important;border-bottom:1px solid rgba(36,58,139,.08)!important}
+.ky-view-mode-tabs{margin-left:2px!important}
+
+/* Template gallery: first/original family should read as the primary set. */
+.ky-template-gallery-v3{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+.ky-template-card-v3{min-height:104px!important;padding:9px!important}
+.ky-template-card-v3 .preview{height:60px!important;background:#f8f9fc!important}
+.ky-template-card-v3[data-template="navy-pill"] .preview .ky-v3-badge{background:#3b4d47!important;color:#fff!important;border-radius:5px!important}
+.ky-template-card-v3[data-template="gradient-pill"] .preview .ky-v3-badge{background:linear-gradient(135deg,#70d6ff,#ffd670,#ff70a6)!important;color:#243a8b!important;border-radius:999px!important}
+.ky-template-card-v3[data-template="coral-pop"] .preview .ky-v3-badge{background:#ef5b45!important;color:#fff!important;border-radius:8px!important}
+.ky-template-card-v3[data-template="mono"] .preview .ky-v3-badge{background:transparent!important;color:#111827!important;border:0!important;border-bottom:2px solid #111827!important;border-radius:0!important;box-shadow:none!important}
+.ky-template-card-v3[data-template="modern-outline"] .preview .ky-v3-badge{background:#fff!important;color:#243a8b!important;border:1px solid #243a8b!important;border-radius:8px!important}
+.ky-template-card-v3[data-template="eco-clean"] .preview .ky-v3-badge{background:#e8f2e9!important;color:#2f6b4f!important;border-radius:999px!important}
+.ky-template-card-v3[data-template="neon-edge"] .preview .ky-v3-badge{background:#111827!important;color:#72f7ff!important;border:1px solid #7c3aed!important;box-shadow:0 0 12px rgba(124,58,237,.35)!important}
+
+/* Real product images: contain instead of stretching, graceful fallback. */
+.ky-mock-img-wrap{background:#f1f3f7!important;overflow:hidden!important}
+.ky-mock-img-wrap>img,.ky-pdp-gallery>img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important;background:#f1f3f7!important}
+.ky-mock-img-wrap>img[src=""],.ky-pdp-gallery>img[src=""]{visibility:hidden!important}
+.ky-img-fallback{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(135deg,#f7f8fb,#eef2ff);color:#243a8b;font-size:11px;font-weight:700;text-align:center;padding:12px}
+.ky-img-fallback img{width:86px;height:auto;opacity:.35}
+
+/* Missing animation option. */
+@keyframes kyv4Flip{0%{opacity:0;transform:perspective(500px) rotateX(-78deg) scale(var(--badge-scale))}100%{opacity:var(--badge-opacity);transform:perspective(500px) rotateX(0) scale(var(--badge-scale))}}
+.ky-entry-flip{animation:kyv4Flip var(--anim-dur,.36s) cubic-bezier(.22,1,.36,1) both!important;transform-origin:center top!important}
+
+/* Auto sync is the normal behavior; manual sync is not presented as a required step. */
+#v3Sync{display:none!important}
+
+/* Profile page — match the established Goatz Studio onboarding/profile language. */
+.ky-profile-shell{grid-template-columns:minmax(0,47%) minmax(0,53%)!important;background:#fff!important}
+.ky-profile-brand{justify-content:flex-start!important;padding:54px 7vw 44px!important;background:#eef2ff!important;overflow:hidden!important}
+.ky-profile-brand>img{width:290px!important;max-height:96px!important;object-fit:contain!important;object-position:left center!important}
+.ky-profile-brand h2{font-size:46px!important;line-height:1.02!important;letter-spacing:-1.5px!important;max-width:540px!important;margin:28px 0 14px!important}
+.ky-profile-brand p{font-size:14px!important;max-width:540px!important}
+.ky-profile-form-wrap{padding:48px 5vw!important;align-items:center!important}
+.ky-profile-form{width:min(100%,720px)!important}
+.ky-profile-form h3{font-size:27px!important;letter-spacing:-.6px!important;color:#243a8b!important;margin:0 0 4px!important}
+.ky-profile-grid{grid-template-columns:1fr 1fr!important;gap:14px 16px!important}
+.ky-profile-field.full{grid-column:1/2!important}
+.ky-profile-form .ky-input,.ky-profile-form .ky-select{min-height:46px!important;border-radius:10px!important;font-size:13px!important;font-weight:650!important}
+.ky-profile-actions{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;margin-top:20px!important}
+.ky-profile-actions .ky-btn{min-height:46px!important;width:100%!important}
+.ky-profile-actions .ky-btn-publish{order:-1!important}
+
+.ky-profile-live-preview{margin-top:28px;width:100%;height:310px;border-radius:18px;background:#fff;border:1px solid rgba(36,58,139,.10);box-shadow:0 22px 42px rgba(36,58,139,.10);overflow:hidden;position:relative;transform:perspective(1100px) rotateY(-2.5deg) rotateX(1deg);transform-origin:center}
+.ky-profile-live-preview iframe{width:1560px;height:900px;border:0;transform:scale(.36);transform-origin:top left;pointer-events:none;background:#fff}
+.ky-profile-trust{display:grid;gap:10px;margin-top:22px;font-size:12px;color:#53639a}
+.ky-profile-trust>div{display:flex;align-items:center;gap:8px}
+.ky-profile-trust .check{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#243a8b;font-size:10px;border:1px solid rgba(36,58,139,.12)}
+.ky-privacy-box{margin-top:14px;padding:14px;border:1px solid rgba(36,58,139,.12);border-radius:12px;background:#fbfcff;display:grid;gap:10px;font-size:11px;line-height:1.45;color:#53639a}
+.ky-privacy-box label{display:flex;align-items:flex-start;gap:9px}
+.ky-privacy-box input{margin-top:2px;accent-color:#243a8b}
+
+/* Miniature dashboard used inside profile left visual. */
+body.ky-profile-preview{overflow:hidden!important;background:#fff!important;zoom:.96}
+body.ky-profile-preview .ky-admin-header{height:66px!important;min-height:66px!important}
+body.ky-profile-preview .ky-header-right{display:none!important}
+body.ky-profile-preview .ky-admin-main{height:calc(100vh - 66px)!important}
+body.ky-profile-preview .ky-sidebar{display:block!important}
+body.ky-profile-preview .ky-admin-footer{display:none!important}
+body.ky-profile-preview .ky-preview-pane{padding-bottom:0!important}
+body.ky-profile-preview .ky-sidebar-content{padding-bottom:20px!important}
+body.ky-profile-preview #menuList::after{display:none!important}
+
+/* Support should look like a proper page/modal, not a missing utility. */
+#accountSupportDialog.ky-modal{width:min(720px,calc(100vw - 32px))!important;border:0!important;border-radius:18px!important;padding:0!important;box-shadow:0 28px 80px rgba(15,23,42,.22)!important}
+#accountSupportDialog::backdrop{background:rgba(15,23,42,.32)!important;backdrop-filter:blur(7px)!important}
+#accountSupportDialog .ky-modal-head{padding:22px 24px 16px!important;border-bottom:1px solid rgba(36,58,139,.08)!important}
+#accountSupportDialog .ky-modal-body{padding:22px 24px 24px!important}
+
+@media(max-width:900px){
+  .ky-profile-shell{grid-template-columns:1fr!important}
+  .ky-profile-brand{padding:34px 28px!important}
+  .ky-profile-live-preview{height:240px}
+  .ky-profile-brand h2{font-size:36px!important}
+  .ky-profile-grid{grid-template-columns:1fr!important}
+  .ky-profile-field.full{grid-column:auto!important}
+}
