@@ -1,10 +1,10 @@
 {
   "name": "katagori-yildizi",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "ikas Bestseller Badge & Category Ranking SaaS App",
-  "main": "server.js",
+  "main": "bootstrap-v4.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node bootstrap-v4.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
