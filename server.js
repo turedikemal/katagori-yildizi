@@ -148,6 +148,14 @@ async function analyzeBestSellers() {
 const server = http.createServer(async (req, res) => {
   const urlObj = new URL(req.url, 'http://localhost:3000');
   
+  if (urlObj.pathname === '/api/oauth/install') {
+    const shop = urlObj.searchParams.get('shop') || 'ornek-magaza';
+    const authUrl = `https://${shop}.myikas.com/api/admin/oauth/authorize?client_id=${IKAS_CLIENT_ID}&redirect_uri=${encodeURIComponent(IKAS_REDIRECT_URI)}&scope=read_products%20read_orders&response_type=code`;
+    res.writeHead(302, { 'Location': authUrl });
+    res.end();
+    return;
+  }
+
   if (urlObj.pathname === '/api/oauth/callback/ikas' || urlObj.pathname === '/auth/callback') {
     const code = urlObj.searchParams.get('code');
     const token = await getIkasAccessToken(code);
