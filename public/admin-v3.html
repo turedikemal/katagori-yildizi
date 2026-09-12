@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Kategori Yıldızı — ikas Yönetim Paneli</title>
+  <link rel="icon" href="/thegoatzstudio.png?v=20260913-1" type="image/png">
+  <link rel="stylesheet" href="/admin.css?v=20260913-1">
+  <link rel="stylesheet" href="/widget.css?v=20260913-1">
+  <link rel="stylesheet" href="/admin-v3.css?v=20260913-1">
+</head>
+<body>
+  <header class="ky-admin-header">
+    <div class="ky-header-left">
+      <button id="btnBrandHome" class="ky-header-logo" type="button" aria-label="Ayarlar ana sayfasına dön" title="Ayarlar ana sayfasına dön" style="background:none;padding:0;border:0;box-shadow:none;overflow:visible;">
+        <img class="ky-brand-image" src="/thegoatzstudio.png?v=20260913-1" alt="The Goatz Studio">
+      </button>
+      <div>
+        <div class="ky-header-title">Kategori Yıldızı</div>
+        <div style="font-size:10px;color:rgba(36,58,139,.48);margin-top:3px">Çok satan ürün rozetlerini tek merkezden yönetin.</div>
+      </div>
+    </div>
+    <div class="ky-header-right">
+      <button class="ky-btn ky-btn-secondary" id="btnProfile" type="button">♙ Profilim</button>
+      <button class="ky-btn ky-btn-secondary" id="btnSupport" type="button">? Destek</button>
+      <div class="ky-connection" id="connectionStatus"><span class="ky-connection-dot"></span><span class="ky-connection-copy"><strong>Bağlantı kontrol ediliyor</strong><span>ikas mağazası</span></span></div>
+      <button class="ky-btn ky-btn-secondary" id="btnOpenStore" type="button">↗ Mağazayı aç</button>
+      <div style="width:1px;height:28px;background:rgba(36,58,139,.10)"></div>
+      <button class="ky-btn-icon-only" id="btnUndo" type="button" title="Geri al">↩</button>
+      <button class="ky-btn-icon-only" id="btnRedo" type="button" title="Yinele">↪</button>
+      <button class="ky-btn ky-btn-secondary" id="btnResetDefault" type="button">Varsayılana dön</button>
+    </div>
+  </header>
+
+  <main class="ky-admin-main">
+    <aside class="ky-sidebar">
+      <div class="ky-sidebar-content">
+        <div class="ky-menu-list" id="menuList">
+          <div class="ky-menu-card" data-target="panelDashboard"><div class="ky-menu-card-left"><div class="ky-menu-icon">◫</div><div><div class="ky-menu-title">Genel görünüm</div><div class="ky-menu-subtitle">Bağlantı, ürünler ve hızlı durum</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelRanking"><div class="ky-menu-card-left"><div class="ky-menu-icon">↗</div><div><div class="ky-menu-title">Sıralama sistemi</div><div class="ky-menu-subtitle">Dönem, ölçüt ve maksimum 20 rozet</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelTemplates"><div class="ky-menu-card-left"><div class="ky-menu-icon">✦</div><div><div class="ky-menu-title">Şablonlar & renkler</div><div class="ky-menu-subtitle">Çağdaş tasarımlar ve şablona özel renkler</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelTexts"><div class="ky-menu-card-left"><div class="ky-menu-icon">T</div><div><div class="ky-menu-title">Metinler</div><div class="ky-menu-subtitle">Tek ürün metni ve dinamik değişkenler</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelTypography"><div class="ky-menu-card-left"><div class="ky-menu-icon">Aa</div><div><div class="ky-menu-title">Tipografi</div><div class="ky-menu-subtitle">Tema fontu veya Google Fonts</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelIcons"><div class="ky-menu-card-left"><div class="ky-menu-icon">★</div><div><div class="ky-menu-title">İkonlar</div><div class="ky-menu-subtitle">İkon, iki renk ve boyut ayarları</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelColors"><div class="ky-menu-card-left"><div class="ky-menu-icon">◉</div><div><div class="ky-menu-title">Renkler & gradyan</div><div class="ky-menu-subtitle">Arka plan, metin ve vurgu renkleri</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelBorders"><div class="ky-menu-card-left"><div class="ky-menu-icon">□</div><div><div class="ky-menu-title">Çerçeve & biçim</div><div class="ky-menu-subtitle">Köşe, çerçeve, gölge ve opaklık</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelSizing"><div class="ky-menu-card-left"><div class="ky-menu-icon">↔</div><div><div class="ky-menu-title">Boyutlar & boşluklar</div><div class="ky-menu-subtitle">Yatay/dikey boşluk ve rozet ölçeği</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelPosition"><div class="ky-menu-card-left"><div class="ky-menu-icon">⌖</div><div><div class="ky-menu-title">Konumlandırma</div><div class="ky-menu-subtitle">9 nokta, alt şerit ve X/Y</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelAnimation"><div class="ky-menu-card-left"><div class="ky-menu-icon">◌</div><div><div class="ky-menu-title">Animasyonlar & hover</div><div class="ky-menu-subtitle">Giriş ve üzerine gelme efektleri</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelResponsive"><div class="ky-menu-card-left"><div class="ky-menu-icon">▣</div><div><div class="ky-menu-title">Masaüstü & mobil</div><div class="ky-menu-subtitle">Cihaz bazlı görünürlük ve ölçek</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelCategories"><div class="ky-menu-card-left"><div class="ky-menu-icon">≡</div><div><div class="ky-menu-title">Kategori sıralamaları</div><div class="ky-menu-subtitle">Otomatik sıra, sabitleme ve gizleme</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelRules"><div class="ky-menu-card-left"><div class="ky-menu-icon">⚙</div><div><div class="ky-menu-title">Görünürlük kuralları</div><div class="ky-menu-subtitle">İndirimli, yeni ve özel ürün koşulları</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelPlacement"><div class="ky-menu-card-left"><div class="ky-menu-icon">⌂</div><div><div class="ky-menu-title">Mağazada gösterim</div><div class="ky-menu-subtitle">Ana sayfa, kategori, arama ve ürün detay</div></div></div><span>›</span></div>
+        </div>
+
+        <section class="ky-subpanel" id="panelDashboard"></section>
+        <section class="ky-subpanel" id="panelRanking"></section>
+        <section class="ky-subpanel" id="panelTemplates"></section>
+        <section class="ky-subpanel" id="panelTexts"></section>
+        <section class="ky-subpanel" id="panelTypography"></section>
+        <section class="ky-subpanel" id="panelIcons"></section>
+        <section class="ky-subpanel" id="panelColors"></section>
+        <section class="ky-subpanel" id="panelBorders"></section>
+        <section class="ky-subpanel" id="panelSizing"></section>
+        <section class="ky-subpanel" id="panelPosition"></section>
+        <section class="ky-subpanel" id="panelAnimation"></section>
+        <section class="ky-subpanel" id="panelResponsive"></section>
+        <section class="ky-subpanel" id="panelCategories"></section>
+        <section class="ky-subpanel" id="panelRules"></section>
+        <section class="ky-subpanel" id="panelPlacement"></section>
+      </div>
+    </aside>
+
+    <section class="ky-preview-pane">
+      <div class="ky-preview-toolbar">
+        <div class="ky-device-switch" style="position:static">
+          <button class="ky-device-btn active desktop" data-device="desktop" type="button" title="Masaüstü">▰ Masaüstü</button>
+          <button class="ky-device-btn mobile" data-device="mobile" type="button" title="Mobil">▯ Mobil</button>
+        </div>
+        <div class="ky-view-mode-tabs">
+          <button class="ky-view-tab active" data-view="category" type="button">Kategori sayfası</button>
+          <button class="ky-view-tab" data-view="pdp" type="button">Ürün detay</button>
+        </div>
+        <div class="ky-preview-selectors"><span>Kategori:</span><select class="ky-select" id="previewCategorySelect"></select></div>
+      </div>
+      <div class="ky-preview-stage"><div class="ky-stage-canvas" id="stageCanvas"><div class="ky-preview-empty"><div><strong>ikas ürünleri bekleniyor</strong>Bağlantı tamamlandığında gerçek TheGoatz ürünleri burada gösterilecek.</div></div></div></div>
+    </section>
+  </main>
+
+  <footer class="ky-admin-footer">
+    <div class="ky-footer-status"><span class="ky-status-dot" id="statusDot"></span><span id="statusText">Yükleniyor…</span></div>
+    <div class="ky-footer-actions">
+      <button class="ky-btn ky-btn-secondary" id="btnCopyCode" type="button">Kurulum otomatik</button>
+      <button class="ky-btn ky-btn-draft" id="btnSaveDraft" type="button">Taslağı kaydet</button>
+      <button class="ky-btn ky-btn-publish" id="btnPublish" type="button">Canlıda yayınla</button>
+    </div>
+  </footer>
+
+  <dialog id="profileDialog"></dialog>
+  <dialog id="supportDialog"></dialog>
+  <div class="ky-toast" id="kyToast"></div>
+
+  <script src="/admin.js?v=20260913-1"></script>
+</body>
+</html>
