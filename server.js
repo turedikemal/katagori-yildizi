@@ -5,6 +5,7 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL && process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 async function initDB() {
@@ -34,9 +35,9 @@ async function initDB() {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    console.log('PostgreSQL tabloları başarıyla oluşturuldu veya zaten mevcut.');
+    console.log('PostgreSQL tabloları başarıyla hazırlandı (stores, settings, bestsellers).');
   } catch (err) {
-    console.error('Veritabanı tabloları oluşturulurken hata:', err);
+    console.error('Veritabanı başlatılırken hata oluştu:', err);
   }
 }
 
@@ -63,14 +64,14 @@ async function getIkasAccessToken(code) {
     const data = await response.json();
     return data.access_token;
   } catch (error) {
-    console.error('Token alma hatasi:', error);
+    console.error('Token alma hatası:', error);
     return null;
   }
 }
 
 async function analyzeBestSellers() {
   const token = await getIkasAccessToken();
-  if (!token) return { error: 'Token alinamadi' };
+  if (!token) return { error: 'Token alınamadı' };
 
   const query = `
     {
@@ -139,7 +140,7 @@ async function analyzeBestSellers() {
       bestSellers: rankedCategories
     };
   } catch (error) {
-    console.error('GraphQL analiz hatasi:', error);
+    console.error('GraphQL analiz hatası:', error);
     return { error: 'Veri analiz edilemedi' };
   }
 }
@@ -147,38 +148,21 @@ async function analyzeBestSellers() {
 const server = http.createServer(async (req, res) => {
   const urlObj = new URL(req.url, 'http://localhost:3000');
   
-  if (urlObj.pathname === '/api/oauth/callback/ikas') {
+  if (urlObj.pathname === '/api/oauth/callback/ikas' || urlObj.pathname === '/auth/callback') {
     const code = urlObj.searchParams.get('code');
     const token = await getIkasAccessToken(code);
     if (token) {
       try {
         await pool.query(
-          `INSERT INTO stores (store_id, access_token) VALUES ($1, $2) ON CONFLICT (store_id) DO UPDATE SET access_token = $2`,
+          `INSERT INTO stores (store_id, access_token) VALUES ($1, $2)
+           ON CONFLICT (store_id) DO UPDATE SET access_token = EXCLUDED.access_token`,
           ['default_store', token]
         );
       } catch (dbErr) {
         console.error('Veritabanına token kaydedilemedi:', dbErr);
       }
     }
-    res.writeHead(302, { 'Location': '/admin?success=1' });
-    res.end();
-    return;
-  }
-
-  if (urlObj.pathname === '/auth/callback') {
-    const code = urlObj.searchParams.get('code');
-    const token = await getIkasAccessToken(code);
-    if (token) {
-      try {
-        await pool.query(
-          `INSERT INTO stores (store_id, access_token) VALUES ($1, $2) ON CONFLICT (store_id) DO UPDATE SET access_token = $2`,
-          ['default_store', token]
-        );
-      } catch (dbErr) {
-        console.error('Veritabanına token kaydedilemedi:', dbErr);
-      }
-    }
-    res.writeHead(302, { 'Location': '/admin?success=1' });
+    res.writeHead(302, { 'Location': '/admin' });
     res.end();
     return;
   }
@@ -201,7 +185,8 @@ const server = http.createServer(async (req, res) => {
           const limit = parsed.limit || 3;
           
           await pool.query(
-            `INSERT INTO settings (store_id, badge_color, "limit") VALUES ($1, $2, $3) ON CONFLICT (store_id) DO UPDATE SET badge_color = $2, "limit" = $3, updated_at = CURRENT_TIMESTAMP`,
+            `INSERT INTO settings (store_id, badge_color, "limit") VALUES ($1, $2, $3)
+             ON CONFLICT (store_id) DO UPDATE SET badge_color = EXCLUDED.badge_color, "limit" = EXCLUDED."limit", updated_at = CURRENT_TIMESTAMP`,
             ['default_store', badgeColor, limit]
           );
 
@@ -210,14 +195,14 @@ const server = http.createServer(async (req, res) => {
         } catch (e) {
           console.error(e);
           res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'Gecersiz JSON veya DB hatasi' }));
+          res.end(JSON.stringify({ error: 'Geçersiz JSON veya DB hatası' }));
         }
       });
       return;
     } else {
       try {
         const result = await pool.query('SELECT badge_color, "limit" FROM settings WHERE store_id = $1', ['default_store']);
-        let settings = { badgeColor: '#1b4332', limit: 5 };
+        let settings = { badgeColor: '#1b4332', limit: 3 };
         if (result.rows.length > 0) {
           settings = {
             badgeColor: result.rows[0].badge_color,
@@ -228,7 +213,7 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify(settings));
       } catch (dbErr) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Ayarlar alinamadi' }));
+        res.end(JSON.stringify({ error: 'Ayarlar alınamadı' }));
       }
       return;
     }
@@ -239,7 +224,7 @@ const server = http.createServer(async (req, res) => {
     fs.readFile(adminHtmlPath, (err, content) => {
       if (err) {
         res.writeHead(404);
-        res.end('Admin sayfasi bulunamadi');
+        res.end('Admin sayfası bulunamadı');
       } else {
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(content, 'utf-8');
@@ -267,7 +252,7 @@ const server = http.createServer(async (req, res) => {
   fs.readFile(filePath, (err, content) => {
     if (err) {
       res.writeHead(404);
-      res.end('Sayfa bulunamadi');
+      res.end('Sayfa bulunamadı');
     } else {
       res.writeHead(200, { 'Content-Type': contentType });
       res.end(content, 'utf-8');
@@ -275,6 +260,7 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log('Kategori Yildizi Sunucusu http://localhost:3000 adresinde calisiyor.');
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Kategori Yıldızı Sunucusu http://localhost:${PORT} adresinde çalışıyor.`);
 });
