@@ -33,6 +33,13 @@ function pageFromQuery(query) {
   return Math.max(1, Number(match?.[1] || 1));
 }
 
+function productQuery(page, rich = true) {
+  if (!rich) {
+    return `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categories { id name } variants { id } } } }`;
+  }
+  return `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categories { id name } images { id fileName order } variants { id prices { sellPrice discountPrice } stocks { stockCount } } } } }`;
+}
+
 function adaptGraphQuery(bodyText) {
   let parsed;
   try { parsed = JSON.parse(bodyText || '{}'); } catch { return null; }
@@ -47,13 +54,13 @@ function adaptGraphQuery(bodyText) {
     parsed.query = 'query { listCategory { id name } }';
   } else if (query.includes('listProduct')) {
     operation = 'listProduct';
-    parsed.query = `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categories { id name } variants { id } } } }`;
+    parsed.query = productQuery(page, true);
   } else if (query.includes('listOrder')) {
     operation = 'listOrder';
     parsed.query = `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { quantity finalPrice variant { id } } } } }`;
   }
 
-  return operation ? { operation, body: JSON.stringify(parsed) } : null;
+  return operation ? { operation, page, parsed, body: JSON.stringify(parsed) } : null;
 }
 
 function jsonResponseLike(response, body) {
@@ -66,11 +73,30 @@ function jsonResponseLike(response, body) {
   });
 }
 
-async function waitForVariantMap(timeoutMs = 2500) {
+async function waitForVariantMap(timeoutMs = 3000) {
   const started = Date.now();
   while (!variantToProduct.size && Date.now() - started < timeoutMs) {
     await new Promise(resolve => setTimeout(resolve, 50));
   }
+}
+
+function firstPrice(variant) {
+  const prices = Array.isArray(variant?.prices) ? variant.prices : [];
+  const price = prices.find(p => Number.isFinite(Number(p?.sellPrice))) || prices[0];
+  return price || null;
+}
+
+function stockCount(variant) {
+  const stocks = Array.isArray(variant?.stocks) ? variant.stocks : [];
+  if (!stocks.length) return null;
+  return stocks.reduce((sum, stock) => sum + (Number(stock?.stockCount) || 0), 0);
+}
+
+function imageUrl(image) {
+  const fileName = String(image?.fileName || '').trim();
+  if (!fileName) return '';
+  if (/^https?:\/\//i.test(fileName)) return fileName;
+  return `https://cdn.myikas.com/images/${fileName.replace(/^\/+/, '')}`;
 }
 
 async function adaptGraphResponse(response, operation) {
@@ -90,9 +116,26 @@ async function adaptGraphResponse(response, operation) {
   if (operation === 'listProduct') {
     const rows = Array.isArray(body.data?.listProduct?.data) ? body.data.listProduct.data : [];
     for (const product of rows) {
+      product.categoryIds = (product.categories || []).map(category => category?.id).filter(Boolean);
+      const orderedImages = [...(product.images || [])].sort((a, b) => Number(a?.order || 0) - Number(b?.order || 0));
+      const url = imageUrl(orderedImages[0]);
+      if (url) product.mainImage = { url };
+
+      let basePrice = null;
       for (const variant of product?.variants || []) {
         if (variant?.id && product?.id) variantToProduct.set(String(variant.id), String(product.id));
+        const price = firstPrice(variant);
+        if (price) {
+          variant.price = {
+            sellPrice: Number(price.sellPrice || 0),
+            discountPrice: Number(price.discountPrice || 0)
+          };
+          if (basePrice == null && Number.isFinite(Number(price.sellPrice))) basePrice = Number(price.sellPrice);
+        }
+        const count = stockCount(variant);
+        if (count != null) variant.stock = { stockCount: count };
       }
+      if (basePrice != null) product.basePrice = basePrice;
     }
     return jsonResponseLike(response, body);
   }
@@ -117,6 +160,17 @@ async function adaptGraphResponse(response, operation) {
   }
 
   return response;
+}
+
+async function graphFetchWithProductFallback(url, init, adapted) {
+  let response = await nativeFetch(url, init);
+  if (adapted?.operation !== 'listProduct' || response.ok) return response;
+
+  const errorBody = await response.clone().text().catch(() => '');
+  console.warn(`[ikas GraphQL ${response.status}] listProduct rich query fallback: ${errorBody.slice(0, 1800)}`);
+
+  const fallbackParsed = { ...adapted.parsed, query: productQuery(adapted.page, false) };
+  return nativeFetch(url, { ...init, body: JSON.stringify(fallbackParsed) });
 }
 
 if (typeof nativeFetch === 'function') {
@@ -151,34 +205,68 @@ if (typeof nativeFetch === 'function') {
     );
 
     const isGraph = nextUrl.includes('/api/v2/admin/graphql');
-    let operation = null;
+    let adapted = null;
     let nextInit = init;
 
     if (isGraph && typeof input === 'string') {
-      const adapted = adaptGraphQuery(init?.body?.toString?.() || '');
-      if (adapted) {
-        operation = adapted.operation;
-        nextInit = { ...init, body: adapted.body };
-      }
+      adapted = adaptGraphQuery(init?.body?.toString?.() || '');
+      if (adapted) nextInit = { ...init, body: adapted.body };
     }
 
     const request = typeof input === 'string' ? null : new Request(nextUrl, input);
-    const response = typeof input === 'string'
-      ? await nativeFetch(nextUrl, nextInit)
-      : await nativeFetch(request, init);
+    let response;
+    if (typeof input === 'string') {
+      response = isGraph
+        ? await graphFetchWithProductFallback(nextUrl, nextInit, adapted)
+        : await nativeFetch(nextUrl, nextInit);
+    } else {
+      response = await nativeFetch(request, init);
+    }
 
     if (isGraph && !response.ok) {
       try {
         const errorBody = await response.clone().text();
-        console.error(`[ikas GraphQL ${response.status}] ${operation || 'unknown'}: ${errorBody.slice(0, 4000)}`);
+        console.error(`[ikas GraphQL ${response.status}] ${adapted?.operation || 'unknown'}: ${errorBody.slice(0, 4000)}`);
       } catch (error) {
         console.error('[ikas GraphQL] hata gövdesi okunamadı:', error.message);
       }
     }
 
-    if (isGraph && operation) return adaptGraphResponse(response, operation);
+    if (isGraph && adapted?.operation) return adaptGraphResponse(response, adapted.operation);
     return response;
   };
 }
 
 require('./server.js');
+
+let backgroundSyncRunning = false;
+async function syncConnectedStores() {
+  if (!tokenPool || backgroundSyncRunning) return;
+  backgroundSyncRunning = true;
+  try {
+    const result = await tokenPool.query('SELECT shop_domain FROM stores WHERE access_token IS NOT NULL ORDER BY updated_at DESC');
+    const port = process.env.PORT || 3000;
+    for (const row of result.rows) {
+      const shop = String(row.shop_domain || '').trim().toLowerCase();
+      if (!shop) continue;
+      try {
+        const response = await nativeFetch(`http://127.0.0.1:${port}/api/admin/rankings/sync?shop=${encodeURIComponent(shop)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ shop })
+        });
+        if (response.ok) console.log(`[ikas Auto Sync] ${shop} güncellendi.`);
+        else console.warn(`[ikas Auto Sync] ${shop} başarısız (${response.status}).`);
+      } catch (error) {
+        console.warn(`[ikas Auto Sync] ${shop} isteği başarısız: ${error.message}`);
+      }
+    }
+  } catch (error) {
+    console.warn('[ikas Auto Sync] mağazalar okunamadı:', error.message);
+  } finally {
+    backgroundSyncRunning = false;
+  }
+}
+
+setTimeout(syncConnectedStores, 4500);
+setInterval(syncConnectedStores, 15 * 60 * 1000);
