@@ -24,47 +24,60 @@ function mountProfile(){
   layer.innerHTML=`<div class="ky-profile-shell">
     <section class="ky-profile-brand">
       <img src="/the-goatz-studio-logo.png?v=20260913-1" alt="The Goatz Studio">
-      <div style="display:inline-flex;width:max-content;margin-top:22px;padding:7px 11px;border-radius:999px;background:#fff;border:1px solid rgba(36,58,139,.10);font-size:10px;font-weight:800;color:#243a8b">Kategori Yıldızı</div>
-      <h2>Profil bilgilerini güncelle.</h2>
-      <p>İletişim ve görev bilgilerini buradan değiştirebilirsin. Profilin mağazana bağlı olarak saklanır ve destek taleplerinde otomatik kullanılır.</p>
-      <div style="margin-top:24px;display:grid;gap:9px;font-size:10.5px;color:#53639a">
-        <div>✓ ikas mağazan otomatik doğrulanır</div>
-        <div>✓ Profilin mağazana bağlı kalır</div>
-        <div>✓ Destek: hello@thegoatzstudio.com</div>
+      <div class="ky-profile-product-pill"><span>✦</span> Kategori Yıldızı</div>
+      <h2>Kategori Yıldızı profilini güncelle.</h2>
+      <p>Mağaza bilgilerini bir kez tamamla; kategori ve ürünlerindeki çok satan rozetlerini hemen yönetmeye başla.</p>
+      <div class="ky-profile-live-preview" aria-hidden="true">
+        <iframe src="/admin-v3.html?shop=${encodeURIComponent(shop)}&profilePreview=1" tabindex="-1" title="Kategori Yıldızı panel önizlemesi"></iframe>
+      </div>
+      <div class="ky-profile-trust">
+        <div><span class="check">✓</span> ikas mağazan otomatik doğrulandı</div>
+        <div><span class="check">✓</span> Profilin mağazana bağlı kalır</div>
+        <div><span class="check">✓</span> Destek: hello@thegoatzstudio.com</div>
       </div>
     </section>
     <section class="ky-profile-form-wrap"><div class="ky-profile-form">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px">
-        <div><div style="font-size:10px;font-weight:800;color:#8b97bf;margin-bottom:7px">1 MAĞAZA &nbsp;—&nbsp; 2 PROFİL &nbsp;—&nbsp; 3 BAŞLA</div><h3>Profilim</h3><p>Bu bilgiler daha sonra destek taleplerinde otomatik kullanılır.</p></div>
-        <button class="ky-btn-icon-only" id="accountProfileClose" type="button">×</button>
+      <div class="ky-profile-steps" aria-label="Kurulum adımları">
+        <span class="done">1 Mağaza</span><i></i><span class="active">2 Profil</span><i></i><span>3 Başla</span>
+      </div>
+      <div class="ky-profile-form-heading">
+        <div class="ky-profile-eyebrow">Profil ayarları</div>
+        <h3>Bilgilerini güncelle</h3>
+        <p><strong>${esc(shop)}</strong> için iletişim bilgilerini tamamla.</p>
       </div>
       <div class="ky-profile-grid">
-        <div class="ky-profile-field full"><label class="ky-label">Mağaza adı</label><input class="ky-input" id="accountStore" disabled></div>
-        <div class="ky-profile-field"><label class="ky-label">Yetkili adı soyadı</label><input class="ky-input" id="accountName" maxlength="120"></div>
-        <div class="ky-profile-field"><label class="ky-label">E-posta</label><input class="ky-input" id="accountEmail" type="email" maxlength="200"></div>
+        <div class="ky-profile-field"><label class="ky-label">Mağaza adı</label><input class="ky-input" id="accountStore" disabled></div>
+        <div class="ky-profile-field"><label class="ky-label">Ad soyad *</label><input class="ky-input" id="accountName" maxlength="120" required></div>
+        <div class="ky-profile-field full"><label class="ky-label">E-posta *</label><input class="ky-input" id="accountEmail" type="email" maxlength="200" required></div>
         <div class="ky-profile-field"><label class="ky-label">Telefon</label><input class="ky-input" id="accountPhone" maxlength="40"></div>
-        <div class="ky-profile-field"><label class="ky-label">Görev / Ünvan</label><input class="ky-input" id="accountRole" maxlength="120"></div>
+        <div class="ky-profile-field"><label class="ky-label">Görevin</label><select class="ky-select" id="accountRole"><option value="">Seçiniz</option><option value="Marka sahibi">Marka sahibi</option><option value="E-ticaret yöneticisi">E-ticaret yöneticisi</option><option value="Pazarlama yöneticisi">Pazarlama yöneticisi</option><option value="Ajans / danışman">Ajans / danışman</option><option value="Diğer">Diğer</option></select></div>
       </div>
-      <label style="display:flex;gap:8px;align-items:flex-start;margin-top:10px;font-size:10px;line-height:1.45;color:#53639a"><input id="accountMarketing" type="checkbox" style="margin-top:2px"> Ürün güncellemeleri ve duyurular için e-posta almak istiyorum. Bu seçim isteğe bağlıdır.</label>
+      <div class="ky-profile-consents">
+        <label><input id="accountPrivacy" type="checkbox" required> <span>Gizlilik bilgilendirmesini okudum ve profil bilgilerimin işlenmesini kabul ediyorum.</span></label>
+        <label class="optional"><input id="accountMarketing" type="checkbox"> <span>Ürün haberleri ve faydalı ipuçları için benimle iletişime geçilebilir.</span></label>
+      </div>
       <div class="ky-profile-error" id="accountProfileError"></div>
-      <div class="ky-profile-actions"><button class="ky-btn ky-btn-secondary" id="accountProfileCancel" type="button">Panele dön</button><button class="ky-btn ky-btn-publish" id="accountProfileSave" type="button">Profili kaydet</button></div>
+      <div class="ky-profile-actions"><button class="ky-btn ky-btn-publish" id="accountProfileSave" type="button">Değişiklikleri kaydet ve panele dön <span>→</span></button><button class="ky-btn ky-btn-secondary" id="accountProfileCancel" type="button">Değişiklik yapmadan panele dön</button></div>
+      <div class="ky-profile-password-note">✓ Ayrı bir şifre oluşturman gerekmez; ikas hesabınla bağlısın.</div>
     </div></section>
   </div>`;
   document.body.appendChild(layer);
-  byId('accountProfileClose').onclick=closeProfile;byId('accountProfileCancel').onclick=closeProfile;byId('accountProfileSave').onclick=saveProfile;
+  byId('accountProfileCancel').onclick=closeProfile;byId('accountProfileSave').onclick=saveProfile;
 }
 async function openProfile(){
   mountProfile();const layer=byId('accountProfileLayer');layer.classList.add('open');const err=byId('accountProfileError');err.classList.remove('show');err.textContent='';
   byId('accountStore').value=shop;
   try{
     const d=await request('/api/profile');const p=d.profile||{};
-    byId('accountStore').value=p.storeName||shop;byId('accountName').value=p.contactName||'';byId('accountEmail').value=p.email||'';byId('accountPhone').value=p.phone||'';byId('accountRole').value=p.role||'';byId('accountMarketing').checked=!!p.marketingConsent;
+    byId('accountStore').value=p.storeName||shop;byId('accountName').value=p.contactName||'';byId('accountEmail').value=p.email||'';byId('accountPhone').value=p.phone||'';byId('accountRole').value=p.role||'';byId('accountPrivacy').checked=!!p.contactName&&!!p.email;byId('accountMarketing').checked=!!p.marketingConsent;
   }catch(e){err.textContent=e.message;err.classList.add('show')}
 }
 function closeProfile(){byId('accountProfileLayer')?.classList.remove('open')}
 async function saveProfile(){
   const err=byId('accountProfileError');err.classList.remove('show');err.textContent='';const btn=byId('accountProfileSave');btn.disabled=true;btn.textContent='Mağaza hazırlanıyor…';
   try{
+    if(!byId('accountName').value.trim()||!byId('accountEmail').value.trim())throw new Error('Ad soyad ve e-posta alanlarını doldurun.');
+    if(!byId('accountPrivacy').checked)throw new Error('Devam etmek için gizlilik bilgilendirmesini kabul edin.');
     await request('/api/profile',{method:'POST',body:{storeName:byId('accountStore').value||shop,contactName:byId('accountName').value,email:byId('accountEmail').value,phone:byId('accountPhone').value,role:byId('accountRole').value,marketingConsent:byId('accountMarketing').checked}});
     try{
       await request('/api/admin/rankings/sync',{method:'POST',body:{shop}});
@@ -74,7 +87,7 @@ async function saveProfile(){
       closeProfile();toast('Profil kaydedildi. Mağaza verileri arka planda hazırlanıyor.');
       setTimeout(()=>location.reload(),700);
     }
-  }catch(e){err.textContent=e.message;err.classList.add('show')}finally{btn.disabled=false;btn.textContent='Profili kaydet'}
+  }catch(e){err.textContent=e.message;err.classList.add('show')}finally{btn.disabled=false;btn.innerHTML='Değişiklikleri kaydet ve panele dön <span>→</span>'}
 }
 function mountSupport(){
   if(byId('accountSupportDialog'))return;
