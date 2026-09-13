@@ -1,0 +1,9 @@
+#kyIconFilterBar [data-filter="premium"]{color:#ffb943!important;border-color:#ffb943!important;background:#fffaf0!important}
+#kyIconFilterBar [data-filter="premium"].active{color:#c98200!important;background:#fff5dc!important}
+#v3Icons{overflow:visible!important;padding-top:8px!important}
+.ky-premium-choice{position:relative!important;overflow:visible!important}
+.ky-premium-choice .ky-premium-tag{right:-7px!important;top:-9px!important;left:auto!important;width:17px!important;height:17px!important;font-size:0!important;background:transparent!important;border:0!important;box-shadow:none!important;z-index:40!important}
+.ky-premium-choice .ky-premium-tag::before{width:17px!important;height:17px!important}
+#kyIconFilterBar:has([data-filter="all"].active) ~ #v3Icons .ky-premium-choice{display:none!important}
+#kyIconFilterBar:has([data-filter="premium"].active) ~ #v3Icons .ky-icon-choice:not(.ky-premium-choice){display:none!important}
+#kyIconFilterBar:has([data-filter="premium"].active) ~ #v3Icons .ky-premium-choice{display:flex!important}
