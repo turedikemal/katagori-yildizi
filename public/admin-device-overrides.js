@@ -31,6 +31,7 @@ function getPath(obj,path,fallback){try{return path.split('.').reduce((a,k)=>a?.
 function setPath(obj,path,val){const parts=path.split('.');let t=obj;for(const k of parts.slice(0,-1))t=t[k]||(t[k]={});t[parts.at(-1)]=val;}
 function castValue(el){if(el.type==='checkbox')return !!el.checked;if(el.type==='range'||el.type==='number')return Number(el.value);if(el.id==='v3FontWeight')return Number(el.value);return el.value;}
 function cfgWrite(path,val){if(typeof window.handleInput==='function')window.handleInput(path,val);}
+function persistProfile(device=activeDevice){if(!deviceSettings[device])return;cfgWrite(`deviceSettings.${device}`,clone(deviceSettings[device]));}
 function activeTemplate(){return deviceSettings[activeDevice]?.templateId||q('[data-template].active')?.dataset.template||'navy-pill';}
 
 function legacySnapshot(raw){
@@ -82,14 +83,14 @@ function mirrorControl(el){
    else if(/Hex$/.test(el.id)){if(!/^#[0-9a-f]{6}$/i.test(el.value))return;val=el.value;}
    else val=castValue(el);
    setPath(deviceSettings[activeDevice],path,val);
-   cfgWrite(`deviceSettings.${activeDevice}.${path}`,val);
+   persistProfile();
    enforceTemplateCapabilities();
    return;
  }
  if(baseId==='v3IconC1'||baseId==='v3IconC2'){
    const val=el.value;if(!/^#[0-9a-f]{6}$/i.test(val))return;
    const path=baseId==='v3IconC1'?'icon.color':'icon.accentColor';
-   setPath(deviceSettings[activeDevice],path,val);cfgWrite(`deviceSettings.${activeDevice}.${path}`,val);
+   setPath(deviceSettings[activeDevice],path,val);persistProfile();
  }
 }
 function captureTemplateColor(el){
@@ -99,27 +100,27 @@ function captureTemplateColor(el){
  const id=activeTemplate();
  deviceSettings[activeDevice].templateColors=deviceSettings[activeDevice].templateColors||{};
  deviceSettings[activeDevice].templateColors[id]={...(deviceSettings[activeDevice].templateColors[id]||{}),[field]:el.value};
- cfgWrite(`deviceSettings.${activeDevice}.templateColors.${id}.${field}`,el.value);
+ persistProfile();
 }
 function captureTemplateClick(btn){
  if(!ready)return;
  const id=btn.dataset.template;if(!id)return;
  deviceSettings[activeDevice].templateId=id;
- cfgWrite(`deviceSettings.${activeDevice}.templateId`,id);
+ persistProfile();
  setTimeout(enforceTemplateCapabilities,0);
 }
 function captureIconClick(btn){
  if(!ready)return;
  const type=btn.dataset.icon;if(!type)return;
  setPath(deviceSettings[activeDevice],'icon.type',type);setPath(deviceSettings[activeDevice],'icon.enabled',type!=='none');
- cfgWrite(`deviceSettings.${activeDevice}.icon.type`,type);cfgWrite(`deviceSettings.${activeDevice}.icon.enabled`,type!=='none');
+ persistProfile();
 }
 function capturePosition(btn){
  if(!ready)return;const pos=btn.dataset.pos;if(!pos)return;
- setPath(deviceSettings[activeDevice],'placements.ninePointPosition',pos);cfgWrite(`deviceSettings.${activeDevice}.placements.ninePointPosition`,pos);
+ setPath(deviceSettings[activeDevice],'placements.ninePointPosition',pos);persistProfile();
 }
 function captureIconMode(mode){
- if(!ready)return;setPath(deviceSettings[activeDevice],'icon.mode',mode);cfgWrite(`deviceSettings.${activeDevice}.icon.mode`,mode);
+ if(!ready)return;setPath(deviceSettings[activeDevice],'icon.mode',mode);persistProfile();
 }
 
 function applyProfile(device){
@@ -127,7 +128,9 @@ function applyProfile(device){
  activeDevice=device;internal=true;
  const p=deviceSettings[device];
  try{
+   cfgWrite('templateColors',clone(p.templateColors||{}));
    if(p.templateId&&typeof window.selectTemplate==='function')window.selectTemplate(p.templateId);
+   persistProfile(device);
    for(const section of ['texts','styling','icon','placements','animation']){
      const obj=p[section]||{};
      walk(obj,(sub,val)=>cfgWrite(`${section}.${sub}`,val));
@@ -146,6 +149,8 @@ function syncControlsFromProfile(){
  internal=true;
  try{
    Object.entries(PATHS).forEach(([id,path])=>{const el=q('#'+id);if(!el)return;const v=getPath(p,path,undefined);if(v===undefined)return;if(el.type==='checkbox')el.checked=!!v;else el.value=v;});
+   const setColorPair=(id,path)=>{const v=getPath(p,path,undefined);if(v===undefined)return;const picker=q('#'+id+'Picker'),hex=q('#'+id+'Hex');if(picker)picker.value=v;if(hex)hex.value=v;};
+   [['v3Bg','styling.bgColor'],['v3TextColor','styling.textColor'],['v3Accent','styling.accentColor'],['v3Grad1','styling.gradientColor1'],['v3Grad2','styling.gradientColor2'],['v3BorderColor','styling.borderColor'],['v3IconC1','icon.color'],['v3IconC2','icon.accentColor']].forEach(([id,path])=>setColorPair(id,path));
    syncLabels();
  }finally{internal=false;}
 }
@@ -202,7 +207,7 @@ function enforceTemplateCapabilities(){
  if(host&&!note){note=document.createElement('div');note.id='kyTemplateCapabilityNote';note.className='ky-capability-note';host.prepend(note);}
  if(note)note.textContent=gradientOk?'Gradyan bu şablonda kullanılabilir. Özel biçimli şablonlarda tasarımın kendi renk yapısı korunur.':'Bu özel biçimli şablonda gradyan kapalıdır; şablonun kendi renk yapısı korunur.';
  if(!gradientOk&&getPath(deviceSettings[activeDevice],'styling.gradientEnabled',false)){
-   setPath(deviceSettings[activeDevice],'styling.gradientEnabled',false);cfgWrite(`deviceSettings.${activeDevice}.styling.gradientEnabled`,false);cfgWrite('styling.gradientEnabled',false);if(grad)grad.checked=false;
+   setPath(deviceSettings[activeDevice],'styling.gradientEnabled',false);persistProfile();cfgWrite('styling.gradientEnabled',false);if(grad)grad.checked=false;
  }
 }
 
