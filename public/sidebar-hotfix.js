@@ -11,11 +11,11 @@ function injectStyles(){
   style.textContent=`
     .ky-sidebar-content{overflow-y:auto!important;overflow-x:hidden!important}
     #menuList.ky-menu-list{display:flex!important;flex-direction:column!important;gap:8px!important;width:100%!important}
-    #menuList>.ky-menu-card{display:flex!important;visibility:visible!important;opacity:1!important;position:relative!important;flex:0 0 auto!important;width:100%!important}
+    #menuList>.ky-menu-card{display:flex!important;visibility:visible!important;opacity:1!important;position:relative!important;flex:0 0 auto!important;width:100%!important;cursor:pointer!important}
     #menuList>.ky-menu-card[hidden]{display:flex!important}
     #menuList>.ky-accordion-panel{position:relative!important;width:100%!important;margin:-5px 0 3px!important;padding:13px!important;border:1px solid rgba(36,58,139,.12)!important;border-radius:0 0 12px 12px!important;background:#f8faff!important;box-shadow:inset 3px 0 0 #243a8b!important}
     #menuList>.ky-accordion-panel:not(.active){display:none!important}
-    #menuList>.ky-accordion-panel.active{display:block!important}
+    #menuList>.ky-accordion-panel.active{display:block!important;visibility:visible!important;opacity:1!important;min-height:40px!important}
     #menuList>.ky-accordion-panel .ky-subpanel-header{display:none!important}
     #menuList>.ky-menu-card.active{background:linear-gradient(135deg,#eef2ff,#f8f9ff)!important;border-color:rgba(36,58,139,.28)!important}
     #menuList>.ky-menu-card>.ky-accordion-indicator{display:flex!important;width:24px!important;height:24px!important;border-radius:7px!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;gap:3px!important;background:#f1f4fb!important;border:1px solid rgba(36,58,139,.11)!important}
@@ -37,37 +37,112 @@ function ensureIndicator(card){
   }
 }
 
-function repair(){
-  if(repairing) return;
+function normalizeStructure(){
+  const menu=qs('#menuList');
+  if(!menu) return null;
+  injectStyles();
+  menu.style.setProperty('display','flex','important');
+  menu.classList.add('ky-menu-list');
+  qsa('#kySidebarNavHead,.ky-sidebar-navhead').forEach(el=>el.remove());
+  qs('.ky-sidebar')?.classList.remove('ky-menu-open','ky-nav-ready');
+  document.body.classList.remove('ky-panel-open');
+
+  qsa('.ky-menu-card',menu).forEach(card=>{
+    card.style.removeProperty('display');
+    card.style.removeProperty('visibility');
+    card.removeAttribute('hidden');
+    ensureIndicator(card);
+    const id=card.dataset.target;
+    const panel=id?qs('#'+CSS.escape(id)):null;
+    if(!panel) return;
+    panel.classList.add('ky-accordion-panel');
+    if(panel.parentElement!==menu || panel.previousElementSibling!==card){
+      menu.insertBefore(panel,card.nextSibling);
+    }
+  });
+  return menu;
+}
+
+function closeAll(){
   const menu=qs('#menuList');
   if(!menu) return;
+  qsa(':scope > .ky-menu-card',menu).forEach(card=>{
+    card.classList.remove('active');
+    card.setAttribute('aria-expanded','false');
+  });
+  qsa(':scope > .ky-accordion-panel',menu).forEach(panel=>panel.classList.remove('active'));
+  sessionStorage.removeItem('ky-active-panel');
+}
+
+function togglePanel(id){
+  const menu=normalizeStructure();
+  if(!menu||!id) return;
+  const panel=qs('#'+CSS.escape(id));
+  const card=qs(`.ky-menu-card[data-target="${CSS.escape(id)}"]`,menu);
+  if(!panel||!card) return;
+
+  const wasOpen=panel.classList.contains('active');
+  qsa(':scope > .ky-menu-card',menu).forEach(c=>{
+    c.classList.remove('active');
+    c.setAttribute('aria-expanded','false');
+  });
+  qsa(':scope > .ky-accordion-panel',menu).forEach(p=>p.classList.remove('active'));
+
+  if(wasOpen){
+    sessionStorage.removeItem('ky-active-panel');
+    return;
+  }
+
+  panel.classList.add('active');
+  card.classList.add('active');
+  card.setAttribute('aria-expanded','true');
+  sessionStorage.setItem('ky-active-panel',id);
+  requestAnimationFrame(()=>panel.scrollIntoView({block:'nearest',behavior:'smooth'}));
+}
+
+function repair(){
+  if(repairing) return;
   repairing=true;
   try{
-    injectStyles();
-    menu.style.setProperty('display','flex','important');
-    menu.classList.add('ky-menu-list');
-    qsa('#kySidebarNavHead,.ky-sidebar-navhead').forEach(el=>el.remove());
-    qs('.ky-sidebar')?.classList.remove('ky-menu-open','ky-nav-ready');
-
-    const cards=qsa('.ky-menu-card',menu);
-    cards.forEach(card=>{
-      card.style.removeProperty('display');
-      card.style.removeProperty('visibility');
-      card.removeAttribute('hidden');
-      ensureIndicator(card);
-      const id=card.dataset.target;
-      const panel=id?qs('#'+CSS.escape(id)):null;
-      if(!panel) return;
-      panel.classList.add('ky-accordion-panel');
-      if(panel.parentElement!==menu || panel.previousElementSibling!==card){
-        menu.insertBefore(panel,card.nextSibling);
-      }
-      card.setAttribute('aria-expanded',panel.classList.contains('active')?'true':'false');
-      card.classList.toggle('active',panel.classList.contains('active'));
+    const menu=normalizeStructure();
+    if(!menu) return;
+    const active=qsa(':scope > .ky-accordion-panel.active',menu);
+    if(active.length>1){
+      active.slice(1).forEach(p=>p.classList.remove('active'));
+    }
+    const activeId=active[0]?.id||'';
+    qsa(':scope > .ky-menu-card',menu).forEach(card=>{
+      const isActive=card.dataset.target===activeId;
+      card.classList.toggle('active',isActive);
+      card.setAttribute('aria-expanded',isActive?'true':'false');
     });
   } finally {
     repairing=false;
   }
+}
+
+function bind(){
+  const menu=normalizeStructure();
+  if(!menu||menu.dataset.kyHotfixBound) return;
+  menu.dataset.kyHotfixBound='1';
+
+  menu.addEventListener('click',e=>{
+    const card=e.target.closest('.ky-menu-card');
+    if(!card||!menu.contains(card)) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    togglePanel(card.dataset.target);
+  },true);
+
+  menu.addEventListener('keydown',e=>{
+    const card=e.target.closest('.ky-menu-card');
+    if(!card||!menu.contains(card)||(e.key!=='Enter'&&e.key!==' ')) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    togglePanel(card.dataset.target);
+  },true);
+
+  closeAll();
 }
 
 function schedule(){
@@ -76,12 +151,12 @@ function schedule(){
   requestAnimationFrame(()=>{scheduled=false;repair();});
 }
 
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',repair,{once:true});
-else repair();
-setTimeout(repair,150);
-setTimeout(repair,700);
-setTimeout(repair,1600);
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>{bind();repair();},{once:true});
+else {bind();repair();}
+setTimeout(()=>{bind();repair();},200);
+setTimeout(()=>{bind();repair();},800);
+setTimeout(()=>{bind();repair();},1600);
 
 const observer=new MutationObserver(schedule);
-observer.observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style','hidden']});
+observer.observe(document.documentElement,{childList:true,subtree:true});
 })();
