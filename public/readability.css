@@ -1,0 +1,37 @@
+/* Kategori Yıldızı — modest readability uplift */
+.ky-header-title{font-size:16px!important}
+.ky-header-left>div:last-child>div:last-child{font-size:11px!important}
+.ky-btn,.ky-btn-secondary,.ky-btn-primary,.ky-btn-publish,.ky-btn-draft{font-size:11px!important}
+.ky-connection-copy strong{font-size:11px!important}.ky-connection-copy span{font-size:10px!important}
+
+.ky-menu-title,.ky6-acc-title{font-size:12px!important}
+.ky-menu-subtitle,.ky6-acc-sub{font-size:10px!important;line-height:1.4!important}
+.ky-subpanel-header h3,.ky6-panel-title{font-size:14px!important}
+.ky-subpanel-header p,.ky6-panel-subtitle{font-size:10.5px!important;line-height:1.45!important}
+.ky-label,.ky6-label{font-size:10.5px!important;line-height:1.35!important}
+.ky-input,.ky-select,.ky-textarea,.ky6-input,.ky6-select,.ky6-textarea{font-size:11.5px!important}
+.ky-inline-help,.ky-font-count,.ky-field-help,.ky6-help{font-size:10px!important;line-height:1.5!important}
+
+.ky-template-card-v3 .name{font-size:11.5px!important}.ky-template-card-v3 .tag{font-size:8.5px!important}
+.ky-template-editor-title strong{font-size:13px!important}.ky-template-editor-title span{font-size:10px!important}
+.ky-theme-font-bar strong{font-size:12.5px!important}.ky-theme-font-bar small{font-size:10.5px!important}
+.ky-icon-choice span{font-size:9px!important;max-width:72px!important}
+.ky-segment button,.ky-icon-filterbar button{font-size:10.5px!important}
+.ky-category-intro{font-size:11px!important}.ky-category-head strong{font-size:12.5px!important}.ky-category-head span{font-size:10px!important}
+.ky-rank-num{font-size:11px!important}.ky-rank-product strong{font-size:11.5px!important}.ky-rank-product small{font-size:9.5px!important}.ky-rank-select{font-size:10px!important}
+
+.ky-preview-toolbar,.ky-preview-selectors,.ky-view-tab,.ky-device-btn{font-size:10.5px!important}
+.ky-live-theme-label{font-size:10px!important}.ky-live-theme-label strong{font-size:11px!important}
+.ky-preview-empty{font-size:12px!important}.ky-preview-empty strong{font-size:15px!important}
+.ky-footer-status,#statusText{font-size:10.5px!important}
+
+.ky-profile-form-heading p,.ky-profile-brand p{font-size:13px!important}
+.ky-profile-eyebrow,.ky-profile-consents,.ky-profile-product-pill{font-size:11px!important}
+.ky-profile-steps,.ky-profile-password-note{font-size:10px!important}
+.ky-profile-trust{font-size:12.5px!important}
+.ky-profile-error,.ky-support-note{font-size:11px!important}
+
+@media(max-width:760px){
+  .ky-menu-title,.ky6-acc-title{font-size:11.5px!important}
+  .ky-btn,.ky-input,.ky-select,.ky-textarea{font-size:11px!important}
+}
