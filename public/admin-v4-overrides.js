@@ -122,8 +122,7 @@ function supportPolish(){
   if(note && !note.dataset.kyPolished){note.dataset.kyPolished='1';note.textContent='Destek talebin doğrudan The Goatz Studio destek akışına gider. Yanıtlar profilinde kayıtlı e-posta adresine gönderilir.';}
 }
 
-function removeBackHandlersVisual(){qsa('.ky-btn-back').forEach(b=>{if(b.getAttribute('aria-hidden')!=='true')b.setAttribute('aria-hidden','true')});}
-function run(){deviceIcons();restoreTemplates();categoryCopy();imageFallbacks();enhanceProfile();supportPolish();removeBackHandlersVisual();}
+function run(){deviceIcons();restoreTemplates();categoryCopy();imageFallbacks();enhanceProfile();supportPolish();}
 
 let scheduled=false;
 function scheduleRun(){

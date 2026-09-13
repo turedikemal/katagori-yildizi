@@ -1,9 +1,5 @@
 /* Kategori Yıldızı v4 visual corrections */
 
-/* Requested: no back button inside settings panels. Keep the active panel persistent. */
-.ky-subpanel-header .ky-btn-back{display:none!important}
-.ky-subpanel-header{padding-left:16px!important}
-
 /* Device switch must always show real desktop/mobile icons. */
 .ky-preview-toolbar .ky-device-switch{display:inline-flex!important;align-items:center!important;gap:7px!important}
 .ky-device-btn{width:38px!important;height:38px!important;min-width:38px!important;display:grid!important;place-items:center!important;font-size:0!important;overflow:visible!important}
