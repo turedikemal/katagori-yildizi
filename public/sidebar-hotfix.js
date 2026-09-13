@@ -25,138 +25,15 @@ function injectStyles(){
   `;
   document.head.appendChild(style);
 }
-
-function ensureIndicator(card){
-  let indicator=card.querySelector(':scope > .ky-accordion-indicator');
-  if(!indicator){
-    indicator=card.lastElementChild;
-    if(indicator){
-      indicator.className='ky-accordion-indicator';
-      indicator.innerHTML='<i></i><i></i><i></i>';
-    }
-  }
-}
-
-function normalizeStructure(){
-  const menu=qs('#menuList');
-  if(!menu) return null;
-  injectStyles();
-  menu.style.setProperty('display','flex','important');
-  menu.classList.add('ky-menu-list');
-  qsa('#kySidebarNavHead,.ky-sidebar-navhead').forEach(el=>el.remove());
-  qs('.ky-sidebar')?.classList.remove('ky-menu-open','ky-nav-ready');
-  document.body.classList.remove('ky-panel-open');
-
-  qsa('.ky-menu-card',menu).forEach(card=>{
-    card.style.removeProperty('display');
-    card.style.removeProperty('visibility');
-    card.removeAttribute('hidden');
-    ensureIndicator(card);
-    const id=card.dataset.target;
-    const panel=id?qs('#'+CSS.escape(id)):null;
-    if(!panel) return;
-    panel.classList.add('ky-accordion-panel');
-    if(panel.parentElement!==menu || panel.previousElementSibling!==card){
-      menu.insertBefore(panel,card.nextSibling);
-    }
-  });
-  return menu;
-}
-
-function closeAll(){
-  const menu=qs('#menuList');
-  if(!menu) return;
-  qsa(':scope > .ky-menu-card',menu).forEach(card=>{
-    card.classList.remove('active');
-    card.setAttribute('aria-expanded','false');
-  });
-  qsa(':scope > .ky-accordion-panel',menu).forEach(panel=>panel.classList.remove('active'));
-  sessionStorage.removeItem('ky-active-panel');
-}
-
-function togglePanel(id){
-  const menu=normalizeStructure();
-  if(!menu||!id) return;
-  const panel=qs('#'+CSS.escape(id));
-  const card=qs(`.ky-menu-card[data-target="${CSS.escape(id)}"]`,menu);
-  if(!panel||!card) return;
-
-  const wasOpen=panel.classList.contains('active');
-  qsa(':scope > .ky-menu-card',menu).forEach(c=>{
-    c.classList.remove('active');
-    c.setAttribute('aria-expanded','false');
-  });
-  qsa(':scope > .ky-accordion-panel',menu).forEach(p=>p.classList.remove('active'));
-
-  if(wasOpen){
-    sessionStorage.removeItem('ky-active-panel');
-    return;
-  }
-
-  panel.classList.add('active');
-  card.classList.add('active');
-  card.setAttribute('aria-expanded','true');
-  sessionStorage.setItem('ky-active-panel',id);
-  requestAnimationFrame(()=>panel.scrollIntoView({block:'nearest',behavior:'smooth'}));
-}
-
-function repair(){
-  if(repairing) return;
-  repairing=true;
-  try{
-    const menu=normalizeStructure();
-    if(!menu) return;
-    const active=qsa(':scope > .ky-accordion-panel.active',menu);
-    if(active.length>1){
-      active.slice(1).forEach(p=>p.classList.remove('active'));
-    }
-    const activeId=active[0]?.id||'';
-    qsa(':scope > .ky-menu-card',menu).forEach(card=>{
-      const isActive=card.dataset.target===activeId;
-      card.classList.toggle('active',isActive);
-      card.setAttribute('aria-expanded',isActive?'true':'false');
-    });
-  } finally {
-    repairing=false;
-  }
-}
-
-function bind(){
-  const menu=normalizeStructure();
-  if(!menu||menu.dataset.kyHotfixBound) return;
-  menu.dataset.kyHotfixBound='1';
-
-  menu.addEventListener('click',e=>{
-    const card=e.target.closest('.ky-menu-card');
-    if(!card||!menu.contains(card)) return;
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    togglePanel(card.dataset.target);
-  },true);
-
-  menu.addEventListener('keydown',e=>{
-    const card=e.target.closest('.ky-menu-card');
-    if(!card||!menu.contains(card)||(e.key!=='Enter'&&e.key!==' ')) return;
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    togglePanel(card.dataset.target);
-  },true);
-
-  closeAll();
-}
-
-function schedule(){
-  if(scheduled||repairing) return;
-  scheduled=true;
-  requestAnimationFrame(()=>{scheduled=false;repair();});
-}
-
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>{bind();repair();},{once:true});
-else {bind();repair();}
-setTimeout(()=>{bind();repair();},200);
-setTimeout(()=>{bind();repair();},800);
-setTimeout(()=>{bind();repair();},1600);
-
-const observer=new MutationObserver(schedule);
-observer.observe(document.documentElement,{childList:true,subtree:true});
+function ensureIndicator(card){let indicator=card.querySelector(':scope > .ky-accordion-indicator');if(!indicator){indicator=card.lastElementChild;if(indicator){indicator.className='ky-accordion-indicator';indicator.innerHTML='<i></i><i></i><i></i>';}}}
+function normalizeStructure(){const menu=qs('#menuList');if(!menu)return null;injectStyles();menu.style.setProperty('display','flex','important');menu.classList.add('ky-menu-list');qsa('#kySidebarNavHead,.ky-sidebar-navhead').forEach(el=>el.remove());qs('.ky-sidebar')?.classList.remove('ky-menu-open','ky-nav-ready');document.body.classList.remove('ky-panel-open');qsa('.ky-menu-card',menu).forEach(card=>{card.style.removeProperty('display');card.style.removeProperty('visibility');card.removeAttribute('hidden');ensureIndicator(card);const id=card.dataset.target;const panel=id?qs('#'+CSS.escape(id)):null;if(!panel)return;panel.classList.add('ky-accordion-panel');if(panel.parentElement!==menu||panel.previousElementSibling!==card)menu.insertBefore(panel,card.nextSibling);});return menu;}
+function closeAll(){const menu=qs('#menuList');if(!menu)return;qsa(':scope > .ky-menu-card',menu).forEach(card=>{card.classList.remove('active');card.setAttribute('aria-expanded','false');});qsa(':scope > .ky-accordion-panel',menu).forEach(panel=>panel.classList.remove('active'));sessionStorage.removeItem('ky-active-panel');}
+function togglePanel(id){const menu=normalizeStructure();if(!menu||!id)return;const panel=qs('#'+CSS.escape(id));const card=qs(`.ky-menu-card[data-target="${CSS.escape(id)}"]`,menu);if(!panel||!card)return;const wasOpen=panel.classList.contains('active');qsa(':scope > .ky-menu-card',menu).forEach(c=>{c.classList.remove('active');c.setAttribute('aria-expanded','false');});qsa(':scope > .ky-accordion-panel',menu).forEach(p=>p.classList.remove('active'));if(wasOpen){sessionStorage.removeItem('ky-active-panel');return;}panel.classList.add('active');card.classList.add('active');card.setAttribute('aria-expanded','true');sessionStorage.setItem('ky-active-panel',id);requestAnimationFrame(()=>panel.scrollIntoView({block:'nearest',behavior:'smooth'}));}
+function repair(){if(repairing)return;repairing=true;try{const menu=normalizeStructure();if(!menu)return;const active=qsa(':scope > .ky-accordion-panel.active',menu);if(active.length>1)active.slice(1).forEach(p=>p.classList.remove('active'));const activeId=active[0]?.id||'';qsa(':scope > .ky-menu-card',menu).forEach(card=>{const isActive=card.dataset.target===activeId;card.classList.toggle('active',isActive);card.setAttribute('aria-expanded',isActive?'true':'false');});}finally{repairing=false;}}
+function bind(){const menu=normalizeStructure();if(!menu||menu.dataset.kyHotfixBound)return;menu.dataset.kyHotfixBound='1';menu.addEventListener('click',e=>{const card=e.target.closest('.ky-menu-card');if(!card||!menu.contains(card))return;e.preventDefault();e.stopImmediatePropagation();togglePanel(card.dataset.target);},true);menu.addEventListener('keydown',e=>{const card=e.target.closest('.ky-menu-card');if(!card||!menu.contains(card)||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();e.stopImmediatePropagation();togglePanel(card.dataset.target);},true);closeAll();}
+function schedule(){if(scheduled||repairing)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;repair();});}
+function loadCustomIconPack(){if(document.querySelector('script[data-ky-custom-icons]'))return;const s=document.createElement('script');s.src='/custom-bestseller-icons.js?v=20260913-1';s.dataset.kyCustomIcons='1';document.body.appendChild(s);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{bind();repair();loadCustomIconPack();},{once:true});else{bind();repair();loadCustomIconPack();}
+setTimeout(()=>{bind();repair();},200);setTimeout(()=>{bind();repair();},800);setTimeout(()=>{bind();repair();},1600);
+const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true});
 })();
