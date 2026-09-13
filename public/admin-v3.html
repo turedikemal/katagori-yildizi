@@ -6,10 +6,32 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Kategori Yıldızı — ikas Yönetim Paneli</title>
   <link rel="icon" href="/thegoatzstudio.png?v=20260913-4" type="image/png">
-  <link rel="stylesheet" href="/admin.css?v=20260913-5">
-  <link rel="stylesheet" href="/widget.css?v=20260913-5">
-  <link rel="stylesheet" href="/admin-v3.css?v=20260913-5">
-  <link rel="stylesheet" href="/admin-v4-overrides.css?v=20260913-5">
+  <link rel="stylesheet" href="/admin.css?v=20260913-6">
+  <link rel="stylesheet" href="/widget.css?v=20260913-6">
+  <link rel="stylesheet" href="/admin-v3.css?v=20260913-6">
+  <link rel="stylesheet" href="/admin-v4-overrides.css?v=20260913-6">
+  <style>
+    .ky-sidebar-navhead,#kySidebarNavHead{display:none!important}
+    .ky-theme-adapter{display:none!important}
+    .ky-preview-stage{background:#f5f6fa!important;padding:14px!important}
+    .ky-stage-canvas{background:transparent!important;border:0!important;box-shadow:none!important;overflow:auto!important}
+    .ky-live-theme-preview{min-height:100%;display:flex;flex-direction:column;gap:8px}
+    .ky-live-theme-label{display:flex;align-items:center;gap:7px;color:#243a8b;font-size:9px;padding:0 2px}
+    .ky-live-theme-label strong{font-size:10px}.ky-live-theme-label>span:last-child{opacity:.48}
+    .ky-live-dot{width:7px;height:7px;border-radius:50%;background:#12b76a}
+    .ky-live-browser{position:relative;min-height:690px;border:1px solid rgba(36,58,139,.10);border-radius:14px;background:#fff;overflow:hidden;box-shadow:0 16px 36px rgba(36,58,139,.07)}
+    .ky-live-store-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+    .ky-live-overlay{position:absolute;inset:0;z-index:4;pointer-events:none}
+    .mobile-view .ky-live-browser{width:390px;max-width:100%;margin:0 auto;min-height:720px}
+    .ky-live-category-demo{position:absolute;left:6.5%;top:31%;width:21%;min-width:220px;max-width:360px;height:260px;border-radius:10px;overflow:hidden}
+    .ky-live-category-ribbon{position:absolute;left:0;right:0;bottom:0;min-height:35px;padding:7px 12px;display:flex;align-items:center;justify-content:center;gap:7px;background:linear-gradient(90deg,#40574f,#c8c99e);color:#fff;font-size:12px;font-weight:700}
+    .ky-live-medal{font-size:16px;line-height:1}
+    .ky-live-pdp-demo{position:absolute;left:7%;right:7%;top:45%;display:flex;align-items:center;gap:6px;color:#111827;font-size:14px;background:rgba(255,255,255,.94);width:max-content;max-width:86%;padding:7px 9px;border-radius:10px;box-shadow:0 7px 22px rgba(15,23,42,.07)}
+    .ky-live-pdp-demo a{color:#111827;text-decoration:underline;text-underline-offset:3px}.ky-live-pdp-icon{font-size:18px}
+    .ky-live-pdp-badge{display:inline-flex;align-items:center;gap:6px;margin-left:3px;border:1px solid #7dd3fc;border-radius:10px;padding:6px 10px;background:#fff;font-weight:700;white-space:nowrap}
+    .ky-live-pdp-badge b{font-size:17px;font-weight:500}
+    @media(max-width:760px){.ky-live-category-demo{left:6%;top:35%;width:43%;min-width:150px;height:220px}.ky-live-category-ribbon{font-size:10px;padding:6px 8px}.ky-live-pdp-demo{left:4%;top:48%;font-size:10px;gap:4px;padding:6px;max-width:92%}.ky-live-pdp-badge{padding:5px 7px}}
+  </style>
 </head>
 <body>
   <header class="ky-admin-header">
@@ -40,8 +62,8 @@
         <div class="ky-menu-list" id="menuList">
           <div class="ky-menu-card" data-target="panelDashboard"><div class="ky-menu-card-left"><div class="ky-menu-icon">◫</div><div><div class="ky-menu-title">Genel görünüm</div><div class="ky-menu-subtitle">Bağlantı, ürünler ve hızlı durum</div></div></div><span>›</span></div>
           <div class="ky-menu-card" data-target="panelRanking"><div class="ky-menu-card-left"><div class="ky-menu-icon">↗</div><div><div class="ky-menu-title">Sıralama sistemi</div><div class="ky-menu-subtitle">Dönem, ölçüt ve maksimum 20 rozet</div></div></div><span>›</span></div>
-          <div class="ky-menu-card" data-target="panelTemplates"><div class="ky-menu-card-left"><div class="ky-menu-icon">✦</div><div><div class="ky-menu-title">Şablonlar & renkler</div><div class="ky-menu-subtitle">Orijinal şablonlar ve çağdaş seçenekler</div></div></div><span>›</span></div>
-          <div class="ky-menu-card" data-target="panelTexts"><div class="ky-menu-card-left"><div class="ky-menu-icon">T</div><div><div class="ky-menu-title">Metinler</div><div class="ky-menu-subtitle">Tek ürün metni ve dinamik değişkenler</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelTemplates"><div class="ky-menu-card-left"><div class="ky-menu-icon">✦</div><div><div class="ky-menu-title">Şablonlar & renkler</div><div class="ky-menu-subtitle">Rozet ve kart görünümleri</div></div></div><span>›</span></div>
+          <div class="ky-menu-card" data-target="panelTexts"><div class="ky-menu-card-left"><div class="ky-menu-icon">T</div><div><div class="ky-menu-title">Metinler</div><div class="ky-menu-subtitle">Kategori ve ürün detay metinleri</div></div></div><span>›</span></div>
           <div class="ky-menu-card" data-target="panelTypography"><div class="ky-menu-card-left"><div class="ky-menu-icon">Aa</div><div><div class="ky-menu-title">Tipografi</div><div class="ky-menu-subtitle">Tema fontu veya tüm Google Fonts</div></div></div><span>›</span></div>
           <div class="ky-menu-card" data-target="panelIcons"><div class="ky-menu-card-left"><div class="ky-menu-icon">★</div><div><div class="ky-menu-title">İkonlar</div><div class="ky-menu-subtitle">İkon, iki renk ve boyut ayarları</div></div></div><span>›</span></div>
           <div class="ky-menu-card" data-target="panelColors"><div class="ky-menu-card-left"><div class="ky-menu-icon">◉</div><div><div class="ky-menu-title">Renkler & gradyan</div><div class="ky-menu-subtitle">Arka plan, metin ve vurgu renkleri</div></div></div><span>›</span></div>
@@ -85,7 +107,7 @@
         </div>
         <div class="ky-preview-selectors"><span>Kategori:</span><select class="ky-select" id="previewCategorySelect"></select></div>
       </div>
-      <div class="ky-preview-stage"><div class="ky-stage-canvas" id="stageCanvas"><div class="ky-preview-empty"><div><strong>ikas ürünleri bekleniyor</strong>Bağlantı tamamlandığında gerçek TheGoatz ürünleri burada gösterilecek.</div></div></div></div>
+      <div class="ky-preview-stage"><div class="ky-stage-canvas" id="stageCanvas"><div class="ky-preview-empty"><div><strong>ikas ürünleri bekleniyor</strong>Bağlantı tamamlandığında gerçek mağaza teması ve ürün verileri burada gösterilecek.</div></div></div></div>
     </section>
   </main>
 
@@ -102,9 +124,10 @@
   <dialog id="supportDialog"></dialog>
   <div class="ky-toast" id="kyToast"></div>
 
-  <script src="/admin.js?v=20260913-5"></script>
-  <script src="/account-v3.js?v=20260913-5"></script>
-  <script src="/admin-fixes.js?v=20260913-5"></script>
-  <script src="/admin-v4-overrides.js?v=20260913-5"></script>
+  <script src="/admin.js?v=20260913-6"></script>
+  <script src="/account-v3.js?v=20260913-6"></script>
+  <script src="/admin-fixes.js?v=20260913-6"></script>
+  <script src="/admin-v4-overrides.js?v=20260913-6"></script>
+  <script src="/admin-theme-preview.js?v=20260913-6"></script>
 </body>
 </html>
