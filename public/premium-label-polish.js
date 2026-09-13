@@ -8,6 +8,14 @@ function apply(){
     tag.innerHTML=`<img src="${CROWN}" alt="Premium">`;
   });
 }
+function loadDeviceOverrides(){
+  if(!document.querySelector('link[data-ky-device-overrides]')){
+    const l=document.createElement('link');l.rel='stylesheet';l.href='/admin-device-overrides.css?v=20260913-1';l.dataset.kyDeviceOverrides='1';document.head.appendChild(l);
+  }
+  if(!document.querySelector('script[data-ky-device-overrides]')){
+    const s=document.createElement('script');s.src='/admin-device-overrides.js?v=20260913-1';s.dataset.kyDeviceOverrides='1';document.body.appendChild(s);
+  }
+}
 const style=document.createElement('style');
 style.textContent=`
 #v3Icons,.ky-premium-choice{overflow:visible!important}
@@ -47,5 +55,5 @@ style.textContent=`
 document.head.appendChild(style);
 const mo=new MutationObserver(()=>{clearTimeout(mo.t);mo.t=setTimeout(apply,20)});
 mo.observe(document.body,{childList:true,subtree:true});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply);else apply();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{apply();loadDeviceOverrides();});else{apply();loadDeviceOverrides();}
 })();
