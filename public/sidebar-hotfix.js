@@ -32,8 +32,14 @@ function togglePanel(id){const menu=normalizeStructure();if(!menu||!id)return;co
 function repair(){if(repairing)return;repairing=true;try{const menu=normalizeStructure();if(!menu)return;const active=qsa(':scope > .ky-accordion-panel.active',menu);if(active.length>1)active.slice(1).forEach(p=>p.classList.remove('active'));const activeId=active[0]?.id||'';qsa(':scope > .ky-menu-card',menu).forEach(card=>{const isActive=card.dataset.target===activeId;card.classList.toggle('active',isActive);card.setAttribute('aria-expanded',isActive?'true':'false');});}finally{repairing=false;}}
 function bind(){const menu=normalizeStructure();if(!menu||menu.dataset.kyHotfixBound)return;menu.dataset.kyHotfixBound='1';menu.addEventListener('click',e=>{const card=e.target.closest('.ky-menu-card');if(!card||!menu.contains(card))return;e.preventDefault();e.stopImmediatePropagation();togglePanel(card.dataset.target);},true);menu.addEventListener('keydown',e=>{const card=e.target.closest('.ky-menu-card');if(!card||!menu.contains(card)||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();e.stopImmediatePropagation();togglePanel(card.dataset.target);},true);closeAll();}
 function schedule(){if(scheduled||repairing)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;repair();});}
-function loadCustomIconPack(){if(document.querySelector('script[data-ky-custom-icons]'))return;const s=document.createElement('script');s.src='/custom-bestseller-icons.js?v=20260913-1';s.dataset.kyCustomIcons='1';document.body.appendChild(s);}
+function loadCustomIconPack(){
+  let s=document.querySelector('script[data-ky-custom-icons]');
+  if(!s){s=document.createElement('script');s.src='/custom-bestseller-icons.js?v=20260913-2';s.dataset.kyCustomIcons='1';document.body.appendChild(s);}
+  if(!document.querySelector('script[data-ky-custom-preview]')){
+    const p=document.createElement('script');p.src='/custom-icon-preview-fix.js?v=20260913-1';p.dataset.kyCustomPreview='1';document.body.appendChild(p);
+  }
+}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{bind();repair();loadCustomIconPack();},{once:true});else{bind();repair();loadCustomIconPack();}
-setTimeout(()=>{bind();repair();},200);setTimeout(()=>{bind();repair();},800);setTimeout(()=>{bind();repair();},1600);
+setTimeout(()=>{bind();repair();loadCustomIconPack();},200);setTimeout(()=>{bind();repair();},800);setTimeout(()=>{bind();repair();},1600);
 const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true});
 })();
