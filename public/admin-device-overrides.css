@@ -1,0 +1,43 @@
+/* Kategori Yıldızı — device editor, menu order, motion and PDP cleanup */
+.ky-device-editor-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:0 0 10px;padding:3px;background:#eef2ff;border:1px solid rgba(36,58,139,.09);border-radius:10px;position:sticky;top:0;z-index:8}
+.ky-device-editor-tabs button{height:31px;border:0;border-radius:7px;background:transparent;color:#7582aa;font-size:9.5px;font-weight:800}
+.ky-device-editor-tabs button.active{background:#fff;color:#243a8b;box-shadow:0 1px 5px rgba(36,58,139,.08)}
+.ky-device-editor-tabs button[data-edit-device="mobile"].active{color:#ce3f44}
+.ky-control-disabled{opacity:.42!important;pointer-events:none!important;filter:grayscale(.2)}
+.ky-capability-note{font-size:9px;line-height:1.45;color:rgba(36,58,139,.6);padding:8px 9px;border-radius:8px;background:#f6f8ff;border:1px solid rgba(36,58,139,.08);margin-bottom:9px}
+
+#stageCanvas .ky-focus-pdp-badge,#stageCanvas .ky-live-pdp-badge{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;padding:0!important}
+#stageCanvas .ky-focus-pdp-badge>.ky-v3-badge,#stageCanvas .ky-live-pdp-badge>.ky-v3-badge{margin:0!important}
+
+#v3Categories .ky-category-head{cursor:pointer;user-select:none}
+#v3Categories .ky-category-arrow{margin-left:auto;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:#eef2ff;color:#243a8b;font-weight:900;transition:transform .18s ease}
+#v3Categories .ky-category-body{display:none}
+#v3Categories .ky-category-card.open .ky-category-body{display:block}
+#v3Categories .ky-category-card.open .ky-category-arrow{transform:rotate(180deg)}
+
+@keyframes kyv3FadeFixed{from{opacity:0}to{opacity:var(--badge-opacity,1)}}
+@keyframes kyv3SlideUpFixed{from{opacity:0;translate:0 14px}to{opacity:var(--badge-opacity,1);translate:0 0}}
+@keyframes kyv3SlideDownFixed{from{opacity:0;translate:0 -14px}to{opacity:var(--badge-opacity,1);translate:0 0}}
+@keyframes kyv3SlideLeftFixed{from{opacity:0;translate:18px 0}to{opacity:var(--badge-opacity,1);translate:0 0}}
+@keyframes kyv3SlideRightFixed{from{opacity:0;translate:-18px 0}to{opacity:var(--badge-opacity,1);translate:0 0}}
+@keyframes kyv3PopFixed{0%{opacity:0;scale:.72}72%{opacity:var(--badge-opacity,1);scale:1.07}100%{opacity:var(--badge-opacity,1);scale:1}}
+@keyframes kyv3FlipFixed{from{opacity:0;transform:perspective(480px) rotateY(-88deg) scale(var(--badge-scale,1))}to{opacity:var(--badge-opacity,1);transform:perspective(480px) rotateY(0) scale(var(--badge-scale,1))}}
+@keyframes kyv3BounceFixed{0%{opacity:0;translate:0 18px}55%{opacity:var(--badge-opacity,1);translate:0 -7px}75%{translate:0 3px}100%{translate:0 0}}
+.ky-entry-fade{animation:kyv3FadeFixed var(--anim-dur,.32s) ease both!important}
+.ky-entry-slide-up{animation:kyv3SlideUpFixed var(--anim-dur,.32s) cubic-bezier(.22,1,.36,1) both!important}
+.ky-entry-slide-down{animation:kyv3SlideDownFixed var(--anim-dur,.32s) cubic-bezier(.22,1,.36,1) both!important}
+.ky-entry-slide-left{animation:kyv3SlideLeftFixed var(--anim-dur,.32s) cubic-bezier(.22,1,.36,1) both!important}
+.ky-entry-slide-right{animation:kyv3SlideRightFixed var(--anim-dur,.32s) cubic-bezier(.22,1,.36,1) both!important}
+.ky-entry-pop{animation:kyv3PopFixed var(--anim-dur,.36s) cubic-bezier(.34,1.56,.64,1) both!important}
+.ky-entry-flip{animation:kyv3FlipFixed var(--anim-dur,.42s) cubic-bezier(.2,.75,.25,1) both!important;backface-visibility:hidden}
+.ky-entry-bounce{animation:kyv3BounceFixed var(--anim-dur,.5s) ease both!important}
+
+.ky-hover-lift:hover{translate:0 -4px!important;box-shadow:0 11px 25px rgba(16,24,40,.17)!important}
+.ky-hover-scale:hover{scale:1.07!important}
+.ky-hover-glow:hover{filter:drop-shadow(0 0 8px color-mix(in srgb,var(--badge-accent) 65%,transparent))!important}
+.ky-hover-shadow:hover{box-shadow:0 14px 30px rgba(16,24,40,.24)!important}
+.ky-hover-tilt:hover{rotate:-3deg!important;scale:1.02!important}
+.ky-hover-pulse:hover{animation:kyv3HoverPulse .7s ease-in-out infinite alternate!important}
+.ky-hover-slide-left:hover{translate:-5px 0!important}
+.ky-hover-slide-right:hover{translate:5px 0!important}
+@keyframes kyv3HoverPulse{from{scale:1}to{scale:1.055}}
