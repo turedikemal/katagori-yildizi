@@ -50,8 +50,8 @@ let state={config:structuredClone(DEFAULT),categories:[],analytics:{},device:'de
 
 function ensureV3Assets(){
  if(!document.querySelector('link[href^="/admin-v3.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/admin-v3.css?v=20260913-5';document.head.appendChild(l);}
- const logo=document.querySelector('#btnBrandHome img'); if(logo){logo.src='/thegoatzstudio.png';logo.className='ky-brand-image';logo.removeAttribute('style');}
- const favicon=document.querySelector('link[rel="icon"]'); if(favicon){favicon.href='/thegoatzstudio.png';favicon.type='image/png';}
+ const logo=document.querySelector('#btnBrandHome img'); if(logo){logo.src='/the-goatz-studio-logo.png?v=20260913-1';logo.className='ky-brand-image';logo.removeAttribute('style');}
+ const favicon=document.querySelector('link[rel="icon"]'); if(favicon){favicon.href='/favicon.png?v=20260913-1';favicon.type='image/png';}
  const copy=byId('btnCopyCode'); if(copy){copy.textContent='Kurulum otomatik';copy.disabled=true;copy.title='Rozetler uygulama tarafından otomatik uygulanır.';}
 }
 async function api(path,opts={}){const url=new URL(path,API); if(!url.searchParams.has('shop'))url.searchParams.set('shop',shop);const init={...opts,headers:{...(opts.headers||{})}};if(init.body&&typeof init.body!=='string'){init.headers['Content-Type']='application/json';init.body=JSON.stringify({...init.body,shop});}const r=await fetch(url.toString(),init);let data={};try{data=await r.json()}catch{}if(!r.ok)throw new Error(data.message||data.error||('HTTP '+r.status));return data;}

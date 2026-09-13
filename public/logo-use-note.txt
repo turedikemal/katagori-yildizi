@@ -1,2 +1,3 @@
-Approved The Goatz Studio logo asset: /public/thegoatzstudio.png
+Approved The Goatz Studio logo asset: /public/the-goatz-studio-logo.png
+Approved favicon asset: /public/favicon.png
 Use the supplied logo as-is; preserve aspect ratio and full tagline.

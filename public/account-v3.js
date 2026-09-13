@@ -23,7 +23,7 @@ function mountProfile(){
   const layer=document.createElement('div');layer.id='accountProfileLayer';layer.className='ky-fullscreen-layer';
   layer.innerHTML=`<div class="ky-profile-shell">
     <section class="ky-profile-brand">
-      <img src="/thegoatzstudio.png?v=20260913-2" alt="The Goatz Studio">
+      <img src="/the-goatz-studio-logo.png?v=20260913-1" alt="The Goatz Studio">
       <div style="display:inline-flex;width:max-content;margin-top:22px;padding:7px 11px;border-radius:999px;background:#fff;border:1px solid rgba(36,58,139,.10);font-size:10px;font-weight:800;color:#243a8b">Kategori Yıldızı</div>
       <h2>Profil bilgilerini güncelle.</h2>
       <p>İletişim ve görev bilgilerini buradan değiştirebilirsin. Profilin mağazana bağlı olarak saklanır ve destek taleplerinde otomatik kullanılır.</p>
