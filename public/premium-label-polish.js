@@ -9,11 +9,11 @@ function apply(){
   });
 }
 function loadDeviceOverrides(){
-  if(!document.querySelector('link[data-ky-device-overrides]')){
-    const l=document.createElement('link');l.rel='stylesheet';l.href='/admin-device-overrides.css?v=20260913-1';l.dataset.kyDeviceOverrides='1';document.head.appendChild(l);
+  if(!document.querySelector('link[href^="/admin-device-overrides.css"]')){
+    const l=document.createElement('link');l.rel='stylesheet';l.href='/admin-device-overrides.css?v=20260913-2';l.dataset.kyDeviceOverrides='1';document.head.appendChild(l);
   }
-  if(!document.querySelector('script[data-ky-device-overrides]')){
-    const s=document.createElement('script');s.src='/admin-device-overrides.js?v=20260913-1';s.dataset.kyDeviceOverrides='1';document.body.appendChild(s);
+  if(!document.querySelector('script[src^="/admin-device-overrides.js"]')){
+    const s=document.createElement('script');s.src='/admin-device-overrides.js?v=20260913-2';s.dataset.kyDeviceOverrides='1';document.body.appendChild(s);
   }
 }
 const style=document.createElement('style');
