@@ -6,6 +6,9 @@
 .ky-control-disabled{opacity:.42!important;pointer-events:none!important;filter:grayscale(.2)}
 .ky-capability-note{font-size:9px;line-height:1.45;color:rgba(36,58,139,.6);padding:8px 9px;border-radius:8px;background:#f6f8ff;border:1px solid rgba(36,58,139,.08);margin-bottom:9px}
 
+/* Template cards: remove the "Özgün" label */
+.ky-template-card-v3 .tag{display:none!important}
+
 #stageCanvas .ky-focus-pdp-badge,#stageCanvas .ky-live-pdp-badge{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;padding:0!important}
 #stageCanvas .ky-focus-pdp-badge>.ky-v3-badge,#stageCanvas .ky-live-pdp-badge>.ky-v3-badge{margin:0!important}
 
