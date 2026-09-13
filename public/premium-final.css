@@ -1,9 +1,11 @@
-#kyIconFilterBar [data-filter="premium"]{color:#ffb943!important;border-color:#ffb943!important;background:#fffaf0!important}
-#kyIconFilterBar [data-filter="premium"].active{color:#c98200!important;background:#fff5dc!important}
+#kyIconFilterBar [data-filter="premium"]{color:#d98c00!important;border-color:#ffb943!important;background:#fffaf0!important;padding:7px 14px!important;gap:7px!important}
+#kyIconFilterBar [data-filter="premium"]::after{width:17px!important;height:17px!important;background-image:url('/premium-crown.png?v=20260913-1')!important}
+#kyIconFilterBar [data-filter="premium"].active{color:#c98200!important;background:#fff5dc!important;box-shadow:0 0 0 1px rgba(255,185,67,.12)!important}
 #v3Icons{overflow:visible!important;padding-top:8px!important}
 .ky-premium-choice{position:relative!important;overflow:visible!important}
-.ky-premium-choice .ky-premium-tag{right:-7px!important;top:-9px!important;left:auto!important;width:17px!important;height:17px!important;font-size:0!important;background:transparent!important;border:0!important;box-shadow:none!important;z-index:40!important}
-.ky-premium-choice .ky-premium-tag::before{width:17px!important;height:17px!important}
+.ky-premium-choice .ky-premium-tag{right:-8px!important;top:-10px!important;left:auto!important;width:20px!important;height:20px!important;font-size:0!important;background:transparent!important;border:0!important;box-shadow:none!important;z-index:40!important}
+.ky-premium-choice .ky-premium-tag::before{width:20px!important;height:20px!important;background-image:url('/premium-crown.png?v=20260913-1')!important}
+.ky-premium-choice .ky-premium-tag img{width:20px!important;height:20px!important;object-fit:contain!important}
 #kyIconFilterBar:has([data-filter="all"].active) ~ #v3Icons .ky-premium-choice{display:none!important}
 #kyIconFilterBar:has([data-filter="premium"].active) ~ #v3Icons .ky-icon-choice:not(.ky-premium-choice){display:none!important}
 #kyIconFilterBar:has([data-filter="premium"].active) ~ #v3Icons .ky-premium-choice{display:flex!important}
