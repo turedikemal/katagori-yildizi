@@ -1,0 +1,26 @@
+/* Kategori Yıldızı — template color integrity.
+   Decorative template colors must derive from the selected template palette. */
+
+/* Admin preview variants */
+.ky-v3-badge.contour{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(120deg,var(--badge-bg),color-mix(in srgb,var(--badge-bg) 45%,var(--badge-accent)),var(--badge-accent)) border-box!important;box-shadow:0 3px 10px color-mix(in srgb,var(--badge-bg) 15%,transparent)!important}
+.ky-v3-badge.medallion{box-shadow:0 6px 16px color-mix(in srgb,var(--badge-bg) 20%,transparent)!important}
+.ky-v3-badge.sage{box-shadow:0 5px 12px color-mix(in srgb,var(--badge-bg) 22%,transparent)!important}
+.ky-v3-badge.frame{box-shadow:0 4px 12px color-mix(in srgb,var(--badge-bg) 15%,transparent)!important}
+.ky-v3-badge.frosted{box-shadow:0 9px 20px color-mix(in srgb,var(--badge-bg) 24%,transparent)!important}
+.ky-v3-badge.luxe{background:linear-gradient(135deg,color-mix(in srgb,var(--badge-bg) 72%,#000),var(--badge-bg))!important;box-shadow:0 7px 18px color-mix(in srgb,var(--badge-bg) 28%,transparent)!important}
+.ky-v3-badge.arc{background:linear-gradient(120deg,var(--badge-bg),color-mix(in srgb,var(--badge-bg) 50%,var(--badge-accent)) 48%,var(--badge-accent))!important;box-shadow:0 8px 20px color-mix(in srgb,var(--badge-bg) 25%,transparent)!important}
+.ky-v3-badge.ranktab{background:var(--badge-bg)!important;color:var(--badge-text)!important;border-left-color:var(--badge-accent)!important;box-shadow:0 5px 14px color-mix(in srgb,var(--badge-bg) 20%,transparent)!important}
+.ky-v3-badge.signature{box-shadow:0 5px 14px color-mix(in srgb,var(--badge-bg) 16%,transparent)!important}
+.ky-v3-badge.colorblock{box-shadow:0 6px 14px color-mix(in srgb,var(--badge-bg) 20%,transparent)!important}
+
+/* Storefront equivalents */
+.ky-badge-root.ky-tpl-gradient-pill{background-image:linear-gradient(#fff,#fff),linear-gradient(120deg,var(--ky-primary-bg),color-mix(in srgb,var(--ky-primary-bg) 45%,var(--ky-accent)),var(--ky-accent));box-shadow:0 3px 10px color-mix(in srgb,var(--ky-primary-bg) 15%,transparent)}
+.ky-badge-root.ky-tpl-split-pill{box-shadow:0 6px 16px color-mix(in srgb,var(--ky-primary-bg) 20%,transparent)}
+.ky-badge-root.ky-tpl-eco-clean{box-shadow:0 5px 12px color-mix(in srgb,var(--ky-primary-bg) 22%,transparent)}
+.ky-badge-root.ky-tpl-modern-outline{box-shadow:0 4px 12px color-mix(in srgb,var(--ky-primary-bg) 15%,transparent)}
+.ky-badge-root.ky-tpl-glass-pill{box-shadow:0 9px 20px color-mix(in srgb,var(--ky-primary-bg) 24%,transparent)}
+.ky-badge-root.ky-tpl-luxury-label{background:linear-gradient(135deg,color-mix(in srgb,var(--ky-primary-bg) 72%,#000),var(--ky-primary-bg));box-shadow:0 7px 18px color-mix(in srgb,var(--ky-primary-bg) 28%,transparent)}
+.ky-badge-root.ky-tpl-arc-pill{background:linear-gradient(120deg,var(--ky-primary-bg),color-mix(in srgb,var(--ky-primary-bg) 50%,var(--ky-accent)) 48%,var(--ky-accent));box-shadow:0 8px 20px color-mix(in srgb,var(--ky-primary-bg) 25%,transparent)}
+.ky-badge-root.ky-tpl-rank-tab{background:var(--ky-primary-bg);color:var(--ky-primary-text);border-left-color:var(--ky-accent);box-shadow:0 5px 14px color-mix(in srgb,var(--ky-primary-bg) 20%,transparent)}
+.ky-badge-root.ky-tpl-signature-pill{box-shadow:0 5px 14px color-mix(in srgb,var(--ky-primary-bg) 16%,transparent)}
+.ky-badge-root.ky-tpl-color-block{box-shadow:0 6px 14px color-mix(in srgb,var(--ky-primary-bg) 20%,transparent)}
