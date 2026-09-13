@@ -10,6 +10,7 @@ if (process.env.DATABASE_URL) {
 }
 
 const variantToProduct = new Map();
+const tokenMerchantIds = new Map();
 
 async function getStoredToken(shop) {
   if (!tokenPool || !shop) return null;
@@ -37,7 +38,7 @@ function productQuery(page, rich = true) {
   if (!rich) {
     return `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categories { id name } variants { id } } } }`;
   }
-  return `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categories { id name } images { id fileName order } variants { id prices { sellPrice discountPrice } stocks { stockCount } } } } }`;
+  return `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categories { id name } variants { id images { imageId fileName isMain order } prices { sellPrice discountPrice } stocks { stockCount } } } } }`;
 }
 
 function adaptGraphQuery(bodyText) {
@@ -92,14 +93,32 @@ function stockCount(variant) {
   return stocks.reduce((sum, stock) => sum + (Number(stock?.stockCount) || 0), 0);
 }
 
-function imageUrl(image) {
-  const fileName = String(image?.fileName || '').trim();
-  if (!fileName) return '';
-  if (/^https?:\/\//i.test(fileName)) return fileName;
-  return `https://cdn.myikas.com/images/${fileName.replace(/^\/+/, '')}`;
+function merchantIdFromToken(token) {
+  if (!token) return '';
+  if (tokenMerchantIds.has(token)) return tokenMerchantIds.get(token);
+  try {
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString('utf8'));
+    const merchantId = String(payload.merchantId || payload.merchant_id || payload.sub || '').trim();
+    if (/^[0-9a-f-]{36}$/i.test(merchantId)) return merchantId;
+  } catch {}
+  return '';
 }
 
-async function adaptGraphResponse(response, operation) {
+function bearerToken(init) {
+  const headers = new Headers(init?.headers || {});
+  const authorization = headers.get('authorization') || '';
+  return authorization.replace(/^Bearer\s+/i, '').trim();
+}
+
+function imageUrl(image, merchantId) {
+  const fileName = String(image?.fileName || '').trim();
+  if (/^https?:\/\//i.test(fileName)) return fileName;
+  const imageId = String(image?.imageId || image?.id || '').trim();
+  if (!merchantId || !imageId) return '';
+  return `https://cdn.myikas.com/images/${merchantId}/${imageId}/image_1080.webp`;
+}
+
+async function adaptGraphResponse(response, operation, merchantId = '') {
   if (!response.ok || !operation) return response;
 
   let body;
@@ -117,8 +136,10 @@ async function adaptGraphResponse(response, operation) {
     const rows = Array.isArray(body.data?.listProduct?.data) ? body.data.listProduct.data : [];
     for (const product of rows) {
       product.categoryIds = (product.categories || []).map(category => category?.id).filter(Boolean);
-      const orderedImages = [...(product.images || [])].sort((a, b) => Number(a?.order || 0) - Number(b?.order || 0));
-      const url = imageUrl(orderedImages[0]);
+      const orderedImages = (product.variants || [])
+        .flatMap(variant => variant?.images || [])
+        .sort((a, b) => Number(Boolean(b?.isMain)) - Number(Boolean(a?.isMain)) || Number(a?.order || 0) - Number(b?.order || 0));
+      const url = imageUrl(orderedImages[0], merchantId);
       if (url) product.mainImage = { url };
 
       let basePrice = null;
@@ -223,6 +244,15 @@ if (typeof nativeFetch === 'function') {
       response = await nativeFetch(request, init);
     }
 
+    if (tokenMatch && response.ok) {
+      try {
+        const tokenBody = await response.clone().json();
+        const token = String(tokenBody?.access_token || '').trim();
+        const merchantId = String(tokenBody?.merchantId || tokenBody?.merchant_id || '').trim();
+        if (token && /^[0-9a-f-]{36}$/i.test(merchantId)) tokenMerchantIds.set(token, merchantId);
+      } catch {}
+    }
+
     if (isGraph && !response.ok) {
       try {
         const errorBody = await response.clone().text();
@@ -232,7 +262,10 @@ if (typeof nativeFetch === 'function') {
       }
     }
 
-    if (isGraph && adapted?.operation) return adaptGraphResponse(response, adapted.operation);
+    if (isGraph && adapted?.operation) {
+      const token = bearerToken(nextInit);
+      return adaptGraphResponse(response, adapted.operation, merchantIdFromToken(token));
+    }
     return response;
   };
 }

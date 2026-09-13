@@ -353,6 +353,11 @@ async function fetchIkasCategories(accessToken) {
   ], 'listCategory', 20);
 }
 
+async function fetchIkasMerchantId(accessToken) {
+  const data = await graphQL(accessToken, 'query { getMerchant { id } }');
+  return String(data?.getMerchant?.id || '').trim();
+}
+
 async function fetchIkasProducts(accessToken) {
   return fetchPagedWithFallback(accessToken, [
     page => `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categoryIds basePrice mainImage { url } } } }`,
@@ -399,10 +404,17 @@ function productStock(product) {
   return known ? total : null;
 }
 
-function productImage(product) {
+function productImage(product, merchantId = '') {
   if (product?.mainImage?.url) return product.mainImage.url;
-  const first = Array.isArray(product.images) ? product.images[0] : null;
-  return first?.url || '';
+  const images = (product.variants || [])
+    .flatMap(variant => variant?.images || [])
+    .sort((a, b) => Number(Boolean(b?.isMain)) - Number(Boolean(a?.isMain)) || Number(a?.order || 0) - Number(b?.order || 0));
+  const first = images[0] || (Array.isArray(product.images) ? product.images[0] : null);
+  if (first?.url) return first.url;
+  if (/^https?:\/\//i.test(String(first?.fileName || ''))) return first.fileName;
+  const imageId = String(first?.imageId || first?.id || '').trim();
+  if (!merchantId || !imageId) return '';
+  return `https://cdn.myikas.com/images/${merchantId}/${imageId}/image_1080.webp`;
 }
 
 function orderTimestamp(order) {
@@ -427,7 +439,7 @@ function emptyMetric() {
   return { quantity: 0, orders: 0, revenue: 0 };
 }
 
-function buildRawCatalog(categories, products, orders) {
+function buildRawCatalog(categories, products, orders, merchantId = '') {
   const metrics = {};
   for (const order of orders) {
     if (order?.cancelledAt) continue;
@@ -464,7 +476,7 @@ function buildRawCatalog(categories, products, orders) {
       categoryIds: productCategoryIds(product).map(String),
       price: productPrice(product),
       stockCount: productStock(product),
-      image: productImage(product),
+      image: productImage(product, merchantId),
       metrics: metrics[String(product.id)] || {}
     })),
     syncedAt: new Date().toISOString()
@@ -567,12 +579,13 @@ async function loadCatalog(shop) {
 async function syncIkasStoreData(shop) {
   try {
     const token = await getIkasAccessToken(shop);
-    const [categories, products, orders] = await Promise.all([
+    const [merchantId, categories, products, orders] = await Promise.all([
+      fetchIkasMerchantId(token),
       fetchIkasCategories(token),
       fetchIkasProducts(token),
       fetchIkasOrders(token)
     ]);
-    const catalog = buildRawCatalog(categories, products, orders);
+    const catalog = buildRawCatalog(categories, products, orders, merchantId);
     await saveCatalog(shop, catalog, null);
     console.log(`[ikas Sync] ${shop}: ${categories.length} kategori, ${products.length} ürün, ${orders.length} sipariş.`);
     return catalog;
