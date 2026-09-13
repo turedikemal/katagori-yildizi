@@ -122,7 +122,7 @@ function supportPolish(){
   if(note && !note.dataset.kyPolished){note.dataset.kyPolished='1';note.textContent='Destek talebin doğrudan The Goatz Studio destek akışına gider. Yanıtlar profilinde kayıtlı e-posta adresine gönderilir.';}
 }
 
-function run(){deviceIcons();restoreTemplates();categoryCopy();imageFallbacks();enhanceProfile();supportPolish();}
+function run(){deviceIcons();categoryCopy();imageFallbacks();enhanceProfile();supportPolish();}
 
 let scheduled=false;
 function scheduleRun(){

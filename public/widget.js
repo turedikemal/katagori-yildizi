@@ -54,7 +54,24 @@
 
   function getBadgeHtml(badgeData, isDetail) {
     if (!badgeData || !appConfig) return '';
-    const tpl = appConfig.templateId || 'sage-ribbon';
+    const tpl = appConfig.templateId || 'navy-pill';
+    const styling = appConfig.styling || {};
+    const templateColors = (appConfig.templateColors && appConfig.templateColors[tpl]) || {};
+    const cleanCss = value => String(value || '').replace(/[;"'<>]/g, '');
+    const badgeStyle = [
+      `--ky-primary-bg:${cleanCss(templateColors.bg || styling.bgColor || '#243a8b')}`,
+      `--ky-primary-text:${cleanCss(templateColors.text || styling.textColor || '#ffffff')}`,
+      `--ky-accent:${cleanCss(templateColors.accent || styling.accentColor || '#ce3f44')}`,
+      `--ky-border-color:${cleanCss(styling.borderColor || 'transparent')}`,
+      `--ky-border-width:${Number(styling.borderWidth || 0)}px`,
+      `--ky-border-radius:${Number(styling.borderRadius || 8)}px`,
+      `--ky-font-size:${Number(styling.fontSize || 12)}px`,
+      `--ky-font-weight:${Number(styling.fontWeight || 700)}`,
+      `--ky-padding-x:${Number(styling.paddingX || 10)}px`,
+      `--ky-padding-y:${Number(styling.paddingY || 5)}px`,
+      `--ky-scale:${Number(styling.scale || 100) / 100}`,
+      `--ky-opacity:${Number(styling.opacity || 100) / 100}`
+    ].join(';');
     const iconKey = appConfig.icon && appConfig.icon.enabled ? (appConfig.icon.type || 'ribbon') : null;
     const iconSvg = iconKey && ICONS[iconKey] ? ICONS[iconKey] : (iconKey === 'custom_svg' ? (appConfig.icon.customSvg || '') : '');
     const animClass = appConfig.animation ? `ky-anim-${appConfig.animation.entry || 'fade'} ky-hover-${appConfig.animation.hover || 'lift'}` : '';
@@ -77,7 +94,7 @@
 
     // Category / Product Card View
     return `
-      <div class="ky-badge-root ky-tpl-${tpl} ${animClass}" data-ky-product="${badgeData.productId}">
+      <div class="ky-badge-root ky-tpl-${tpl} ${animClass}" style="${badgeStyle}" data-ky-product="${badgeData.productId}">
         ${iconSvg}
         <span>${badgeData.badgeText || ('En Çok Satan ' + badgeData.rank + '. Ürün')}</span>
       </div>

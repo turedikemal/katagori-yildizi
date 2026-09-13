@@ -15,13 +15,6 @@
 .ky-template-gallery-v3{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
 .ky-template-card-v3{min-height:104px!important;padding:9px!important}
 .ky-template-card-v3 .preview{height:60px!important;background:#f8f9fc!important}
-.ky-template-card-v3[data-template="navy-pill"] .preview .ky-v3-badge{background:#3b4d47!important;color:#fff!important;border-radius:5px!important}
-.ky-template-card-v3[data-template="gradient-pill"] .preview .ky-v3-badge{background:linear-gradient(135deg,#70d6ff,#ffd670,#ff70a6)!important;color:#243a8b!important;border-radius:999px!important}
-.ky-template-card-v3[data-template="coral-pop"] .preview .ky-v3-badge{background:#ef5b45!important;color:#fff!important;border-radius:8px!important}
-.ky-template-card-v3[data-template="mono"] .preview .ky-v3-badge{background:transparent!important;color:#111827!important;border:0!important;border-bottom:2px solid #111827!important;border-radius:0!important;box-shadow:none!important}
-.ky-template-card-v3[data-template="modern-outline"] .preview .ky-v3-badge{background:#fff!important;color:#243a8b!important;border:1px solid #243a8b!important;border-radius:8px!important}
-.ky-template-card-v3[data-template="eco-clean"] .preview .ky-v3-badge{background:#e8f2e9!important;color:#2f6b4f!important;border-radius:999px!important}
-.ky-template-card-v3[data-template="neon-edge"] .preview .ky-v3-badge{background:#111827!important;color:#72f7ff!important;border:1px solid #7c3aed!important;box-shadow:0 0 12px rgba(124,58,237,.35)!important}
 
 /* Real product images: contain instead of stretching, graceful fallback. */
 .ky-mock-img-wrap{background:#f1f3f7!important;overflow:hidden!important}
@@ -87,3 +80,37 @@ body.ky-profile-preview #menuList::after{display:none!important}
   .ky-profile-grid{grid-template-columns:1fr!important}
   .ky-profile-field.full{grid-column:auto!important}
 }
+
+/* Sidebar accordion: every section stays in the document flow. */
+#menuList.ky-menu-list{display:flex!important;flex-direction:column!important;gap:8px!important}
+#menuList>.ky-menu-card{flex:0 0 auto;min-height:58px;cursor:pointer}
+#menuList>.ky-menu-card.active{background:linear-gradient(135deg,#eef2ff,#f8f9ff)!important;border-color:rgba(36,58,139,.28)!important}
+#menuList>.ky-menu-card:focus-visible{outline:3px solid rgba(36,58,139,.18);outline-offset:2px}
+#menuList>.ky-menu-card>.ky-accordion-indicator{display:flex!important;width:24px;height:24px;border-radius:7px;align-items:center;justify-content:center;flex-direction:column;gap:3px;background:#f1f4fb;border:1px solid rgba(36,58,139,.11);transition:.2s ease}
+.ky-accordion-indicator i{display:block;width:10px;height:1.5px;border-radius:2px;background:#243a8b;transition:.2s ease}
+#menuList>.ky-menu-card.active>.ky-accordion-indicator{background:#243a8b;transform:rotate(90deg)}
+#menuList>.ky-menu-card.active>.ky-accordion-indicator i{background:#fff}
+#menuList>.ky-accordion-panel{display:none!important;margin:-4px 0 2px;padding:13px;background:#f8faff;border:1px solid rgba(36,58,139,.12);border-radius:0 0 12px 12px;box-shadow:inset 3px 0 0 #243a8b;animation:kyAccordionIn .2s ease both}
+#menuList>.ky-accordion-panel.active{display:block!important}
+#menuList>.ky-accordion-panel .ky-subpanel-header{display:none!important}
+@keyframes kyAccordionIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
+
+/* Curated badge collection — the same classes power gallery and live preview. */
+.ky-v3-badge.atelier{background:linear-gradient(115deg,var(--badge-bg) 0 65%,var(--badge-accent) 100%)!important;border:1px solid rgba(255,255,255,.22)!important;border-radius:999px!important;box-shadow:0 7px 16px color-mix(in srgb,var(--badge-bg) 24%,transparent)!important}
+.ky-v3-badge.contour{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(120deg,#70d6ff,#ffd670,var(--badge-accent)) border-box!important;color:var(--badge-text)!important;border:1.5px solid transparent!important;border-radius:999px!important;box-shadow:0 3px 10px rgba(36,58,139,.08)!important}
+.ky-v3-badge.editorial{background:transparent!important;color:var(--badge-text)!important;border:0!important;border-bottom:1.5px solid var(--badge-accent)!important;border-radius:0!important;text-transform:uppercase;letter-spacing:.07em;box-shadow:none!important}
+.ky-v3-badge.medallion{background:linear-gradient(90deg,var(--badge-bg) 0 29%,var(--badge-accent) 29% 100%)!important;border-radius:999px!important;box-shadow:0 6px 16px rgba(36,58,139,.17)!important}
+.ky-v3-badge.sage{background:linear-gradient(90deg,var(--badge-bg),var(--badge-accent))!important;border-radius:5px!important;color:var(--badge-text)!important;box-shadow:0 5px 12px rgba(64,87,79,.2)!important}
+.ky-v3-badge.frame{background:#fff!important;color:var(--badge-text)!important;border:1px solid var(--badge-bg)!important;border-radius:8px!important;box-shadow:0 4px 12px rgba(36,58,139,.08)!important}
+.ky-v3-badge.frosted{background:linear-gradient(135deg,color-mix(in srgb,var(--badge-bg) 82%,transparent),color-mix(in srgb,var(--badge-accent) 62%,transparent))!important;border:1px solid rgba(255,255,255,.36)!important;border-radius:12px!important;backdrop-filter:blur(10px);box-shadow:0 9px 20px rgba(36,58,139,.18)!important}
+.ky-v3-badge.luxe{background:linear-gradient(135deg,#0f172a,var(--badge-bg))!important;color:var(--badge-text)!important;border:1px solid var(--badge-accent)!important;border-radius:3px!important;letter-spacing:.045em;text-transform:uppercase;box-shadow:0 7px 18px rgba(15,23,42,.22)!important}
+.ky-v3-badge.stamp{background:color-mix(in srgb,var(--badge-accent) 46%,white)!important;color:var(--badge-text)!important;border:1px dashed var(--badge-bg)!important;border-radius:999px 999px 999px 5px!important;box-shadow:none!important}
+.ky-v3-badge.arc{background:linear-gradient(120deg,var(--badge-bg),#7c6cff 48%,var(--badge-accent))!important;border-radius:999px!important;box-shadow:0 8px 20px rgba(92,78,229,.24)!important}
+.ky-v3-badge.ranktab{background:var(--badge-bg)!important;border-radius:4px 999px 999px 4px!important;border-left:4px solid var(--badge-accent)!important;box-shadow:0 5px 14px rgba(36,58,139,.17)!important}
+.ky-v3-badge.signature{background:var(--badge-bg)!important;color:var(--badge-text)!important;border:1px solid color-mix(in srgb,var(--badge-text) 18%,transparent)!important;border-radius:999px!important;font-style:italic;box-shadow:0 5px 14px rgba(36,58,139,.09)!important}
+.ky-v3-badge.fold{background:linear-gradient(135deg,var(--badge-bg) 0 78%,var(--badge-accent) 79%)!important;border-radius:2px 8px 8px 2px!important;clip-path:polygon(0 0,94% 0,100% 50%,94% 100%,0 100%,5% 50%);padding-left:calc(var(--badge-px) + 3px)!important}
+.ky-v3-badge.colorblock{background:linear-gradient(90deg,var(--badge-accent) 0 25%,var(--badge-bg) 25%)!important;border-radius:7px!important;box-shadow:0 6px 14px rgba(36,58,139,.16)!important}
+.ky-v3-badge.understated{background:var(--badge-bg)!important;color:var(--badge-text)!important;border:1px solid color-mix(in srgb,var(--badge-accent) 38%,white)!important;border-radius:6px!important;box-shadow:none!important}
+.ky-v3-badge.ticket{background:#fff!important;color:var(--badge-text)!important;border:1px solid var(--badge-bg)!important;border-radius:5px!important;box-shadow:inset 4px 0 0 var(--badge-accent)!important}
+
+@media(max-width:760px){#menuList>.ky-accordion-panel{padding:11px}.ky-template-gallery-v3{grid-template-columns:1fr!important}}
