@@ -28,6 +28,9 @@ let appConfig=null,productsMap={};
 let lastMobile=matchMedia('(max-width:768px)').matches;
 
 function injectRuntimeStyles(){
+ if(!document.querySelector('link[data-ky-color-integrity]')){
+   const l=document.createElement('link');l.rel='stylesheet';l.href=`${API_HOST}/template-color-integrity.css?v=20260913-1`;l.dataset.kyColorIntegrity='1';document.head.appendChild(l);
+ }
  if(document.getElementById('ky-runtime-v2'))return;
  const s=document.createElement('style');s.id='ky-runtime-v2';s.textContent=`
  @keyframes ky-slide-right{from{transform:translateX(-14px);opacity:0}to{transform:translateX(0);opacity:1}}
