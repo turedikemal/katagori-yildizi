@@ -4,137 +4,30 @@ const qs=(s,r=document)=>r.querySelector(s);
 const qsa=(s,r=document)=>[...r.querySelectorAll(s)];
 const params=new URLSearchParams(location.search);
 const shop=(params.get('shop')||'thegoatz').replace(/\.myikas\.com$/i,'');
-
 if(params.get('profilePreview')==='1') document.body.classList.add('ky-profile-preview');
 
-function deviceIcons(){
-  const desktop=qs('.ky-device-btn.desktop');
-  const mobile=qs('.ky-device-btn.mobile');
-  if(desktop && !qs('.ky-device-svg',desktop)) desktop.innerHTML='<svg class="ky-device-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>';
-  if(mobile && !qs('.ky-device-svg',mobile)) mobile.innerHTML='<svg class="ky-device-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"></rect><path d="M11 18h2"></path></svg>';
+function injectNavStyles(){
+  if(qs('#kySidebarV5Styles')) return;
+  const style=document.createElement('style');style.id='kySidebarV5Styles';style.textContent=`
+  .ky-sidebar{position:relative!important;overflow:visible!important}.ky-sidebar-content{position:relative!important;padding-top:64px!important}.ky-sidebar-navhead{position:absolute;top:0;left:0;right:0;height:64px;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:#fff;border-bottom:1px solid rgba(36,58,139,.10)}.ky-sidebar-navcopy{min-width:0;display:grid;gap:2px}.ky-sidebar-eyebrow{font-size:9px;line-height:1;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:rgba(36,58,139,.48)}#kySidebarCurrentTitle{font-size:14px;line-height:1.15;color:#243a8b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ky-sidebar-menu-btn{width:38px;height:38px;min-width:38px;border:1px solid rgba(36,58,139,.14);border-radius:10px;background:#fff;display:grid;align-content:center;justify-items:center;gap:4px;cursor:pointer}.ky-sidebar-menu-btn span{width:17px;height:2px;border-radius:999px;background:#243a8b;display:block;transition:.18s ease}.ky-sidebar.ky-menu-open .ky-sidebar-menu-btn span:nth-child(1){transform:translateY(6px) rotate(45deg)}.ky-sidebar.ky-menu-open .ky-sidebar-menu-btn span:nth-child(2){opacity:0}.ky-sidebar.ky-menu-open .ky-sidebar-menu-btn span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}.ky-sidebar.ky-nav-ready #menuList{display:none!important}.ky-sidebar.ky-nav-ready.ky-menu-open #menuList{display:grid!important;position:absolute!important;top:64px!important;left:0!important;right:0!important;z-index:55!important;max-height:calc(100vh - 130px)!important;overflow:auto!important;padding:10px!important;background:#fff!important;border-bottom:1px solid rgba(36,58,139,.10)!important;box-shadow:0 18px 30px rgba(36,58,139,.12)!important}.ky-sidebar.ky-nav-ready .ky-subpanel{display:none}.ky-sidebar.ky-nav-ready .ky-subpanel.active{display:block!important}.ky-sidebar.ky-nav-ready .ky-subpanel-header{position:sticky!important;top:0!important;z-index:20!important;background:#fff!important;padding:14px 16px!important;border-bottom:1px solid rgba(36,58,139,.08)!important}.ky-sidebar.ky-nav-ready .ky-subpanel-header .ky-btn-back{display:none!important}.ky-menu-card.ky-current{border-color:rgba(36,58,139,.32)!important;background:#f6f8ff!important}`;document.head.appendChild(style);
+}
+function panelLabel(target){return qs(`.ky-menu-card[data-target="${target}"] .ky-menu-title`)?.textContent?.trim()||'Genel görünüm';}
+function activePanelId(){return qs('.ky-subpanel.active')?.id||sessionStorage.getItem('ky-active-panel')||'panelDashboard';}
+function syncNav(target){qsa('.ky-menu-card').forEach(c=>c.classList.toggle('ky-current',c.dataset.target===target));const t=qs('#kySidebarCurrentTitle');if(t)t.textContent=panelLabel(target);}
+function closeMenu(){const s=qs('.ky-sidebar');if(!s)return;s.classList.remove('ky-menu-open');qs('#kySidebarMenuButton')?.setAttribute('aria-expanded','false');}
+function toggleMenu(){const s=qs('.ky-sidebar');if(!s)return;const open=!s.classList.contains('ky-menu-open');s.classList.toggle('ky-menu-open',open);qs('#kySidebarMenuButton')?.setAttribute('aria-expanded',open?'true':'false');}
+function mountNavigation(){
+  injectNavStyles();const sidebar=qs('.ky-sidebar'),content=qs('.ky-sidebar-content'),menu=qs('#menuList');if(!sidebar||!content||!menu)return;
+  if(!qs('#kySidebarNavHead')){const h=document.createElement('div');h.id='kySidebarNavHead';h.className='ky-sidebar-navhead';h.innerHTML='<div class="ky-sidebar-navcopy"><span class="ky-sidebar-eyebrow">Rozet ayarları</span><strong id="kySidebarCurrentTitle">Genel görünüm</strong></div><button id="kySidebarMenuButton" class="ky-sidebar-menu-btn" type="button" aria-label="Tüm ayarları aç" aria-expanded="false"><span></span><span></span><span></span></button>';content.insertBefore(h,menu);qs('#kySidebarMenuButton').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();toggleMenu();});}
+  sidebar.classList.add('ky-nav-ready');syncNav(activePanelId());
+  if(!menu.dataset.kyNavBound){menu.dataset.kyNavBound='1';menu.addEventListener('click',e=>{const card=e.target.closest('.ky-menu-card');if(!card)return;syncNav(card.dataset.target);setTimeout(closeMenu,0);});document.addEventListener('click',e=>{if(sidebar.classList.contains('ky-menu-open')&&!e.target.closest('.ky-sidebar'))closeMenu();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});}
+  qsa('.ky-subpanel').forEach(p=>{if(p.dataset.kyNavObserved)return;p.dataset.kyNavObserved='1';new MutationObserver(()=>{if(p.classList.contains('active'))syncNav(p.id);}).observe(p,{attributes:true,attributeFilter:['class']});});
 }
 
-const originalTemplates=[
-  ['navy-pill','Adaçayı Şerit','Orijinal'],
-  ['gradient-pill','Gradyan Oval','Orijinal'],
-  ['coral-pop','Alev Trend','Orijinal'],
-  ['mono','Minimal Çizgili','Orijinal'],
-  ['modern-outline','Çerçeveli Outline','Orijinal'],
-  ['eco-clean','Eko Doğal','Orijinal'],
-  ['neon-edge','Siber Neon','Orijinal']
-];
-const preferredModern=[
-  ['glass-pill','Cam Kapsül'],['split-pill','Çift Renk Kapsül'],['soft-blue','Soft Blue'],['sunset','Sunset'],['ocean','Ocean'],['aurora','Aurora'],['berry','Berry'],['shadow-pill','Floating Shadow'],['electric','Electric'],['rose','Rose Soft'],['sky','Sky'],['violet','Violet'],['graphite','Graphite'],['dot-label','Dot Label'],['cream','Cream Label'],['teal','Teal Capsule'],['ruby','Ruby'],['holographic','Holografik']
-];
-
-function restoreTemplates(){
-  const host=qs('#v3Templates');
-  if(!host || !host.children.length) return;
-  const cards=new Map(qsa('[data-template]',host).map(card=>[card.dataset.template,card]));
-  const order=[...originalTemplates,...preferredModern];
-  let changed=false;
-
-  for(const [id,name,tag] of order){
-    const card=cards.get(id); if(!card) continue;
-    const label=qs('.name',card);
-    if(label && label.textContent!==name){ label.textContent=name; changed=true; }
-    const oldTag=qs('.tag',card);
-    if(tag){
-      if(oldTag){ if(oldTag.textContent!==tag){ oldTag.textContent=tag; changed=true; } }
-      else { const t=document.createElement('span');t.className='tag';t.textContent=tag;card.appendChild(t);changed=true; }
-    } else if(oldTag && oldTag.textContent==='Yeni') { oldTag.remove(); changed=true; }
-  }
-
-  const desiredIds=order.map(([id])=>id).filter(id=>cards.has(id));
-  const currentIds=qsa('[data-template]',host).map(card=>card.dataset.template);
-  const currentKnown=currentIds.filter(id=>desiredIds.includes(id));
-  if(currentKnown.join('|')!==desiredIds.join('|')){
-    const frag=document.createDocumentFragment();
-    desiredIds.forEach(id=>frag.appendChild(cards.get(id)));
-    currentIds.filter(id=>!desiredIds.includes(id)).forEach(id=>frag.appendChild(cards.get(id)));
-    host.appendChild(frag);
-    changed=true;
-  }
-  return changed;
-}
-
-function categoryCopy(){
-  const intro=qs('#panelCategories .ky-category-intro');
-  if(!intro) return;
-  const html='<strong>Kategori sıralamaları nasıl çalışır?</strong><br>ikas satışları otomatik analiz edilir ve her ürün kendi kategorisi içinde sıralanır. Aşağıdaki listeden yalnızca istisna gerektiğinde sıralamayı sabitleyebilir veya belirli bir ürünün rozetini gizleyebilirsiniz. Veriler arka planda otomatik güncellenir.';
-  if(intro.innerHTML!==html) intro.innerHTML=html;
-}
-
-function imageFallbacks(){
-  qsa('.ky-mock-img-wrap>img,.ky-pdp-gallery>img').forEach(img=>{
-    if(img.dataset.kyFallbackBound) return;
-    img.dataset.kyFallbackBound='1';
-    const apply=()=>{
-      const parent=img.parentElement;if(!parent||qs('.ky-img-fallback',parent))return;
-      img.style.display='none';
-      const fb=document.createElement('div');fb.className='ky-img-fallback';fb.innerHTML='<div><img src="/thegoatzstudio.png" alt=""><div style="margin-top:8px">Ürün görseli yükleniyor</div></div>';
-      parent.appendChild(fb);
-    };
-    img.addEventListener('error',apply,{once:true});
-    if(!img.getAttribute('src')) apply();
-  });
-}
-
-function enhanceProfile(){
-  const layer=qs('#accountProfileLayer');
-  if(!layer) return;
-  const brand=qs('.ky-profile-brand',layer);
-  if(brand && !qs('.ky-profile-live-preview',brand)){
-    brand.innerHTML=`
-      <img src="/thegoatzstudio.png" alt="The Goatz Studio">
-      <div style="display:inline-flex;width:max-content;margin-top:20px;padding:7px 11px;border-radius:999px;background:#fff;border:1px solid rgba(36,58,139,.10);font-size:10px;font-weight:800;color:#243a8b">Kategori Yıldızı</div>
-      <h2>Profil bilgilerini güncelle.</h2>
-      <p>İletişim ve görev bilgilerini buradan değiştirebilirsin. Profilin mağazana bağlı olarak saklanır ve destek taleplerinde otomatik kullanılır.</p>
-      <div class="ky-profile-live-preview"><iframe src="/admin?shop=${encodeURIComponent(shop)}&profilePreview=1" title="Kategori Yıldızı panel önizlemesi" tabindex="-1"></iframe></div>
-      <div class="ky-profile-trust"><div><span class="check">✓</span> ikas mağazan otomatik doğrulanır</div><div><span class="check">✓</span> Profilin mağazana bağlı kalır; yeniden kurulumda kaybolmaz</div></div>`;
-  }
-
-  const form=qs('.ky-profile-form',layer);
-  if(form && !qs('.ky-privacy-box',form)){
-    const role=qs('#accountRole',form);
-    if(role && role.tagName==='INPUT'){
-      const sel=document.createElement('select');sel.id='accountRole';sel.className='ky-select';
-      ['Marka sahibi','Kurucu / Ortak','E-ticaret yöneticisi','Pazarlama','Ajans / Danışman','Diğer'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o)});
-      const current=role.value;
-      if(current && ![...sel.options].some(o=>o.value===current)){const o=document.createElement('option');o.value=current;o.textContent=current;sel.appendChild(o)}
-      sel.value=current||'Marka sahibi';role.replaceWith(sel);
-    }
-    const actions=qs('.ky-profile-actions',form);
-    if(actions){
-      const box=document.createElement('div');box.className='ky-privacy-box';box.innerHTML='<label><input type="checkbox" id="kyPrivacyRequired" checked> <span>Kişisel verilerimin hesabın çalıştırılması, destek sunulması ve güvenlik amacıyla işlenmesine ilişkin aydınlatma metnini okudum. <strong>(zorunlu)</strong></span></label><label><input type="checkbox" id="kyMarketingVisual"> <span>Ürün haberleri ve kampanyalar için benimle iletişime geçilmesini istiyorum. <strong>(isteğe bağlı)</strong></span></label>';
-      actions.parentElement.insertBefore(box,actions);
-      const market=qs('#accountMarketing',form),visual=qs('#kyMarketingVisual',form);
-      if(market&&visual){visual.checked=market.checked;visual.onchange=()=>{market.checked=visual.checked;market.dispatchEvent(new Event('change',{bubbles:true}))};market.closest('label')?.style.setProperty('display','none','important');}
-      const required=qs('#kyPrivacyRequired',form),save=qs('#accountProfileSave',form);
-      const sync=()=>{if(save)save.disabled=!required.checked};required.addEventListener('change',sync);sync();
-    }
-  }
-}
-
-function supportPolish(){
-  const d=qs('#accountSupportDialog');if(!d)return;
-  const note=qs('.ky-support-note',d);
-  if(note && !note.dataset.kyPolished){note.dataset.kyPolished='1';note.textContent='Destek talebin doğrudan The Goatz Studio destek akışına gider. Yanıtlar profilinde kayıtlı e-posta adresine gönderilir.';}
-}
-
-function run(){deviceIcons();categoryCopy();imageFallbacks();enhanceProfile();supportPolish();}
-
-let scheduled=false;
-function scheduleRun(){
-  if(scheduled)return;
-  scheduled=true;
-  requestAnimationFrame(()=>{scheduled=false;run();});
-}
-
-const mo=new MutationObserver(scheduleRun);
-mo.observe(document.body,{subtree:true,childList:true});
-run();
-setTimeout(run,150);
-setTimeout(run,700);
-setInterval(()=>{deviceIcons();imageFallbacks();},3000);
+function deviceIcons(){const desktop=qs('.ky-device-btn.desktop'),mobile=qs('.ky-device-btn.mobile');if(desktop&&!qs('.ky-device-svg',desktop))desktop.innerHTML='<svg class="ky-device-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>';if(mobile&&!qs('.ky-device-svg',mobile))mobile.innerHTML='<svg class="ky-device-svg" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"></rect><path d="M11 18h2"></path></svg>';}
+function categoryCopy(){const intro=qs('#panelCategories .ky-category-intro');if(intro)intro.innerHTML='<strong>Kategori sıralamaları nasıl çalışır?</strong><br>ikas satışları otomatik analiz edilir ve her ürün kendi kategorisi içinde sıralanır. Yalnızca istisna gerektiğinde sıralamayı sabitleyin veya belirli bir ürünün rozetini gizleyin. Veriler arka planda otomatik güncellenir.';}
+function imageFallbacks(){qsa('.ky-mock-img-wrap>img,.ky-pdp-gallery>img').forEach(img=>{const reveal=()=>{if(img.getAttribute('src')&&img.naturalWidth){img.style.removeProperty('display');img.style.removeProperty('visibility');img.parentElement?.querySelector('.ky-img-fallback')?.remove();}};const fallback=()=>{if(img.getAttribute('src')&&img.naturalWidth)return reveal();const p=img.parentElement;if(!p||qs('.ky-img-fallback',p))return;img.style.display='none';const fb=document.createElement('div');fb.className='ky-img-fallback';fb.innerHTML='<div><div>Ürün görseli yükleniyor</div></div>';p.appendChild(fb);};if(!img.dataset.kyFallbackBound){img.dataset.kyFallbackBound='1';img.addEventListener('load',reveal);img.addEventListener('error',fallback);}if(img.complete){img.naturalWidth?reveal():fallback();}else if(!img.getAttribute('src'))fallback();});}
+function run(){deviceIcons();mountNavigation();categoryCopy();imageFallbacks();}
+let scheduled=false;function scheduleRun(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;run();});}
+const mo=new MutationObserver(scheduleRun);mo.observe(document.body,{subtree:true,childList:true});run();setTimeout(run,150);setTimeout(run,700);setInterval(()=>{deviceIcons();mountNavigation();imageFallbacks();},3000);
 })();
