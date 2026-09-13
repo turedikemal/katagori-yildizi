@@ -59,6 +59,7 @@ function safeShop(value) {
 function getDefaultConfig() {
   return {
     templateId: 'navy-pill',
+    themeId: 'ozy',
     ranking: {
       period: '30days',
       metric: 'quantity',
