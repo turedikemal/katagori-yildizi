@@ -39,7 +39,7 @@ function loadIconPacks(){
     const p=document.createElement('script');p.src='/custom-icon-preview-fix.js?v=20260913-1';p.dataset.kyCustomPreview='1';document.body.appendChild(p);
   }
   if(!document.querySelector('script[data-ky-premium-icons]')){
-    const p=document.createElement('script');p.src='/premium-icon-pack.js?v=20260913-1';p.dataset.kyPremiumIcons='1';document.body.appendChild(p);
+    const p=document.createElement('script');p.src='/premium-icon-pack.js?v=20260913-2';p.dataset.kyPremiumIcons='1';document.body.appendChild(p);
   }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{bind();repair();loadIconPacks();},{once:true});else{bind();repair();loadIconPacks();}
