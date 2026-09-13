@@ -1,18 +1,25 @@
 (function(){
 'use strict';
+
 const q=(s,r=document)=>r.querySelector(s);
 const qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const HEX=/^#[0-9a-f]{6}$/i;
 let scheduled=false;
+let editorObserver=null;
 
+function renderedTemplateId(){
+  const badge=q('#stageCanvas .ky-v3-badge[class*="tpl-"]');
+  if(!badge)return '';
+  const cls=[...badge.classList].find(x=>x.startsWith('tpl-'));
+  return cls?cls.slice(4):'';
+}
 function activeTemplateId(){
-  return q('.ky-template-card-v3.active[data-template]')?.dataset.template || q('[data-template].active')?.dataset.template || '';
+  return q('#v3TemplateEditor')?.dataset.kyTemplateId || renderedTemplateId() || q('.ky-template-card-v3.active[data-template]')?.dataset.template || q('[data-template].active')?.dataset.template || '';
 }
 function readColor(name,fallback){
   const hex=q(`#tpl${name}Hex`)?.value;
   const picker=q(`#tpl${name}Picker`)?.value;
-  const value=HEX.test(String(hex||''))?hex:(HEX.test(String(picker||''))?picker:fallback);
-  return value;
+  return HEX.test(String(hex||''))?hex:(HEX.test(String(picker||''))?picker:fallback);
 }
 function currentColors(){
   const id=activeTemplateId();
@@ -48,13 +55,93 @@ function schedule(){
   scheduled=true;
   requestAnimationFrame(sync);
 }
+function setPair(field,value){
+  const cap=field==='bg'?'Bg':field==='text'?'Text':'Accent';
+  const picker=q(`#tpl${cap}Picker`),hex=q(`#tpl${cap}Hex`);
+  if(picker&&picker.value!==value)picker.value=value;
+  if(hex&&hex.value!==value)hex.value=value;
+}
+function pushConfig(field,value){
+  const id=activeTemplateId();
+  if(!id||!HEX.test(String(value||'')))return;
+  if(typeof window.handleInput==='function')window.handleInput(`templateColors.${id}.${field}`,value);
+  schedule();
+}
+function patchField(field){
+  const cap=field==='bg'?'Bg':field==='text'?'Text':'Accent';
+  const picker=q(`#tpl${cap}Picker`),hex=q(`#tpl${cap}Hex`);
+  if(!picker||!hex)return;
+
+  const onPicker=()=>{
+    const value=picker.value;
+    if(!HEX.test(value))return;
+    setPair(field,value);
+    pushConfig(field,value);
+  };
+  const onHex=()=>{
+    const value=hex.value.trim();
+    if(!HEX.test(value))return;
+    setPair(field,value);
+    pushConfig(field,value);
+  };
+
+  /* admin.js used a stale palette snapshot here. Replacing the property handlers
+     prevents one edited color from restoring the previous values of the other two. */
+  picker.oninput=onPicker;
+  picker.onchange=onPicker;
+  hex.oninput=onHex;
+  hex.onchange=onHex;
+}
+function patchEditor(){
+  const editor=q('#v3TemplateEditor');
+  if(!editor)return;
+  const id=renderedTemplateId()||q('.ky-template-card-v3.active[data-template]')?.dataset.template||editor.dataset.kyTemplateId||'';
+  if(id)editor.dataset.kyTemplateId=id;
+  patchField('bg');
+  patchField('text');
+  patchField('accent');
+}
+function colorFromRenderedBadge(prop,fallback){
+  const id=renderedTemplateId();
+  if(!id)return fallback;
+  const badge=q(`#stageCanvas .ky-v3-badge.tpl-${CSS.escape(id)}`) || q(`#stageCanvas .ky-badge-root.ky-tpl-${CSS.escape(id)}`);
+  if(!badge)return fallback;
+  const inline=badge.style.getPropertyValue(prop).trim();
+  if(HEX.test(inline))return inline;
+  const computed=getComputedStyle(badge).getPropertyValue(prop).trim();
+  return HEX.test(computed)?computed:fallback;
+}
+function syncEditorFromRenderedBadge(){
+  const id=renderedTemplateId();
+  const editor=q('#v3TemplateEditor');
+  if(!id||!editor)return;
+
+  editor.dataset.kyTemplateId=id;
+  qa('.ky-template-card-v3[data-template]').forEach(card=>card.classList.toggle('active',card.dataset.template===id));
+  const name=q(`.ky-template-card-v3[data-template="${CSS.escape(id)}"] .name`)?.textContent?.trim();
+  const title=q('#v3TemplateEditor .ky-template-editor-title strong');
+  if(name&&title)title.textContent=`${name} renkleri`;
+
+  const bg=colorFromRenderedBadge('--badge-bg',readColor('Bg','#243a8b'));
+  const text=colorFromRenderedBadge('--badge-text',readColor('Text','#ffffff'));
+  const accent=colorFromRenderedBadge('--badge-accent',readColor('Accent','#ce3f44'));
+  setPair('bg',bg);setPair('text',text);setPair('accent',accent);
+  patchEditor();
+  schedule();
+}
 function observe(){
   const canvas=q('#stageCanvas');
   const templates=q('#v3Templates');
+  const editor=q('#v3TemplateEditor');
   const opts={childList:true,subtree:true};
   const mo=new MutationObserver(schedule);
   if(canvas)mo.observe(canvas,opts);
   if(templates)mo.observe(templates,opts);
+  if(editor){
+    editorObserver?.disconnect();
+    editorObserver=new MutationObserver(()=>{patchEditor();setTimeout(syncEditorFromRenderedBadge,0);});
+    editorObserver.observe(editor,opts);
+  }
 }
 
 document.addEventListener('input',e=>{
@@ -64,13 +151,15 @@ document.addEventListener('change',e=>{
   if(e.target.closest('#v3TemplateEditor,#panelTemplates'))schedule();
 },true);
 document.addEventListener('click',e=>{
-  if(e.target.closest('[data-template],.ky-device-btn,[data-edit-device],.ky-view-tab'))setTimeout(schedule,20);
+  if(e.target.closest('[data-template]'))setTimeout(()=>{patchEditor();syncEditorFromRenderedBadge();},30);
+  if(e.target.closest('.ky-device-btn,[data-edit-device],.ky-view-tab'))setTimeout(syncEditorFromRenderedBadge,120);
 },true);
 
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',()=>{observe();setTimeout(schedule,80);},{once:true});
-}else{
-  observe();setTimeout(schedule,80);
+function boot(){
+  observe();
+  patchEditor();
+  setTimeout(syncEditorFromRenderedBadge,90);
+  setTimeout(syncEditorFromRenderedBadge,550);
 }
-setTimeout(schedule,500);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
