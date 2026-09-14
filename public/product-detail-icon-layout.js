@@ -6,10 +6,12 @@ let busy=false;
 function moveFocusedPreviewIcon(){
  const context=q('#stageCanvas .ky-focus-pdp-context');if(!context)return;
  const badge=q('.ky-focus-pdp-badge .ky-v3-badge',context);if(!badge)return;
- qa('.ky-ref-medal,.ky-pdp-leading-selected-icon',context).forEach(x=>x.remove());
+ qa('.ky-ref-medal',context).forEach(x=>x.remove());
  const text=q(':scope > .ky-badge-text',badge);
  const icons=[...badge.children].filter(x=>x!==text&&!x.classList.contains('ky-badge-text'));
+ const existing=q('.ky-pdp-leading-selected-icon',context);
  if(!icons.length)return;
+ if(existing)existing.remove();
  const lead=document.createElement('span');lead.className='ky-pdp-leading-selected-icon';
  icons.forEach(x=>lead.appendChild(x));
  const anchor=q('a',context);context.insertBefore(lead,anchor||context.firstChild);
@@ -18,8 +20,8 @@ function moveLegacyPreviewIcon(){
  qa('#stageCanvas .ky-live-pdp-demo,#stageCanvas .ky-mock-pdp').forEach(root=>{
   const badge=q('.ky-live-pdp-badge .ky-v3-badge,.ky-v3-badge',root);if(!badge)return;
   const text=q(':scope > .ky-badge-text',badge),icons=[...badge.children].filter(x=>x!==text&&!x.classList.contains('ky-badge-text'));
-  const old=q('.ky-pdp-leading-selected-icon',root);if(old)old.remove();
   if(!icons.length)return;
+  const old=q('.ky-pdp-leading-selected-icon',root);if(old)old.remove();
   const lead=document.createElement('span');lead.className='ky-pdp-leading-selected-icon';icons.forEach(x=>lead.appendChild(x));
   const firstText=q('a,.ky-live-pdp-icon',root);if(firstText?.classList.contains('ky-live-pdp-icon'))firstText.remove();
   if(firstText&&firstText.parentElement)firstText.parentElement.insertBefore(lead,firstText);else root.insertBefore(lead,root.firstChild);
