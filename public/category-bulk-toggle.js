@@ -1,2 +1,10 @@
-/* Retired compatibility entry. Category expand and bulk visibility are handled by editor-stability-v3.js (v4 layer). */
-(function(){'use strict';if(window.__KY_EDITOR_STABILITY_V4__)return;})();
+/* Compatibility entry — load the stable live-preview layer. */
+(function(){
+'use strict';
+if(document.querySelector('script[data-ky-preview-stability]'))return;
+const s=document.createElement('script');
+s.src='/preview-stability-fix.js?v=20260914-1';
+s.async=false;
+s.dataset.kyPreviewStability='1';
+document.body.appendChild(s);
+})();
