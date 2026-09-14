@@ -1,0 +1,11 @@
+(function(){
+'use strict';
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const shop=(new URLSearchParams(location.search).get('shop')||'thegoatz').replace(/\.myikas\.com$/i,'');
+let busy=false;
+async function json(url,options={}){const r=await fetch(url,{...options,headers:{'Content-Type':'application/json',...(options.headers||{})}});const d=await r.json().catch(()=>({}));if(!r.ok||d.success===false)throw new Error(d.message||'İşlem tamamlanamadı.');return d;}
+async function apply(card,show){if(busy||!card)return;const categoryId=card.dataset.categoryId;if(!categoryId)return;busy=true;const bar=q('.ky-category-bulk',card);bar?.classList.add('is-busy');qa('.ky-category-bulk-btn',card).forEach(b=>b.disabled=true);try{const settings=await json(`/api/admin/settings?shop=${encodeURIComponent(shop)}&categoryBulk=1`,{cache:'no-store'});const category=(settings.categories||[]).find(c=>String(c.id)===String(categoryId));const products=category?.products||[];if(!products.length)throw new Error('Bu kategoride ürün bulunamadı.');await Promise.all(products.map(p=>json(`/api/admin/categories/override?shop=${encodeURIComponent(shop)}`,{method:'POST',body:JSON.stringify({categoryId,productId:p.id,manualRank:p.manual?Number(p.rank):null,hidden:!show})})));sessionStorage.setItem('ky-reopen-categories','1');location.reload();}catch(err){console.error('[Kategori toplu aç/kapa]',err);const label=q('.ky-category-bulk-label',card);if(label){const old=label.textContent;label.textContent='İşlem tamamlanamadı';setTimeout(()=>{if(label.isConnected)label.textContent=old},1800)}}finally{busy=false;bar?.classList.remove('is-busy');qa('.ky-category-bulk-btn',card).forEach(b=>b.disabled=false)}}
+document.addEventListener('click',e=>{const b=e.target.closest('.ky-category-bulk-btn');if(!b)return;e.preventDefault();e.stopImmediatePropagation();const card=b.closest('.ky-category-card');apply(card,b.classList.contains('open'));},true);
+function reopen(){if(sessionStorage.getItem('ky-reopen-categories')!=='1')return;sessionStorage.removeItem('ky-reopen-categories');setTimeout(()=>q('.ky-menu-card[data-target="panelCategories"]')?.click(),700)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',reopen,{once:true});else reopen();
+})();
