@@ -12,8 +12,9 @@ function repair(){if(repairing)return;repairing=true;try{const menu=normalizeStr
 function bind(){const menu=normalizeStructure();if(!menu||menu.dataset.kyHotfixBound)return;menu.dataset.kyHotfixBound='1';menu.addEventListener('click',e=>{const card=e.target.closest('.ky-menu-card');if(!card||!menu.contains(card))return;e.preventDefault();e.stopImmediatePropagation();togglePanel(card.dataset.target);},true);menu.addEventListener('keydown',e=>{const card=e.target.closest('.ky-menu-card');if(!card||!menu.contains(card)||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();e.stopImmediatePropagation();togglePanel(card.dataset.target);},true);closeAll();}
 function schedule(){if(scheduled||repairing)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;repair();});}
 function loadIconPacks(){if(document.querySelector('script[data-ky-icon-system]'))return;const s=document.createElement('script');s.src='/badge-icon-system.js?v=20260914-3';s.dataset.kyIconSystem='1';document.body.appendChild(s);}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{bind();repair();loadIconPacks();},{once:true});else{bind();repair();loadIconPacks();}
-setTimeout(()=>{bind();repair();loadIconPacks();},200);setTimeout(()=>{bind();repair();loadIconPacks();},800);setTimeout(()=>{bind();repair();},1600);
+function loadSurfaceSettings(){if(document.querySelector('script[data-ky-surface-settings]'))return;const s=document.createElement('script');s.src='/admin-surface-settings.js?v=20260914-1';s.dataset.kySurfaceSettings='1';document.body.appendChild(s);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{bind();repair();loadIconPacks();loadSurfaceSettings();},{once:true});else{bind();repair();loadIconPacks();loadSurfaceSettings();}
+setTimeout(()=>{bind();repair();loadIconPacks();loadSurfaceSettings();},200);setTimeout(()=>{bind();repair();loadIconPacks();loadSurfaceSettings();},800);setTimeout(()=>{bind();repair();},1600);
 const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true});
 })();
 
