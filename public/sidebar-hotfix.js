@@ -24,6 +24,7 @@ function loadExtras(){
  loadScript('ky-premium-template-fixes','/premium-template-fixes.js?v=20260914-6');
  loadScript('ky-product-detail-icon-layout','/product-detail-icon-layout.js?v=20260914-5');
  loadScript('ky-text-style-controls','/text-style-controls.js?v=20260914-2');
+ loadScript('ky-min-sales-hover-fix','/min-sales-hover-fix.js?v=20260915-1');
  loadStyle('ky-premium-intensity','/premium-intensity.css?v=20260914-5');
 }
 function boot(){bind();repair();observeMenu();loadExtras()}
