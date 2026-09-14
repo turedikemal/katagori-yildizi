@@ -96,8 +96,6 @@ function patchField(field){
     pushConfig(field,value);
   };
 
-  /* admin.js used a stale palette snapshot here. Replacing the property handlers
-     prevents one edited color from restoring the previous values of the other two. */
   picker.oninput=onPicker;
   picker.onchange=onPicker;
   hex.oninput=onHex;
@@ -155,6 +153,22 @@ function observe(){
   }
 }
 
+function loadPremiumExperience(){
+  const loadUi=()=>{
+    if(document.querySelector('script[data-ky-premium-experience]'))return;
+    const s=document.createElement('script');
+    s.src='/premium-experience-v2.js?v=20260914-1';
+    s.dataset.kyPremiumExperience='1';
+    document.body.appendChild(s);
+  };
+  if(document.querySelector('script[data-ky-badge-icon-system]')){loadUi();return;}
+  const s=document.createElement('script');
+  s.src='/badge-icon-system.js?v=20260914-1';
+  s.dataset.kyBadgeIconSystem='1';
+  s.onload=loadUi;
+  document.body.appendChild(s);
+}
+
 document.addEventListener('input',e=>{
   if(e.target.closest('#v3TemplateEditor,#panelTemplates'))schedule();
 },true);
@@ -171,6 +185,7 @@ function boot(){
   patchEditor();
   setTimeout(syncEditorFromRenderedBadge,90);
   setTimeout(syncEditorFromRenderedBadge,550);
+  setTimeout(loadPremiumExperience,120);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
