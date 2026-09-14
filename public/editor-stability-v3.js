@@ -303,10 +303,10 @@ function bindCategoryCard(card,index){
   const head=oldHead.cloneNode(true);
   oldHead.replaceWith(head);
   oldHead=head;
+  while(oldHead.children.length>1)oldHead.lastElementChild.remove();
+  const arrow=document.createElement('span');arrow.className='ky-v4-category-arrow';arrow.textContent='⌄';oldHead.appendChild(arrow);
+  oldHead.dataset.kyV4Bound='1';oldHead.setAttribute('role','button');oldHead.tabIndex=0;
  }
- while(oldHead.children.length>1)oldHead.lastElementChild.remove();
- const arrow=document.createElement('span');arrow.className='ky-v4-category-arrow';arrow.textContent='⌄';oldHead.appendChild(arrow);
- oldHead.dataset.kyV4Bound='1';oldHead.setAttribute('role','button');oldHead.tabIndex=0;
 
  if(expandMode==='all'||openCategories.has(id)||(expandMode===null&&openCategories.size===0&&index===0))card.classList.add('open');
  if(expandMode==='none')card.classList.remove('open');
