@@ -40,7 +40,8 @@ function injectRuntimeStyles(){
  .ky-hover-tilt:hover{rotate:-3deg;scale:1.02}.ky-hover-pulse:hover{animation:ky-pulse .7s ease-in-out infinite alternate}
  .ky-hover-slide-left:hover{translate:-5px 0}.ky-hover-slide-right:hover{translate:5px 0}
  .ky-offset-shell{display:inline-flex;max-width:100%}
- .ky-pos-bottom-full>.ky-offset-shell{display:flex;width:100%}.ky-pos-bottom-full .ky-badge-root{width:100%;justify-content:center;border-radius:0!important}
+ .ky-pos-bottom-full>.ky-offset-shell,.ky-pos-under-full>.ky-offset-shell{display:flex;width:100%}.ky-pos-bottom-full .ky-badge-root,.ky-pos-under-full .ky-badge-root{width:100%;justify-content:center;border-radius:0!important}
+ .ky-pos-under-full{position:relative;display:flex;width:100%;inset:auto!important;z-index:10;box-sizing:border-box}
  .ky-tpl-category-context .ky-detail-badge-wrap{display:inline-flex;align-items:center;margin-left:2px;border:0!important;outline:0!important;background:transparent!important;box-shadow:none!important;padding:0!important}
  @media(max-width:768px){.ky-badge-root{font-size:var(--ky-font-size)!important;padding:var(--ky-padding-y) var(--ky-padding-x)!important}}
  `;document.head.appendChild(s);
@@ -77,7 +78,7 @@ function badgeMarkup(data,c,text){
  if(gradient)styles.push(`background:linear-gradient(${Number(st.gradientAngle||135)}deg,${cleanCss(st.gradientColor1||bg)},${cleanCss(st.gradientColor2||accent)})`);
  if(st.shadow)styles.push(`box-shadow:${shadowValue(st.shadow,accent)}`);
  const icon=iconSvg(c);
- return `<span class="ky-badge-root ky-tpl-${cleanCss(tpl)} ${animationClasses(c)}" style="${styles.join(';')}" data-ky-product="${cleanCss(data.productId||'')}">${icon}<span>${escapeHtml(text)}</span></span>`;
+ return `<span class="ky-badge-root ky-tpl-${cleanCss(tpl)} ${animationClasses(c)}" style="${styles.join(';')}" data-ky-product="${cleanCss(data.productId||'')}">${icon}<span class="ky-badge-text">${escapeHtml(text)}</span></span>`;
 }
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function fill(t,d){return String(t||'').replaceAll('{rank}',d.rank??'').replaceAll('{category}',d.categoryName||'').replaceAll('{product}',d.productName||'').replaceAll('{sales}',d.sales||0);}
@@ -92,19 +93,21 @@ async function loadData(){
    if(d.success){appConfig=d.config||{};productsMap=d.products||{};sessionStorage.setItem('__ky_cache_v2',JSON.stringify({ts:Date.now(),config:appConfig,products:productsMap}));renderAll();}
  }catch(e){console.warn('[Kategori Yıldızı] Load error:',e);}
 }
-function clearRendered(){document.querySelectorAll('.ky-badge-container[data-ky-runtime],.ky-tpl-category-context[data-ky-runtime]').forEach(el=>el.remove());}
+function clearRendered(){document.querySelectorAll('.ky-badge-container[data-ky-runtime],.ky-tpl-category-context[data-ky-runtime]').forEach(el=>el.remove());document.querySelectorAll('[data-ky-badge-rendered]').forEach(el=>el.removeAttribute('data-ky-badge-rendered'));}
 function pickDataForCard(card,idx){const id=card.getAttribute('data-product-id')||card.dataset.productId||card.getAttribute('data-id');if(id&&productsMap[id])return productsMap[id];const vals=Object.values(productsMap);return vals[idx]||null;}
-function positionClass(p){if(p.cardLocation==='image_bottom_bar')return 'ky-pos-bottom-full';return 'ky-pos-'+String(p.ninePointPosition||'top_left').replaceAll('_','-');}
+function positionClass(p){if(p.cardLocation==='image_bottom_bar')return 'ky-pos-under-full';if(p.cardLocation==='image_inside_bottom_bar')return 'ky-pos-bottom-full';return 'ky-pos-'+String(p.ninePointPosition||'top_left').replaceAll('_','-');}
 function renderCategoryCards(){
  const c=effectiveConfig();if(!c||c.placements?.categoryCards===false)return;
  const cards=[...document.querySelectorAll('.product-card,.product-item,[data-product-id],article[class*="product"]')];
  cards.forEach((card,idx)=>{
-   if(card.querySelector('.ky-badge-container[data-ky-runtime]'))return;
+   if(card.dataset.kyBadgeRendered==='1'||card.querySelector('.ky-badge-container[data-ky-runtime]'))return;
    let d=pickDataForCard(card,idx);if(!d){d={productId:'card_'+idx,rank:idx+1,categoryName:''};}
    const rank=Number(d.rank||idx+1);if(rank>Number(c.ranking?.maxRank||3))return;
    const img=card.querySelector('img'),host=img?(img.closest('.image-wrapper,.product-image,picture')||img.parentElement):card;if(!host)return;
-   host.classList.add('ky-pos-parent');const wrap=document.createElement('div');wrap.dataset.kyRuntime='1';wrap.className='ky-badge-container '+positionClass(c.placements||{});
-   const ox=Number(c.placements?.offsetX||0),oy=Number(c.placements?.offsetY||0);wrap.innerHTML=`<span class="ky-offset-shell" style="transform:translate(${ox}px,${oy}px)">${badgeMarkup(d,c,cardText(d,c))}</span>`;host.appendChild(wrap);
+   const placement=c.placements||{},isUnder=placement.cardLocation==='image_bottom_bar',isFullBar=isUnder||placement.cardLocation==='image_inside_bottom_bar';
+   if(!isUnder)host.classList.add('ky-pos-parent');const wrap=document.createElement('div');wrap.dataset.kyRuntime='1';wrap.className='ky-badge-container '+positionClass(placement);
+   const ox=Number(placement.offsetX||0),oy=Number(placement.offsetY||0),transform=isFullBar?`translateY(${oy}px)`:`translate(${ox}px,${oy}px)`;wrap.innerHTML=`<span class="ky-offset-shell" style="transform:${transform}">${badgeMarkup(d,c,cardText(d,c))}</span>`;
+   if(isUnder)host.insertAdjacentElement('afterend',wrap);else host.appendChild(wrap);card.dataset.kyBadgeRendered='1';
  });
 }
 function renderProductDetail(){

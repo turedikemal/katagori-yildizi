@@ -51,6 +51,27 @@
   vertical-align: middle;
 }
 
+/* Full-width bar below the product image. The inside variant keeps using
+   .ky-pos-bottom-full and remains absolutely anchored within the image. */
+.ky-pos-under-full {
+  position: relative;
+  display: flex;
+  width: 100%;
+  inset: auto;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.ky-pos-under-full > .ky-offset-shell,
+.ky-pos-under-full .ky-badge-root {
+  width: 100%;
+}
+
+.ky-pos-under-full .ky-badge-root {
+  justify-content: center;
+  border-radius: 0;
+}
+
 /* --------------------------------------------------------------------------
    18 TEMPLATE ARCHITECTURES
    -------------------------------------------------------------------------- */
