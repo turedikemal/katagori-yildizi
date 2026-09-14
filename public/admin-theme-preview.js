@@ -89,6 +89,7 @@ observer.observe(document.body,{childList:true,subtree:true});
 document.addEventListener('click',e=>{if(e.target.closest('.ky-view-tab,.ky-device-btn,[data-template],#v3TemplateEditor,.ky-slider,.ky-switch,.ky-color-row,.ky-grid-btn'))setTimeout(handleCanvasMutation,40);},true);
 document.addEventListener('input',e=>{if(e.target.closest('#panelTexts,#panelTypography,#panelIcons,#panelColors,#panelBorders,#panelSizing,#panelPosition,#panelAnimation,#panelResponsive'))setTimeout(handleCanvasMutation,40);},true);
 document.addEventListener('change',e=>{if(e.target.closest('#panelTexts,#panelPosition,#panelResponsive,#panelTemplates'))setTimeout(handleCanvasMutation,40);},true);
+document.addEventListener('ky:categories-updated',e=>{if(Array.isArray(e.detail?.categories)){catalog=e.detail.categories;requestAnimationFrame(renderFocused);}});
 
 (async()=>{injectStyles();removeThemeControl();await loadCatalog();setTimeout(handleCanvasMutation,80);setTimeout(handleCanvasMutation,500);})();
 })();

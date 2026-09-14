@@ -213,12 +213,13 @@ function enforceTemplateCapabilities(persist=true){
 
 function enhanceCategories(){
   const host=q('#v3Categories');if(!host)return;
+  const hasPresetOpen=qa('.ky-category-card.open',host).length>0;
   qa('.ky-category-card',host).forEach((card,i)=>{
     if(card.dataset.kyCollapsible)return;card.dataset.kyCollapsible='1';
     const head=q('.ky-category-head',card);if(!head)return;
     const rows=qa(':scope > .ky-rank-row',card);const body=document.createElement('div');body.className='ky-category-body';rows.forEach(r=>body.appendChild(r));card.appendChild(body);
     const arrow=document.createElement('span');arrow.className='ky-category-arrow';arrow.textContent='⌄';head.appendChild(arrow);
-    card.classList.toggle('open',i===0);head.setAttribute('role','button');head.tabIndex=0;
+    card.classList.toggle('open',card.classList.contains('open')||(!hasPresetOpen&&i===0));head.setAttribute('role','button');head.tabIndex=0;
     const toggle=()=>card.classList.toggle('open');head.addEventListener('click',toggle);head.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
   });
 }
