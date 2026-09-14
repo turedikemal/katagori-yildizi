@@ -1,4 +1,4 @@
-#kyIconFilterBar [data-filter="premium"]{color:#d98c00!important;border-color:#ffb943!important;background:#fffaf0!important;padding:7px 14px!important;gap:7px!important}
+#kyIconFilterBar [data-filter="premium"]{color:#d98c00!important;border-color:#ffb943!important;background:#fffaf0!important;padding:8px 14px!important;gap:7px!important;font-size:12px!important}
 #kyIconFilterBar [data-filter="premium"]::after{width:17px!important;height:17px!important;background-image:url('/premium-crown.png?v=20260913-1')!important}
 #kyIconFilterBar [data-filter="premium"].active{color:#c98200!important;background:#fff5dc!important;box-shadow:0 0 0 1px rgba(255,185,67,.12)!important}
 #v3Icons{overflow:visible!important;padding-top:8px!important}
