@@ -1,0 +1,48 @@
+/* Kategori Yıldızı — authoritative basic/premium icon gallery. */
+(function(){
+'use strict';
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const BASIC=[['none','İkonsuz'],['award','Başarı'],['crown','Taç'],['star','Yıldız'],['medal','Madalya'],['trophy','Kupa'],['fire','Alev'],['sparkles','Parıltı'],['trend','Yükseliş'],['check','Onay']];
+const PREMIUM=[
+ ['premium-crown-orbit','Işıltılı Taç'],['premium-trophy-glow','Şampiyon Kupa'],['premium-medal-spin','Dönen Madalya'],
+ ['premium-flame-winner','Canlı Alev'],['premium-diamond-shine','Parlayan Elmas'],['premium-rocket-rank','Yükselen Roket']
+];
+const iconSvg=id=>{
+ const key=String(id).replace('premium-','');
+ const common='viewBox="0 0 48 48" aria-hidden="true"';
+ if(key==='crown-orbit')return `<span class="ky-premium-icon ky-premium-crown-orbit"><svg ${common}><path class="p-main p-float" d="m7 15 9 9 8-14 8 14 9-9-4 22H11Z"/><path class="p-accent" d="M12 39h24v4H12z"/><circle class="p-spark p-s1" cx="8" cy="8" r="2"/><circle class="p-spark p-s2" cx="40" cy="8" r="2"/></svg></span>`;
+ if(key==='trophy-glow')return `<span class="ky-premium-icon ky-premium-trophy-glow"><svg ${common}><path class="p-accent p-ray" d="M23 2h3v7h-3zM5 11l2-2 5 5-2 2zm31 3 5-5 2 2-5 5z"/><path class="p-main p-pulse" d="M13 9h22v9c0 8-4 13-9 14v5h8v5H14v-5h8v-5c-5-1-9-6-9-14Zm-2 4H5v6c0 6 4 10 10 10v-5c-3 0-5-2-5-5v-2h3Zm26 0v4h3v2c0 3-2 5-5 5v5c6 0 10-4 10-10v-6Z"/></svg></span>`;
+ if(key==='medal-spin')return `<span class="ky-premium-icon ky-premium-medal-spin"><svg ${common}><path class="p-accent p-ribbon-left" d="m13 27-4 18 10-6 5 7 3-17Z"/><path class="p-accent p-ribbon-right" d="m35 27 4 18-10-6-5 7-3-17Z"/><circle class="p-main" cx="24" cy="19" r="15"/><path class="p-star" d="m24 8 3.4 6.9 7.6 1.1-5.5 5.3 1.3 7.6-6.8-3.6-6.8 3.6 1.3-7.6L13 16l7.6-1.1Z"/></svg></span>`;
+ if(key==='flame-winner')return `<span class="ky-premium-icon ky-premium-flame-winner"><svg ${common}><path class="p-main p-flame" d="M27 3c2 10 12 13 12 26 0 9-7 16-16 16S7 38 7 29c0-7 4-13 10-18-1 8 3 11 6 12-2-8 0-15 4-20Z"/><path class="p-accent p-flame-core" d="M25 22c1 6 7 7 7 14 0 5-4 9-9 9s-9-4-9-9c0-4 2-7 6-10 0 4 2 6 4 7-1-4-1-8 1-11Z"/></svg></span>`;
+ if(key==='diamond-shine')return `<span class="ky-premium-icon ky-premium-diamond-shine"><svg ${common}><path class="p-main" d="m8 16 8-11h16l8 11-16 28Z"/><path class="p-accent" d="M8 16h32L24 44Z" opacity=".55"/><path class="p-shine" d="m12 11 4-5 20 29-3 5Z"/></svg></span>`;
+ return `<span class="ky-premium-icon ky-premium-rocket-rank"><svg ${common}><path class="p-trail" d="M14 35 8 43m12-6-5 8"/><path class="p-main p-rocket" d="M18 31 11 30l5-6C17 12 25 5 38 3c-2 13-9 21-21 22l-6 5Zm8-15a5 5 0 1 0 10 0 5 5 0 0 0-10 0Z"/><path class="p-accent p-flare" d="M15 33c-6 1-9 4-10 10 6-1 9-4 10-10Z"/></svg></span>`;
+};
+let scheduled=false;
+function activeType(){return q('#stageCanvas .ky-v3-badge[data-icon-type]')?.dataset.iconType||q('#v3Icons .ky-icon-choice.active')?.dataset.icon||'';}
+function syncActive(host){const active=activeType();qa('[data-icon]',host).forEach(b=>b.classList.toggle('active',b.dataset.icon===active));}
+function enhance(){
+ scheduled=false;const host=q('#v3Icons');if(!host)return;
+ if(q(':scope > .ky-icon-sections',host)){syncActive(host);return;}
+ const existing=new Map(qa(':scope > [data-icon]',host).map(b=>[b.dataset.icon,b]));
+ const wrap=document.createElement('div');wrap.className='ky-icon-sections';
+ const basic=document.createElement('section');basic.className='ky-icon-section ky-icon-basic';basic.innerHTML='<div class="ky-icon-section-head"><div><strong>Basit Rozetler</strong><span>Sade, tek renkli ve günlük kullanım için</span></div><span class="ky-icon-count">10</span></div><div class="ky-icon-section-grid"></div>';
+ const basicGrid=q('.ky-icon-section-grid',basic);
+ BASIC.forEach(([id,name])=>{const b=existing.get(id);if(!b)return;b.querySelector(':scope > span:last-child').textContent=name;basicGrid.appendChild(b);});
+ const premium=document.createElement('section');premium.className='ky-icon-section ky-icon-premium';premium.innerHTML='<div class="ky-icon-section-head"><div><strong>Premium Rozetler <span class="ky-premium-crown">♛</span></strong><span>İki renkli, şeffaf ve sürekli hareketli</span></div><span class="ky-icon-count">6</span></div><div class="ky-icon-section-grid"></div>';
+ const premiumGrid=q('.ky-icon-section-grid',premium);
+ PREMIUM.forEach(([id,name])=>{const b=document.createElement('button');b.type='button';b.className='ky-icon-choice ky-premium-choice';b.dataset.icon=id;b.innerHTML=`<b>${iconSvg(id)}</b><span>${name}</span><i>PREMIUM</i>`;b.addEventListener('click',()=>{window.handleInput?.('icon.enabled',true);window.selectIcon?.(id);});premiumGrid.appendChild(b);});
+ wrap.append(basic,premium);host.replaceChildren(wrap);syncActive(host);
+}
+function queue(){if(scheduled)return;scheduled=true;requestAnimationFrame(enhance);}
+const style=document.createElement('style');style.id='kyBadgeIconSystemStyles';style.textContent=`
+#v3Icons{display:block!important;overflow:visible!important}.ky-icon-sections{display:grid;gap:14px}.ky-icon-section{padding:12px;border:1px solid rgba(36,58,139,.12);border-radius:13px;background:#fff}.ky-icon-premium{border-color:rgba(216,180,92,.42);background:linear-gradient(145deg,#fffdf7,#fff8e7)}
+.ky-icon-section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.ky-icon-section-head strong{display:block;color:#243a8b;font-size:12px}.ky-icon-section-head span{display:block;margin-top:2px;color:rgba(36,58,139,.55);font-size:9px}.ky-icon-section-head .ky-premium-crown{display:inline;color:#d39b21;font-size:14px}.ky-icon-count{min-width:25px;height:25px;display:grid!important;place-items:center;border-radius:999px;background:#eef2ff;color:#243a8b!important;font-weight:900}.ky-icon-premium .ky-icon-count{background:#fff0bd;color:#9a6500!important}
+.ky-icon-section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ky-icon-section-grid .ky-icon-choice{min-height:72px}.ky-premium-choice{position:relative;overflow:hidden!important;border-color:rgba(216,180,92,.35)!important;background:rgba(255,255,255,.78)!important}.ky-premium-choice.active{border-color:#d39b21!important;box-shadow:0 0 0 2px rgba(211,155,33,.18)!important;background:#fff!important}.ky-premium-choice>i{position:absolute;right:4px;top:4px;font-style:normal;font-size:6px;letter-spacing:.06em;color:#9a6500;background:#fff0bd;border-radius:999px;padding:2px 4px}.ky-premium-choice b{width:30px!important;height:30px!important;background:transparent!important}
+.ky-premium-icon{--p-main:#243a8b;--p-accent:#f2b84b;display:inline-flex!important;width:1.35em;height:1.35em;align-items:center;justify-content:center;flex:0 0 auto;background:transparent!important}.ky-premium-icon svg{width:100%;height:100%;display:block;overflow:visible}.ky-premium-icon .p-main{fill:var(--ky-icon-main,var(--p-main))}.ky-premium-icon .p-accent,.ky-premium-icon .p-star{fill:var(--ky-icon-accent,var(--p-accent))}.ky-premium-icon .p-spark{fill:var(--ky-icon-accent,var(--p-accent))}.ky-premium-icon .p-trail{fill:none;stroke:var(--ky-icon-accent,var(--p-accent));stroke-width:3;stroke-linecap:round}
+@keyframes kyPremFloat{50%{transform:translateY(-3px)}}@keyframes kyPremSpark{50%{opacity:.2;transform:scale(.45)}}@keyframes kyPremPulse{50%{transform:scale(1.08)}}@keyframes kyPremSpin{to{transform:rotate(360deg)}}@keyframes kyPremSway{50%{transform:rotate(5deg)}}@keyframes kyPremFlame{50%{transform:scale(.92,1.08) translateY(-1px)}}@keyframes kyPremShine{0%,35%{transform:translateX(-25px);opacity:0}55%{opacity:.9}75%,100%{transform:translateX(25px);opacity:0}}@keyframes kyPremRocket{50%{transform:translate(2px,-3px)}}
+.ky-premium-crown-orbit .p-float{transform-origin:center;animation:kyPremFloat 1.8s ease-in-out infinite}.ky-premium-crown-orbit .p-spark{transform-box:fill-box;transform-origin:center;animation:kyPremSpark 1.1s ease-in-out infinite}.ky-premium-crown-orbit .p-s2{animation-delay:.55s}.ky-premium-trophy-glow .p-pulse{transform-origin:center;animation:kyPremPulse 1.5s ease-in-out infinite}.ky-premium-trophy-glow .p-ray{animation:kyPremSpark 1.3s ease-in-out infinite}.ky-premium-medal-spin .p-star{transform-box:fill-box;transform-origin:center;animation:kyPremSpin 4s linear infinite}.ky-premium-medal-spin .p-ribbon-left,.ky-premium-medal-spin .p-ribbon-right{transform-origin:top center;animation:kyPremSway 1.4s ease-in-out infinite alternate}.ky-premium-flame-winner .p-flame,.ky-premium-flame-winner .p-flame-core{transform-origin:center bottom;animation:kyPremFlame .9s ease-in-out infinite}.ky-premium-flame-winner .p-flame-core{animation-delay:.2s}.ky-premium-diamond-shine svg{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}.ky-premium-diamond-shine .p-shine{fill:#fff;opacity:0;animation:kyPremShine 2.4s ease-in-out infinite}.ky-premium-rocket-rank .p-rocket{animation:kyPremRocket 1.25s ease-in-out infinite}.ky-premium-rocket-rank .p-flare{transform-origin:center;animation:kyPremPulse .75s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.ky-premium-icon *{animation:none!important}}
+`;document.head.appendChild(style);
+function start(){const host=q('#v3Icons');if(host)new MutationObserver(queue).observe(host,{childList:true});queue();document.addEventListener('click',e=>{if(e.target.closest('[data-edit-device],.ky-device-btn,#v3IconMono,#v3IconColor'))setTimeout(queue,80);},true);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
