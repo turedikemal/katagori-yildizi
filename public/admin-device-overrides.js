@@ -220,7 +220,7 @@ function enhanceCategories(){
     const rows=qa(':scope > .ky-rank-row',card);const body=document.createElement('div');body.className='ky-category-body';rows.forEach(r=>body.appendChild(r));card.appendChild(body);
     const arrow=document.createElement('span');arrow.className='ky-category-arrow';arrow.textContent='⌄';head.appendChild(arrow);
     card.classList.toggle('open',card.classList.contains('open')||(!hasPresetOpen&&i===0));head.setAttribute('role','button');head.tabIndex=0;
-    const toggle=()=>card.classList.toggle('open');head.addEventListener('click',toggle);head.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+    const toggle=()=>{const opening=!card.classList.contains('open');qa('.ky-category-card.open',host).forEach(other=>{if(other!==card)other.classList.remove('open');});card.classList.toggle('open',opening);if(opening)window.selectPreviewCategory?.(card.dataset.categoryId);};head.addEventListener('click',toggle);head.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
   });
 }
 function observeCategories(){

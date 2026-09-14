@@ -8,6 +8,7 @@ let catalog=null;
 let replacing=false;
 let lastBadge='';
 let lastPlacement='overlay';
+let selectedCategoryId='';
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function fill(t,p,c){return String(t||'').replaceAll('{rank}',p?.rank??1).replaceAll('{category}',c?.name||'').replaceAll('{product}',p?.name||'').replaceAll('{sales}',p?.sales||0);}
@@ -45,10 +46,11 @@ function removeThemeControl(){
 async function loadCatalog(){
  try{const r=await fetch(`/api/admin/settings?shop=${encodeURIComponent(shop)}&preview=1`,{cache:'no-store'});const d=await r.json();if(r.ok&&Array.isArray(d.categories))catalog=d.categories;}catch(e){console.warn('[Preview] catalog:',e.message);}
 }
-function globalSample(){
- const cats=catalog||[];let chosenCat=null,chosenProduct=null;
- for(const cat of cats){for(const p of cat.products||[]){if(!chosenProduct||Number(p.sales||0)>Number(chosenProduct.sales||0)||(Number(p.sales||0)===Number(chosenProduct.sales||0)&&Number(p.rank||99)<Number(chosenProduct.rank||99))){chosenProduct=p;chosenCat=cat;}}}
- return {cat:chosenCat||cats[0]||null,product:chosenProduct||(cats[0]?.products||[])[0]||null};
+function selectedSample(){
+ const cats=catalog||[],openId=qs('#v3Categories .ky-category-card.open[data-category-id]')?.dataset.categoryId,selectIndex=Number(qs('#previewCategorySelect')?.value||0);
+ const cat=cats.find(c=>String(c.id)===String(selectedCategoryId||openId))||cats[selectIndex]||cats[0]||null;
+ const product=[...(cat?.products||[])].sort((a,b)=>Number(a.rank||99)-Number(b.rank||99)||Number(b.sales||0)-Number(a.sales||0))[0]||null;
+ return {cat,product};
 }
 function captureLiveSettings(canvas){
  const badge=canvas.querySelector('.ky-v3-badge');if(badge)lastBadge=badge.outerHTML;
@@ -62,13 +64,13 @@ function cloneBadge(text){
  if(!label){label=document.createElement('span');el.appendChild(label);}label.classList.add('ky-badge-text');label.textContent=text;return el.outerHTML;
 }
 function image(p){return p?.image?`<img src="${esc(p.image)}" alt="${esc(p.name)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ky-focus-fallback',textContent:'${esc(p.name)}'}))">`:`<div class="ky-focus-fallback">${esc(p?.name||'Ürün')}</div>`;}
-function productText(p){const t=qs('#v3ProductText')?.value||'En Çok Satan {rank}. Ürün';return fill(t,p,globalSample().cat);}
+function productText(p,cat){const t=qs('#v3ProductText')?.value||'En Çok Satan {rank}. Ürün';return fill(t,p,cat||selectedSample().cat);}
 function positionClass(){return lastPlacement==='under'||lastPlacement==='inside'?'':` pos-${lastPlacement}`;}
 function medal(){return `<svg class="ky-ref-medal" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M9.5 12 8 21l4-2 4 2-1.5-9"></path></svg>`;}
 
 function categoryPreview(cat){
  const items=(cat?.products||[]).slice(0,12);
- return `<div class="ky-focus-wrap"><div class="ky-focus-head"><div><h2>${esc(cat?.name||'Kategori')}</h2><p>Önizleme • ilk ${Math.min(items.length,12)} ürün</p></div><div class="ky-focus-pill">Örnek kategori sayfası</div></div><div class="ky-focus-grid">${items.map(p=>{const show=Number(p.rank||99)<=Number(qs('#v3MaxRank')?.value||20)&&!p.hidden;const badge=show?cloneBadge(productText(p)):'';return `<article class="ky-focus-card${positionClass()}"><div class="ky-focus-media">${image(p)}${show&&lastPlacement==='inside'?`<div class="ky-focus-insidebar">${badge}</div>`:show&&lastPlacement!=='under'?`<div class="ky-focus-badge-overlay">${badge}</div>`:''}</div>${show&&lastPlacement==='under'?`<div class="ky-focus-underbar">${badge}</div>`:''}<div class="ky-focus-product-meta"><div class="ky-focus-product-name">${esc(p.name)}</div><div class="ky-focus-price">${esc(money(p.price))}</div></div></article>`}).join('')}</div><div class="ky-focus-note">Yalnızca rozetin ürün kartındaki görünümü önizlenir.</div></div>`;
+ return `<div class="ky-focus-wrap"><div class="ky-focus-head"><div><h2>${esc(cat?.name||'Kategori')}</h2><p>Önizleme • ilk ${Math.min(items.length,12)} ürün</p></div><div class="ky-focus-pill">Örnek kategori sayfası</div></div><div class="ky-focus-grid">${items.map(p=>{const show=Number(p.rank||99)<=Number(qs('#v3MaxRank')?.value||20)&&!p.hidden;const badge=show?cloneBadge(productText(p,cat)):'';return `<article class="ky-focus-card${positionClass()}"><div class="ky-focus-media">${image(p)}${show&&lastPlacement==='inside'?`<div class="ky-focus-insidebar">${badge}</div>`:show&&lastPlacement!=='under'?`<div class="ky-focus-badge-overlay">${badge}</div>`:''}</div>${show&&lastPlacement==='under'?`<div class="ky-focus-underbar">${badge}</div>`:''}<div class="ky-focus-product-meta"><div class="ky-focus-product-name">${esc(p.name)}</div><div class="ky-focus-price">${esc(money(p.price))}</div></div></article>`}).join('')}</div><div class="ky-focus-note">Yalnızca rozetin ürün kartındaki görünümü önizlenir.</div></div>`;
 }
 function pdpPreview(cat,p){
  const prefix=qs('#v3PdpPrefix')?.value||'{category} Kategorisinde';
@@ -78,7 +80,7 @@ function pdpPreview(cat,p){
 }
 function renderFocused(){
  const canvas=qs('#stageCanvas');if(!canvas||replacing||document.body.classList.contains('ky-profile-preview')||!catalog?.length)return;
- const sample=globalSample();if(!sample.cat||!sample.product)return;
+ const sample=selectedSample();if(!sample.cat||!sample.product)return;
  replacing=true;canvas.innerHTML=mode()==='pdp'?pdpPreview(sample.cat,sample.product):categoryPreview(sample.cat);replacing=false;
 }
 function handleCanvasMutation(){const canvas=qs('#stageCanvas');if(!canvas||replacing)return;if(canvas.querySelector('.ky-focus-wrap'))return;captureLiveSettings(canvas);requestAnimationFrame(renderFocused);}
@@ -90,6 +92,7 @@ document.addEventListener('click',e=>{if(e.target.closest('.ky-view-tab,.ky-devi
 document.addEventListener('input',e=>{if(e.target.closest('#panelTexts,#panelTypography,#panelIcons,#panelColors,#panelBorders,#panelSizing,#panelPosition,#panelAnimation,#panelResponsive'))setTimeout(handleCanvasMutation,40);},true);
 document.addEventListener('change',e=>{if(e.target.closest('#panelTexts,#panelPosition,#panelResponsive,#panelTemplates'))setTimeout(handleCanvasMutation,40);},true);
 document.addEventListener('ky:categories-updated',e=>{if(Array.isArray(e.detail?.categories)){catalog=e.detail.categories;requestAnimationFrame(renderFocused);}});
+document.addEventListener('ky:preview-category-selected',e=>{selectedCategoryId=String(e.detail?.categoryId||'');if(e.detail?.category&&catalog){const i=catalog.findIndex(c=>String(c.id)===selectedCategoryId);if(i>=0)catalog[i]=e.detail.category;}requestAnimationFrame(renderFocused);});
 
 (async()=>{injectStyles();removeThemeControl();await loadCatalog();setTimeout(handleCanvasMutation,80);setTimeout(handleCanvasMutation,500);})();
 })();
