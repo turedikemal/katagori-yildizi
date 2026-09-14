@@ -498,8 +498,10 @@ async function loadOverrides(shop) {
   }));
 }
 
-function rankedCategories(rawCatalog, config, overrides = []) {
+function rankedCategories(rawCatalog, config, overrides = [], options = {}) {
   if (!rawCatalog?.categories || !rawCatalog?.products) return [];
+  const includeEmptyCategories = Boolean(options?.includeEmptyCategories);
+  const includeExcludedCategories = Boolean(options?.includeExcludedCategories);
   const period = config?.ranking?.period || '30days';
   const metric = config?.ranking?.metric || 'quantity';
   const excludedProducts = new Set(config?.rules?.excludedProducts || []);
@@ -507,7 +509,7 @@ function rankedCategories(rawCatalog, config, overrides = []) {
   const overridesMap = new Map(overrides.map(o => [`${o.categoryId}:${o.productId}`, o]));
 
   return rawCatalog.categories
-    .filter(category => !excludedCategories.has(category.id))
+    .filter(category => includeExcludedCategories || !excludedCategories.has(category.id))
     .map(category => {
       const rows = rawCatalog.products
         .filter(product => product.categoryIds.includes(category.id))
@@ -549,7 +551,7 @@ function rankedCategories(rawCatalog, config, overrides = []) {
       rows.sort((a, b) => a.rank - b.rank || b.sortValue - a.sortValue);
       return { id: category.id, name: category.name, products: rows };
     })
-    .filter(category => category.products.length > 0);
+    .filter(category => includeEmptyCategories || category.products.length > 0);
 }
 
 async function saveCatalog(shop, catalog, syncError = null) {
@@ -706,7 +708,12 @@ app.get('/api/admin/settings', async (req, res) => {
     const settings = await loadSettings(shop);
     const catalogState = await maybeAutoSync(shop);
     const overrides = await loadOverrides(shop);
-    const categories = rankedCategories(catalogState.catalog, settings.draft, overrides);
+    const categories = rankedCategories(catalogState.catalog, settings.draft, overrides, {
+      includeEmptyCategories: true,
+      includeExcludedCategories: true
+    });
+    const rawCategoryCount = catalogState.catalog?.categories?.length || 0;
+    console.log(`[Admin Categories] ${shop}: raw catalog categories=${rawCategoryCount}, admin categories returned=${categories.length}`);
     res.json({
       success: true,
       shop,
@@ -759,7 +766,10 @@ app.post('/api/admin/rankings/sync', async (req, res) => {
     const rawCatalog = await syncIkasStoreData(shop);
     const settings = await loadSettings(shop);
     const overrides = await loadOverrides(shop);
-    const categories = rankedCategories(rawCatalog, settings.draft, overrides);
+    const categories = rankedCategories(rawCatalog, settings.draft, overrides, {
+      includeEmptyCategories: true,
+      includeExcludedCategories: true
+    });
     res.json({ success: true, lastSync: rawCatalog.syncedAt, categories, productCount: rawCatalog.products.length });
   } catch (error) {
     res.status(502).json({ success: false, message: error.message });
@@ -791,7 +801,11 @@ app.post('/api/admin/categories/override', async (req, res) => {
     const catalogState = await loadCatalog(shop);
     const settings = await loadSettings(shop);
     const overrides = await loadOverrides(shop);
-    res.json({ success: true, categories: rankedCategories(catalogState.catalog, settings.draft, overrides) });
+    const categories = rankedCategories(catalogState.catalog, settings.draft, overrides, {
+      includeEmptyCategories: true,
+      includeExcludedCategories: true
+    });
+    res.json({ success: true, categories });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
