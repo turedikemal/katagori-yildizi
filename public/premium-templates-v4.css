@@ -1,0 +1,194 @@
+/* Kategori Yildizi — Premium Templates v4
+   Ten distinct premium families. Each family has its own motion language.
+   All user controls remain authoritative through CSS variables. */
+
+@keyframes kyP4Aurora{0%{background-position:0 50%,0 50%}50%{background-position:0 50%,100% 50%}100%{background-position:0 50%,200% 50%}}
+@keyframes kyP4Halo{0%,100%{opacity:.28;transform:scale(.92) rotate(0)}50%{opacity:.82;transform:scale(1.08) rotate(180deg)}}
+@keyframes kyP4Prism{0%{background-position:0 0,0 50%}100%{background-position:0 0,260% 50%}}
+@keyframes kyP4PrismCut{0%{translate:-180% 0;opacity:0}30%{opacity:.8}65%{opacity:.35}100%{translate:280% 0;opacity:0}}
+@keyframes kyP4Nebula{0%,100%{filter:saturate(1) brightness(1);box-shadow:0 0 12px color-mix(in srgb,var(--p-accent) 22%,transparent),var(--user-shadow,0 0 0 transparent)}50%{filter:saturate(1.28) brightness(1.08);box-shadow:0 0 28px color-mix(in srgb,var(--p-accent) 52%,transparent),var(--user-shadow,0 0 0 transparent)}}
+@keyframes kyP4NebulaDust{0%,100%{opacity:.2;transform:translate3d(0,0,0) scale(.8)}50%{opacity:.95;transform:translate3d(7px,-3px,0) scale(1.16)}}
+@keyframes kyP4Liquid{0%{background-position:0 50%,0 50%}50%{background-position:100% 50%,180% 50%}100%{background-position:0 50%,360% 50%}}
+@keyframes kyP4LiquidWave{0%{transform:translateX(-130%) skewX(-24deg) scaleX(.7);opacity:0}35%{opacity:.65}70%{opacity:.28}100%{transform:translateX(250%) skewX(-24deg) scaleX(1.3);opacity:0}}
+@keyframes kyP4Photon{0%{background-position:0 50%,0 50%}100%{background-position:0 50%,280% 50%}}
+@keyframes kyP4PhotonScan{0%{left:-30%;opacity:0}18%{opacity:1}70%{opacity:.5}100%{left:112%;opacity:0}}
+@keyframes kyP4Holo{0%{filter:hue-rotate(0deg) saturate(1.05)}50%{filter:hue-rotate(110deg) saturate(1.35)}100%{filter:hue-rotate(360deg) saturate(1.05)}}
+@keyframes kyP4HoloFilm{0%{background-position:0 0}100%{background-position:180% 0}}
+@keyframes kyP4Comet{0%{background-position:0 50%,0 50%}100%{background-position:0 50%,300% 50%}}
+@keyframes kyP4CometDot{0%{left:5%;top:3px;opacity:0;transform:scale(.5)}15%{opacity:1;transform:scale(1)}50%{left:55%;top:calc(100% - 6px)}85%{opacity:1}100%{left:96%;top:3px;opacity:0;transform:scale(.6)}}
+@keyframes kyP4Spectrum{0%{background-position:0 50%,0 50%;filter:saturate(1)}50%{filter:saturate(1.4)}100%{background-position:0 50%,360% 50%;filter:saturate(1)}}
+@keyframes kyP4CrownPulse{0%,100%{opacity:.22;transform:translateY(1px) scaleX(.82)}50%{opacity:.74;transform:translateY(-1px) scaleX(1)}}
+@keyframes kyP4Quantum{0%,100%{backdrop-filter:blur(8px) saturate(125%);box-shadow:0 7px 20px color-mix(in srgb,var(--p-accent) 18%,transparent),var(--user-shadow,0 0 0 transparent)}50%{backdrop-filter:blur(13px) saturate(175%);box-shadow:0 12px 32px color-mix(in srgb,var(--p-accent) 35%,transparent),var(--user-shadow,0 0 0 transparent)}}
+@keyframes kyP4QuantumLens{0%,100%{opacity:.22;transform:translate(-18%,-10%) scale(.8)}50%{opacity:.68;transform:translate(28%,12%) scale(1.18)}}
+@keyframes kyP4Electric{0%,100%{filter:drop-shadow(0 0 2px color-mix(in srgb,var(--p-accent) 38%,transparent))}18%{filter:drop-shadow(0 0 7px #00f5ff)}20%{filter:drop-shadow(0 0 1px #00f5ff)}48%{filter:drop-shadow(0 0 10px #ff2bd6)}52%{filter:drop-shadow(0 0 2px #ff2bd6)}76%{filter:drop-shadow(0 0 8px #7c3aed)}}
+@keyframes kyP4ElectricDash{0%{background-position:0 0}100%{background-position:160% 0}}
+
+html body .ky-v3-badge[class*="tpl-premium-"],
+html body .ky-badge-root[class*="ky-tpl-premium-"]{
+  --p-bg:var(--badge-bg,var(--ky-primary-bg,#243a8b));
+  --p-text:var(--badge-text,var(--ky-primary-text,#fff));
+  --p-accent:var(--badge-accent,var(--ky-accent,#ce3f44));
+  --user-surface:linear-gradient(135deg,color-mix(in srgb,var(--p-bg) 92%,#fff),var(--p-bg));
+  --user-border-width:2px;
+  --user-radius:12px;
+  --user-shadow:0 0 0 transparent;
+  --premium-speed:2800ms;
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  color:var(--p-text)!important;
+  border:var(--user-border-width) solid transparent!important;
+  border-radius:var(--user-radius)!important;
+  padding:var(--badge-py,var(--ky-padding-y,5px)) var(--badge-px,var(--ky-padding-x,10px))!important;
+  opacity:var(--badge-opacity,var(--ky-opacity,1))!important;
+  font-size:var(--badge-font-size,var(--ky-font-size,12px))!important;
+  font-weight:var(--ky-font-weight,var(--badge-font-weight,700))!important;
+  transform:scale(var(--badge-scale,var(--ky-scale,1)));
+  transform-origin:center;
+}
+html body .ky-v3-badge[class*="tpl-premium-"]>* ,
+html body .ky-badge-root[class*="ky-tpl-premium-"]>*{position:relative;z-index:3}
+html body .ky-v3-badge[class*="tpl-premium-"]::before,
+html body .ky-v3-badge[class*="tpl-premium-"]::after,
+html body .ky-badge-root[class*="ky-tpl-premium-"]::before,
+html body .ky-badge-root[class*="ky-tpl-premium-"]::after{content:none!important}
+
+/* 1 — Aurora Halo: slow orbital aura and flowing polar-light frame. */
+html body .ky-v3-badge.tpl-premium-aurora,
+html body .ky-badge-root.ky-tpl-premium-aurora{
+  --user-radius:999px;
+  background:var(--user-surface) padding-box,linear-gradient(105deg,#7c3aed,#22d3ee,#34d399,#f472b6,#7c3aed) border-box!important;
+  background-size:100% 100%,220% 100%!important;
+  animation:kyP4Aurora var(--premium-speed) linear infinite!important;
+  box-shadow:0 0 16px color-mix(in srgb,var(--p-accent) 30%,transparent),var(--user-shadow)!important;
+}
+html body .ky-v3-badge.tpl-premium-aurora::after,
+html body .ky-badge-root.ky-tpl-premium-aurora::after{content:""!important;display:block!important;position:absolute;inset:-55%;z-index:1;border-radius:50%;background:conic-gradient(from 0deg,transparent,#22d3ee66,transparent,#f472b666,transparent);filter:blur(9px);animation:kyP4Halo var(--premium-speed) ease-in-out infinite;pointer-events:none}
+
+/* 2 — Prism Flux: sharp spectral frame and diagonal refracted cut. */
+html body .ky-v3-badge.tpl-premium-prism,
+html body .ky-badge-root.ky-tpl-premium-prism{
+  --user-radius:9px;
+  background:var(--user-surface) padding-box,linear-gradient(90deg,#ff3366,#ff9f1c,#f9f871,#2de2e6,#6c63ff,#d65db1,#ff3366) border-box!important;
+  background-size:100% 100%,260% 100%!important;
+  animation:kyP4Prism var(--premium-speed) linear infinite!important;
+  box-shadow:0 8px 20px color-mix(in srgb,var(--p-bg) 20%,transparent),var(--user-shadow)!important;
+}
+html body .ky-v3-badge.tpl-premium-prism::after,
+html body .ky-badge-root.ky-tpl-premium-prism::after{content:""!important;display:block!important;position:absolute;z-index:1;top:-35%;bottom:-35%;left:-28%;width:18%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.78),#67e8f977,transparent);transform:skewX(-22deg);animation:kyP4PrismCut var(--premium-speed) cubic-bezier(.2,.75,.3,1) infinite;pointer-events:none}
+
+/* 3 — Nebula Pulse: deep-space bloom with breathing dust. */
+html body .ky-v3-badge.tpl-premium-nebula,
+html body .ky-badge-root.ky-tpl-premium-nebula{
+  --user-radius:16px;
+  background:radial-gradient(circle at 12% 20%,#7c3aed55,transparent 45%),radial-gradient(circle at 88% 78%,color-mix(in srgb,var(--p-accent) 45%,transparent),transparent 45%),var(--user-surface) padding-box,linear-gradient(110deg,#4f46e5,#22d3ee,#e879f9,#fb7185,#4f46e5) border-box!important;
+  background-size:100% 100%,100% 100%,100% 100%,240% 100%!important;
+  animation:kyP4Nebula var(--premium-speed) ease-in-out infinite!important;
+}
+html body .ky-v3-badge.tpl-premium-nebula::after,
+html body .ky-badge-root.ky-tpl-premium-nebula::after{content:"✦"!important;display:block!important;position:absolute;z-index:1;right:9px;top:2px;font-size:8px;color:#fff;text-shadow:0 0 8px #fff,0 0 14px var(--p-accent);animation:kyP4NebulaDust var(--premium-speed) ease-in-out infinite;pointer-events:none}
+
+/* 4 — Liquid Chrome: liquid surface drift and curved chrome reflection. */
+html body .ky-v3-badge.tpl-premium-liquid,
+html body .ky-badge-root.ky-tpl-premium-liquid{
+  --user-radius:999px 14px 999px 14px;
+  background:linear-gradient(115deg,color-mix(in srgb,var(--p-bg) 64%,#fff),var(--p-bg),color-mix(in srgb,var(--p-accent) 28%,var(--p-bg)),var(--p-bg)) padding-box,linear-gradient(95deg,#e2e8f0,#22d3ee,#a78bfa,#f9a8d4,#fef3c7,#e2e8f0) border-box!important;
+  background-size:220% 100%,260% 100%!important;
+  animation:kyP4Liquid var(--premium-speed) ease-in-out infinite!important;
+  box-shadow:0 7px 24px color-mix(in srgb,var(--p-accent) 22%,transparent),var(--user-shadow)!important;
+}
+html body .ky-v3-badge.tpl-premium-liquid::after,
+html body .ky-badge-root.ky-tpl-premium-liquid::after{content:""!important;display:block!important;position:absolute;z-index:1;inset:-30% auto -30% -25%;width:24%;border-radius:50%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.82),transparent);filter:blur(1px);animation:kyP4LiquidWave var(--premium-speed) ease-in-out infinite;pointer-events:none}
+
+/* 5 — Photon Rail: clean energy rails and scanning photon. */
+html body .ky-v3-badge.tpl-premium-photon,
+html body .ky-badge-root.ky-tpl-premium-photon{
+  --user-radius:6px;
+  background:var(--user-surface) padding-box,linear-gradient(90deg,#06b6d4,#3b82f6,#8b5cf6,#ec4899,#06b6d4) border-box!important;
+  background-size:100% 100%,280% 100%!important;
+  animation:kyP4Photon var(--premium-speed) linear infinite!important;
+  box-shadow:0 0 14px #22d3ee44,var(--user-shadow)!important;
+}
+html body .ky-v3-badge.tpl-premium-photon::after,
+html body .ky-badge-root.ky-tpl-premium-photon::after{content:""!important;display:block!important;position:absolute;z-index:1;bottom:1px;left:-30%;width:28%;height:2px;background:linear-gradient(90deg,transparent,#fff,#22d3ee,transparent);box-shadow:0 0 7px #22d3ee;animation:kyP4PhotonScan var(--premium-speed) linear infinite;pointer-events:none}
+
+/* 6 — Hologram Shift: iridescent film instead of a travelling shine. */
+html body .ky-v3-badge.tpl-premium-hologram,
+html body .ky-badge-root.ky-tpl-premium-hologram{
+  --user-radius:12px;
+  background:linear-gradient(120deg,color-mix(in srgb,var(--p-bg) 86%,#fff),color-mix(in srgb,var(--p-accent) 18%,#fff),color-mix(in srgb,var(--p-bg) 88%,#fff)) padding-box,linear-gradient(105deg,#67e8f9,#c4b5fd,#f9a8d4,#fde68a,#86efac,#67e8f9) border-box!important;
+  background-size:180% 100%,260% 100%!important;
+  animation:kyP4Holo var(--premium-speed) linear infinite!important;
+  box-shadow:0 8px 22px rgba(91,94,180,.18),var(--user-shadow)!important;
+}
+html body .ky-v3-badge.tpl-premium-hologram::after,
+html body .ky-badge-root.ky-tpl-premium-hologram::after{content:""!important;display:block!important;position:absolute;z-index:1;inset:0;background:repeating-linear-gradient(110deg,transparent 0 8px,rgba(255,255,255,.18) 9px 10px,transparent 11px 18px);background-size:180% 100%;mix-blend-mode:screen;animation:kyP4HoloFilm var(--premium-speed) linear infinite;pointer-events:none}
+
+/* 7 — Comet Orbit: moving border plus a comet tracing the perimeter. */
+html body .ky-v3-badge.tpl-premium-comet,
+html body .ky-badge-root.ky-tpl-premium-comet{
+  --user-radius:999px;
+  background:var(--user-surface) padding-box,linear-gradient(90deg,#22d3ee,#fff,#a78bfa,#fb7185,#22d3ee) border-box!important;
+  background-size:100% 100%,300% 100%!important;
+  animation:kyP4Comet var(--premium-speed) linear infinite!important;
+  box-shadow:0 7px 20px color-mix(in srgb,var(--p-accent) 20%,transparent),var(--user-shadow)!important;
+}
+html body .ky-v3-badge.tpl-premium-comet::after,
+html body .ky-badge-root.ky-tpl-premium-comet::after{content:""!important;display:block!important;position:absolute;z-index:4;width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 7px #fff,0 0 14px #22d3ee,0 0 22px #a78bfa;animation:kyP4CometDot var(--premium-speed) ease-in-out infinite;pointer-events:none}
+
+/* 8 — Spectrum Crown: saturated spectrum frame with a top crown aura. */
+html body .ky-v3-badge.tpl-premium-spectrum,
+html body .ky-badge-root.ky-tpl-premium-spectrum{
+  --user-radius:8px 8px 15px 15px;
+  background:var(--user-surface) padding-box,linear-gradient(90deg,#f43f5e,#f59e0b,#eab308,#10b981,#06b6d4,#6366f1,#d946ef,#f43f5e) border-box!important;
+  background-size:100% 100%,360% 100%!important;
+  animation:kyP4Spectrum var(--premium-speed) linear infinite!important;
+  box-shadow:0 8px 22px color-mix(in srgb,var(--p-accent) 22%,transparent),var(--user-shadow)!important;
+}
+html body .ky-v3-badge.tpl-premium-spectrum::before,
+html body .ky-badge-root.ky-tpl-premium-spectrum::before{content:""!important;display:block!important;position:absolute;z-index:1;left:18%;right:18%;top:-4px;height:5px;border-radius:999px;background:linear-gradient(90deg,#f43f5e,#f59e0b,#10b981,#06b6d4,#d946ef);filter:blur(4px);animation:kyP4CrownPulse var(--premium-speed) ease-in-out infinite;pointer-events:none}
+
+/* 9 — Quantum Glass: translucent lens drifting inside the badge. */
+html body .ky-v3-badge.tpl-premium-quantum,
+html body .ky-badge-root.ky-tpl-premium-quantum{
+  --user-radius:14px;
+  background:linear-gradient(130deg,color-mix(in srgb,var(--p-bg) 58%,transparent),color-mix(in srgb,var(--p-accent) 22%,transparent)) padding-box,linear-gradient(110deg,#93c5fd,#c4b5fd,#f0abfc,#5eead4,#fde68a,#93c5fd) border-box!important;
+  background-size:100% 100%,260% 100%!important;
+  animation:kyP4Quantum var(--premium-speed) ease-in-out infinite!important;
+}
+html body .ky-v3-badge.tpl-premium-quantum::after,
+html body .ky-badge-root.ky-tpl-premium-quantum::after{content:""!important;display:block!important;position:absolute;z-index:1;width:55%;height:170%;left:8%;top:-35%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.38),transparent 68%);filter:blur(3px);animation:kyP4QuantumLens var(--premium-speed) ease-in-out infinite;pointer-events:none}
+
+/* 10 — Electric Frame: segmented neon electricity, intentionally angular. */
+html body .ky-v3-badge.tpl-premium-electric,
+html body .ky-badge-root.ky-tpl-premium-electric{
+  --user-radius:4px;
+  clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px);
+  background:var(--user-surface) padding-box,repeating-linear-gradient(90deg,#00f5ff 0 9px,#3b82f6 10px 17px,#8b5cf6 18px 26px,#ff2bd6 27px 35px,#00f5ff 36px 44px) border-box!important;
+  background-size:100% 100%,160% 100%!important;
+  animation:kyP4Electric var(--premium-speed) steps(9,end) infinite,kyP4ElectricDash var(--premium-speed) linear infinite!important;
+  box-shadow:0 0 14px color-mix(in srgb,var(--p-accent) 30%,transparent),var(--user-shadow)!important;
+}
+
+/* Premium cards: larger preview, restrained premium frame. The badge itself carries the unique motion. */
+.ky-template-card-v3.ky-premium-template-v4{position:relative!important;border:1.5px solid transparent!important;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(105deg,#7c3aed,#22d3ee,#f43f5e,#facc15,#34d399,#7c3aed) border-box!important;background-size:100% 100%,280% 100%!important;animation:kyP4Prism 5200ms linear infinite!important;overflow:hidden!important}
+.ky-template-card-v3.ky-premium-template-v4 .preview{height:80px!important;overflow:visible!important;background:linear-gradient(180deg,#fbfcff,#f4f6ff)!important}
+.ky-template-card-v3.ky-premium-template-v4 .name{padding-right:48px!important}
+.ky-premium-v4-mark{position:absolute;right:6px;bottom:6px;padding:3px 5px;border-radius:999px;background:#fff7dd;color:#9a6500;border:1px solid #f0d37c;font-size:6.8px;font-weight:900;pointer-events:none}
+
+/* User controls always win, including premium templates. */
+html body #stageCanvas .ky-v3-badge,
+html body #stageCanvas .ky-badge-root{
+  border-radius:var(--user-radius,var(--badge-radius,var(--ky-border-radius,8px)))!important;
+  border-width:var(--user-border-width,var(--badge-border-width,var(--ky-border-width,0px)))!important;
+  border-color:var(--user-border-color,var(--badge-border,var(--ky-border-color,transparent)))!important;
+  box-shadow:var(--user-effective-shadow,var(--badge-shadow,var(--ky-shadow,none)))!important;
+  opacity:var(--user-opacity,var(--badge-opacity,var(--ky-opacity,1)))!important;
+  padding:var(--user-py,var(--badge-py,var(--ky-padding-y,5px))) var(--user-px,var(--badge-px,var(--ky-padding-x,10px)))!important;
+  font-size:var(--user-font-size,var(--badge-font-size,var(--ky-font-size,12px)))!important;
+  font-weight:var(--user-font-weight,var(--ky-font-weight,700))!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body .ky-v3-badge[class*="tpl-premium-"],html body .ky-badge-root[class*="ky-tpl-premium-"],html body .ky-v3-badge[class*="tpl-premium-"]::before,html body .ky-v3-badge[class*="tpl-premium-"]::after,html body .ky-badge-root[class*="ky-tpl-premium-"]::before,html body .ky-badge-root[class*="ky-tpl-premium-"]::after,.ky-template-card-v3.ky-premium-template-v4{animation:none!important}
+}
