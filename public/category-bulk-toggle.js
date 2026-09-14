@@ -3,7 +3,7 @@
 'use strict';
 if(document.querySelector('script[data-ky-preview-stability]'))return;
 const s=document.createElement('script');
-s.src='/preview-stability-fix.js?v=20260914-4';
+s.src='/preview-stability-fix.js?v=20260914-5';
 s.async=false;
 s.dataset.kyPreviewStability='1';
 document.body.appendChild(s);
