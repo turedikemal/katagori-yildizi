@@ -4,6 +4,7 @@
 const q=(s,r=document)=>r.querySelector(s);
 const qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const HEX=/^#[0-9a-f]{6}$/i;
+const LIGHT_SURFACE_TEMPLATES=new Set(['gradient-pill','modern-outline','ticket-line']);
 let scheduled=false;
 let editorObserver=null;
 
@@ -43,7 +44,7 @@ function outlineTextColor(text,bg){
 }
 function apply(el,c){
   if(!el||!c)return;
-  const text=c.id==='gradient-pill'?outlineTextColor(c.text,c.bg):c.text;
+  const text=LIGHT_SURFACE_TEMPLATES.has(c.id)?outlineTextColor(c.text,c.bg):c.text;
   el.style.setProperty('--badge-bg',c.bg);
   el.style.setProperty('--badge-text',text);
   el.style.setProperty('--badge-accent',c.accent);
