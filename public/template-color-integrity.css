@@ -1,5 +1,6 @@
-/* Kategori Yıldızı — template color integrity.
-   Decorative template colors must derive from the selected template palette. */
+@import url('/premium-templates-v3.css?v=20260914-1');
+/* Kategori Yildizi — template color integrity.
+   Standard templates keep their own palette behavior. Premium movement now lives only in premium-templates-v3.css. */
 
 /* Admin preview variants */
 .ky-v3-badge.contour{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(120deg,var(--badge-bg),color-mix(in srgb,var(--badge-bg) 45%,var(--badge-accent)),var(--badge-accent)) border-box!important;box-shadow:0 3px 10px color-mix(in srgb,var(--badge-bg) 15%,transparent)!important}
@@ -25,50 +26,9 @@
 .ky-badge-root.ky-tpl-signature-pill{box-shadow:0 5px 14px color-mix(in srgb,var(--ky-primary-bg) 16%,transparent)}
 .ky-badge-root.ky-tpl-color-block{box-shadow:0 6px 14px color-mix(in srgb,var(--ky-primary-bg) 20%,transparent)}
 
-/* Premium template movement: the palette remains the merchant's own colors.
-   Gold is used only in the editor chrome, never as the template's forced theme. */
-@keyframes kyPremiumPaletteFlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-@keyframes kyPremiumSheen{0%,58%{transform:translateX(-160%) skewX(-18deg);opacity:0}66%{opacity:.5}82%,100%{transform:translateX(220%) skewX(-18deg);opacity:0}}
-
-.ky-v3-badge.tpl-gradient-pill,
-.ky-v3-badge.tpl-split-pill,
-.ky-v3-badge.tpl-modern-outline,
-.ky-v3-badge.tpl-glass-pill,
-.ky-v3-badge.tpl-arc-pill,
-.ky-v3-badge.tpl-ribbon-fold,
-.ky-v3-badge.tpl-signature-pill,
-.ky-v3-badge.tpl-ticket-line,
-.ky-badge-root.ky-tpl-gradient-pill,
-.ky-badge-root.ky-tpl-split-pill,
-.ky-badge-root.ky-tpl-modern-outline,
-.ky-badge-root.ky-tpl-glass-pill,
-.ky-badge-root.ky-tpl-arc-pill,
-.ky-badge-root.ky-tpl-ribbon-fold,
-.ky-badge-root.ky-tpl-signature-pill,
-.ky-badge-root.ky-tpl-ticket-line{position:relative;isolation:isolate;overflow:hidden;background-size:220% 220%!important;animation:kyPremiumPaletteFlow 6s ease-in-out infinite}
-
-.ky-v3-badge.tpl-gradient-pill::after,
-.ky-v3-badge.tpl-split-pill::after,
-.ky-v3-badge.tpl-modern-outline::after,
-.ky-v3-badge.tpl-glass-pill::after,
-.ky-v3-badge.tpl-arc-pill::after,
-.ky-v3-badge.tpl-ribbon-fold::after,
-.ky-v3-badge.tpl-signature-pill::after,
-.ky-v3-badge.tpl-ticket-line::after,
-.ky-badge-root.ky-tpl-gradient-pill::after,
-.ky-badge-root.ky-tpl-split-pill::after,
-.ky-badge-root.ky-tpl-modern-outline::after,
-.ky-badge-root.ky-tpl-glass-pill::after,
-.ky-badge-root.ky-tpl-arc-pill::after,
-.ky-badge-root.ky-tpl-ribbon-fold::after,
-.ky-badge-root.ky-tpl-signature-pill::after,
-.ky-badge-root.ky-tpl-ticket-line::after{content:'';position:absolute;z-index:0;top:-45%;bottom:-45%;left:-38%;width:28%;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.34),transparent);animation:kyPremiumSheen 4.8s ease-in-out infinite}
-
-.ky-v3-badge.tpl-gradient-pill>* ,.ky-v3-badge.tpl-split-pill>* ,.ky-v3-badge.tpl-modern-outline>* ,.ky-v3-badge.tpl-glass-pill>* ,.ky-v3-badge.tpl-arc-pill>* ,.ky-v3-badge.tpl-ribbon-fold>* ,.ky-v3-badge.tpl-signature-pill>* ,.ky-v3-badge.tpl-ticket-line>*,
-.ky-badge-root.ky-tpl-gradient-pill>* ,.ky-badge-root.ky-tpl-split-pill>* ,.ky-badge-root.ky-tpl-modern-outline>* ,.ky-badge-root.ky-tpl-glass-pill>* ,.ky-badge-root.ky-tpl-arc-pill>* ,.ky-badge-root.ky-tpl-ribbon-fold>* ,.ky-badge-root.ky-tpl-signature-pill>* ,.ky-badge-root.ky-tpl-ticket-line>*{position:relative;z-index:1}
-
-@media(prefers-reduced-motion:reduce){
+/* The templates that were previously labelled Premium are now normal templates.
+   Explicitly remove the old automatic premium movement and sheen. */
 .ky-v3-badge.tpl-gradient-pill,.ky-v3-badge.tpl-split-pill,.ky-v3-badge.tpl-modern-outline,.ky-v3-badge.tpl-glass-pill,.ky-v3-badge.tpl-arc-pill,.ky-v3-badge.tpl-ribbon-fold,.ky-v3-badge.tpl-signature-pill,.ky-v3-badge.tpl-ticket-line,
 .ky-badge-root.ky-tpl-gradient-pill,.ky-badge-root.ky-tpl-split-pill,.ky-badge-root.ky-tpl-modern-outline,.ky-badge-root.ky-tpl-glass-pill,.ky-badge-root.ky-tpl-arc-pill,.ky-badge-root.ky-tpl-ribbon-fold,.ky-badge-root.ky-tpl-signature-pill,.ky-badge-root.ky-tpl-ticket-line{animation:none!important}
-.ky-v3-badge::after,.ky-badge-root::after{animation:none!important;display:none!important}
-}
+.ky-v3-badge.tpl-gradient-pill::after,.ky-v3-badge.tpl-split-pill::after,.ky-v3-badge.tpl-modern-outline::after,.ky-v3-badge.tpl-glass-pill::after,.ky-v3-badge.tpl-arc-pill::after,.ky-v3-badge.tpl-ribbon-fold::after,.ky-v3-badge.tpl-signature-pill::after,.ky-v3-badge.tpl-ticket-line::after,
+.ky-badge-root.ky-tpl-gradient-pill::after,.ky-badge-root.ky-tpl-split-pill::after,.ky-badge-root.ky-tpl-modern-outline::after,.ky-badge-root.ky-tpl-glass-pill::after,.ky-badge-root.ky-tpl-arc-pill::after,.ky-badge-root.ky-tpl-ribbon-fold::after,.ky-badge-root.ky-tpl-signature-pill::after,.ky-badge-root.ky-tpl-ticket-line::after{content:none!important;display:none!important}
