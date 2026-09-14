@@ -16,3 +16,25 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 setTimeout(()=>{bind();repair();loadIconPacks();},200);setTimeout(()=>{bind();repair();loadIconPacks();},800);setTimeout(()=>{bind();repair();},1600);
 const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true});
 })();
+
+/* Device editor -> live preview synchronization.
+   Any Masaüstü/Mobil editor tab immediately switches the preview to the same device. */
+(function(){
+'use strict';
+function syncPreviewDevice(device){
+  if(device!=='desktop'&&device!=='mobile')return;
+  const target=document.querySelector(`.ky-device-btn[data-device="${device}"]`);
+  if(!target)return;
+  if(!target.classList.contains('active')){
+    target.click();
+  }else{
+    const canvas=document.getElementById('stageCanvas');
+    if(canvas)canvas.classList.toggle('mobile-view',device==='mobile');
+  }
+}
+document.addEventListener('click',event=>{
+  const tab=event.target.closest('[data-edit-device]');
+  if(!tab)return;
+  syncPreviewDevice(tab.dataset.editDevice);
+},true);
+})();
