@@ -1,18 +1,30 @@
-/* Stronger premium motion layer */
-@keyframes kyPremiumEdgePulse{0%,100%{box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 0 10px color-mix(in srgb,var(--p-accent) 34%,transparent),0 7px 18px color-mix(in srgb,var(--p-bg) 22%,transparent)}50%{box-shadow:0 0 0 1px rgba(255,255,255,.22) inset,0 0 24px color-mix(in srgb,var(--p-accent) 68%,transparent),0 0 38px color-mix(in srgb,#22d3ee 34%,transparent),0 10px 26px color-mix(in srgb,var(--p-bg) 28%,transparent)}}
+/* Premium motion layer — every premium template keeps its own character. */
 @keyframes kyPremiumCardPulse{0%,100%{box-shadow:0 0 10px rgba(124,58,237,.16),0 8px 20px rgba(36,58,139,.07)}50%{box-shadow:0 0 24px rgba(34,211,238,.32),0 0 38px rgba(244,63,94,.18),0 10px 26px rgba(36,58,139,.11)}}
-.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]{border-width:3px!important;background-size:100% 100%,420% 100%!important;box-shadow:0 0 18px color-mix(in srgb,var(--p-accent) 44%,transparent),0 8px 24px color-mix(in srgb,var(--p-bg) 24%,transparent)!important;filter:saturate(1.16);will-change:background-position,box-shadow,filter}
-.ky-v3-badge[class*="tpl-premium-"]::before,.ky-badge-root[class*="ky-tpl-premium-"]::before{width:34%!important;background:linear-gradient(90deg,transparent,rgba(255,255,255,.92),transparent)!important;filter:drop-shadow(0 0 7px rgba(255,255,255,.7));animation-duration:2.6s!important}
-.ky-v3-badge.tpl-premium-aurora,.ky-badge-root.ky-tpl-premium-aurora{animation:kyP3BorderFlow 2.2s linear infinite,kyP3Float 2.8s ease-in-out infinite,kyPremiumEdgePulse 1.7s ease-in-out infinite!important}
-.ky-v3-badge.tpl-premium-prism,.ky-badge-root.ky-tpl-premium-prism{animation:kyP3BorderFlow 1.8s linear infinite,kyPremiumEdgePulse 1.55s ease-in-out infinite!important}
-.ky-v3-badge.tpl-premium-nebula,.ky-badge-root.ky-tpl-premium-nebula{animation:kyP3BorderFlow 2.5s linear infinite,kyP3Pulse 1.7s ease-in-out infinite,kyPremiumEdgePulse 1.8s ease-in-out infinite!important}
-.ky-v3-badge.tpl-premium-liquid,.ky-badge-root.ky-tpl-premium-liquid{animation:kyP3BorderFlow 2.1s linear infinite,kyP3Breathe 2.3s ease-in-out infinite,kyPremiumEdgePulse 1.65s ease-in-out infinite!important}
-.ky-v3-badge.tpl-premium-photon,.ky-badge-root.ky-tpl-premium-photon{animation:kyP3BorderFlow 1.55s linear infinite,kyPremiumEdgePulse 1.45s ease-in-out infinite!important}
-.ky-v3-badge.tpl-premium-hologram,.ky-badge-root.ky-tpl-premium-hologram{animation:kyP3BorderFlow 1.9s linear infinite,kyP3Float 2.8s ease-in-out infinite,kyPremiumEdgePulse 1.7s ease-in-out infinite!important}
-.ky-v3-badge.tpl-premium-comet,.ky-badge-root.ky-tpl-premium-comet{animation:kyP3BorderFlow 1.65s linear infinite,kyPremiumEdgePulse 1.5s ease-in-out infinite!important}
-.ky-v3-badge.tpl-premium-spectrum,.ky-badge-root.ky-tpl-premium-spectrum{animation:kyP3BorderFlow 2s linear infinite,kyP3Breathe 2.1s ease-in-out infinite,kyPremiumEdgePulse 1.65s ease-in-out infinite!important}
-.ky-v3-badge.tpl-premium-quantum,.ky-badge-root.ky-tpl-premium-quantum{animation:kyP3BorderFlow 2.6s linear infinite,kyP3Pulse 2s ease-in-out infinite,kyPremiumEdgePulse 1.8s ease-in-out infinite!important}
-.ky-v3-badge.tpl-premium-electric,.ky-badge-root.ky-tpl-premium-electric{animation:kyP3BorderFlow 1.15s linear infinite,kyP3Electric 1.7s steps(8,end) infinite,kyPremiumEdgePulse 1.35s ease-in-out infinite!important}
+@keyframes kyPremiumAuroraGlow{0%,100%{box-shadow:0 0 12px rgba(139,92,246,.28),0 7px 20px color-mix(in srgb,var(--p-bg) 20%,transparent)}50%{box-shadow:0 0 24px rgba(34,211,238,.42),0 0 34px rgba(244,114,182,.20),0 9px 24px color-mix(in srgb,var(--p-bg) 24%,transparent)}}
+@keyframes kyPremiumPrismShift{0%{filter:saturate(1.12) hue-rotate(0deg)}50%{filter:saturate(1.32) hue-rotate(18deg)}100%{filter:saturate(1.12) hue-rotate(0deg)}}
+@keyframes kyPremiumHoloShift{0%,100%{filter:saturate(1.08) brightness(1)}50%{filter:saturate(1.30) brightness(1.08)}}
+@keyframes kyPremiumSpectrumBreath{0%,100%{filter:saturate(1.08);box-shadow:0 6px 18px rgba(99,102,241,.16)}50%{filter:saturate(1.38);box-shadow:0 0 26px rgba(217,70,239,.30),0 8px 22px rgba(6,182,212,.16)}}
+
+.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]{border-width:3px!important;background-size:100% 100%,420% 100%!important;filter:saturate(1.12);will-change:background-position,box-shadow,filter,transform}
+
+/* Remove the old shared left-to-right white shine. Premium templates must not all look identical. */
+.ky-v3-badge[class*="tpl-premium-"]::before,.ky-badge-root[class*="ky-tpl-premium-"]::before{content:none!important;display:none!important;animation:none!important;background:none!important;box-shadow:none!important;filter:none!important}
+.ky-template-card-v3.ky-premium-template-v3 .preview::after{content:none!important;display:none!important;animation:none!important}
+
+/* Each premium family keeps a different motion signature. */
+.ky-v3-badge.tpl-premium-aurora,.ky-badge-root.ky-tpl-premium-aurora{animation:kyP3BorderFlow 2.6s linear infinite,kyP3Float 3.4s ease-in-out infinite,kyPremiumAuroraGlow 2.4s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-prism,.ky-badge-root.ky-tpl-premium-prism{animation:kyP3BorderFlow 1.9s linear infinite,kyPremiumPrismShift 3.2s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-nebula,.ky-badge-root.ky-tpl-premium-nebula{animation:kyP3BorderFlow 3.1s linear infinite,kyP3Pulse 2.2s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-liquid,.ky-badge-root.ky-tpl-premium-liquid{animation:kyP3BorderFlow 2.5s linear infinite,kyP3Breathe 2.7s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-photon,.ky-badge-root.ky-tpl-premium-photon{animation:kyP3BorderFlow 1.55s linear infinite!important}
+.ky-v3-badge.tpl-premium-hologram,.ky-badge-root.ky-tpl-premium-hologram{animation:kyP3BorderFlow 2.4s linear infinite,kyP3Float 3.6s ease-in-out infinite,kyPremiumHoloShift 2.8s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-comet,.ky-badge-root.ky-tpl-premium-comet{animation:kyP3BorderFlow 1.8s linear infinite!important}
+.ky-v3-badge.tpl-premium-spectrum,.ky-badge-root.ky-tpl-premium-spectrum{animation:kyP3BorderFlow 2.8s linear infinite,kyP3Breathe 2.5s ease-in-out infinite,kyPremiumSpectrumBreath 2.9s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-quantum,.ky-badge-root.ky-tpl-premium-quantum{animation:kyP3BorderFlow 3.6s linear infinite,kyP3Pulse 3s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-electric,.ky-badge-root.ky-tpl-premium-electric{animation:kyP3BorderFlow 1.15s linear infinite,kyP3Electric 1.55s steps(8,end) infinite!important}
+
+/* Premium gallery cards keep a moving frame, but no generic sweeping shine over the preview. */
 .ky-template-card-v3.ky-premium-template-v3{border-width:2px!important;background-size:100% 100%,420% 100%!important;animation:kyP3BorderFlow 2.35s linear infinite,kyPremiumCardPulse 1.9s ease-in-out infinite!important;will-change:background-position,box-shadow}
 .ky-template-card-v3.ky-premium-template-v3.active{box-shadow:0 0 0 2px rgba(124,58,237,.16),0 0 28px rgba(34,211,238,.38),0 0 42px rgba(244,63,94,.18)!important}
+
 @media(prefers-reduced-motion:reduce){.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"],.ky-template-card-v3.ky-premium-template-v3{animation:none!important}}
