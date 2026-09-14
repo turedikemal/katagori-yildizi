@@ -1,0 +1,70 @@
+/* Kategori Yildizi — Premium Templates v3
+   Ten genuinely premium, animated template families for admin preview + storefront. */
+@keyframes kyP3BorderFlow{0%{background-position:0 0,0% 50%}100%{background-position:0 0,300% 50%}}
+@keyframes kyP3Float{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes kyP3Pulse{0%,100%{box-shadow:0 5px 15px color-mix(in srgb,var(--p-accent) 18%,transparent)}50%{box-shadow:0 7px 24px color-mix(in srgb,var(--p-accent) 42%,transparent)}}
+@keyframes kyP3Sheen{0%,45%{transform:translateX(-180%) skewX(-18deg);opacity:0}55%{opacity:.65}75%,100%{transform:translateX(260%) skewX(-18deg);opacity:0}}
+@keyframes kyP3Scan{0%{transform:translateX(-130%);opacity:0}18%{opacity:.85}72%{opacity:.4}100%{transform:translateX(190%);opacity:0}}
+@keyframes kyP3Orbit{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes kyP3Breathe{0%,100%{scale:1}50%{scale:1.025}}
+@keyframes kyP3Spark{0%,100%{opacity:.2;transform:translate(0,0) scale(.7)}50%{opacity:1;transform:translate(5px,-2px) scale(1.15)}}
+@keyframes kyP3Electric{0%,100%{filter:drop-shadow(0 0 0 transparent)}45%{filter:drop-shadow(0 0 5px color-mix(in srgb,var(--p-accent) 70%,#22d3ee))}50%{filter:drop-shadow(0 0 9px color-mix(in srgb,var(--p-accent) 75%,#f43f5e))}55%{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--p-accent) 65%,#7c3aed))}}
+
+.ky-v3-badge[class*="tpl-premium-"],
+.ky-badge-root[class*="ky-tpl-premium-"]{
+  --p-bg:var(--badge-bg,var(--ky-primary-bg,#243a8b));
+  --p-text:var(--badge-text,var(--ky-primary-text,#fff));
+  --p-accent:var(--badge-accent,var(--ky-accent,#ce3f44));
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  color:var(--p-text)!important;border:2px solid transparent!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--p-bg) 92%,#fff),var(--p-bg)) padding-box,
+             linear-gradient(105deg,#7c3aed,#22d3ee,var(--p-accent),#f43f5e,#facc15,#7c3aed) border-box!important;
+  background-size:100% 100%,300% 100%!important;
+  animation:kyP3BorderFlow 3.8s linear infinite!important;
+  box-shadow:0 7px 18px color-mix(in srgb,var(--p-bg) 20%,transparent)!important;
+}
+.ky-v3-badge[class*="tpl-premium-"]>* ,
+.ky-badge-root[class*="ky-tpl-premium-"]>*{position:relative;z-index:2}
+.ky-v3-badge[class*="tpl-premium-"]::before,
+.ky-badge-root[class*="ky-tpl-premium-"]::before{content:"";position:absolute;z-index:1;inset:-70% auto -70% -32%;width:24%;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);animation:kyP3Sheen 4.6s ease-in-out infinite}
+
+/* 1 — Aurora Halo */
+.ky-v3-badge.tpl-premium-aurora,.ky-badge-root.ky-tpl-premium-aurora{border-radius:999px!important;background:radial-gradient(circle at 20% 20%,color-mix(in srgb,var(--p-accent) 28%,transparent),transparent 48%),linear-gradient(130deg,color-mix(in srgb,var(--p-bg) 82%,#111827),var(--p-bg)) padding-box,linear-gradient(100deg,#8b5cf6,#22d3ee,#f472b6,#34d399,#8b5cf6) border-box!important;background-size:100% 100%,100% 100%,320% 100%!important;animation:kyP3BorderFlow 3.2s linear infinite,kyP3Float 3.6s ease-in-out infinite!important}
+
+/* 2 — Prism Flux */
+.ky-v3-badge.tpl-premium-prism,.ky-badge-root.ky-tpl-premium-prism{border-radius:10px!important;background:linear-gradient(120deg,color-mix(in srgb,var(--p-bg) 86%,#fff),var(--p-bg)) padding-box,linear-gradient(90deg,#ff3366,#ff9f1c,#f9f871,#2de2e6,#6c63ff,#d65db1,#ff3366) border-box!important;background-size:100% 100%,360% 100%!important;animation:kyP3BorderFlow 2.6s linear infinite!important}
+.ky-v3-badge.tpl-premium-prism::before,.ky-badge-root.ky-tpl-premium-prism::before{width:34%;animation-duration:3.1s}
+
+/* 3 — Nebula Pulse */
+.ky-v3-badge.tpl-premium-nebula,.ky-badge-root.ky-tpl-premium-nebula{border-radius:16px!important;background:radial-gradient(circle at 10% 20%,color-mix(in srgb,#7c3aed 34%,transparent),transparent 48%),radial-gradient(circle at 86% 76%,color-mix(in srgb,var(--p-accent) 36%,transparent),transparent 46%),linear-gradient(145deg,color-mix(in srgb,var(--p-bg) 70%,#020617),color-mix(in srgb,var(--p-bg) 92%,#111827)) padding-box,linear-gradient(100deg,#4f46e5,#22d3ee,#e879f9,#fb7185,#4f46e5) border-box!important;background-size:100% 100%,100% 100%,100% 100%,300% 100%!important;animation:kyP3BorderFlow 4s linear infinite,kyP3Pulse 2.3s ease-in-out infinite!important}
+
+/* 4 — Liquid Chrome */
+.ky-v3-badge.tpl-premium-liquid,.ky-badge-root.ky-tpl-premium-liquid{border-radius:999px 14px 999px 14px!important;background:linear-gradient(115deg,color-mix(in srgb,var(--p-bg) 68%,#fff),var(--p-bg) 38%,color-mix(in srgb,var(--p-bg) 55%,#111827)) padding-box,linear-gradient(95deg,#dbeafe,#22d3ee,#a78bfa,#f9a8d4,#fef3c7,#dbeafe) border-box!important;background-size:230% 100%,310% 100%!important;animation:kyP3BorderFlow 3.1s linear infinite,kyP3Breathe 3s ease-in-out infinite!important}
+
+/* 5 — Photon Rail */
+.ky-v3-badge.tpl-premium-photon,.ky-badge-root.ky-tpl-premium-photon{border-radius:6px!important;background:linear-gradient(90deg,color-mix(in srgb,var(--p-bg) 88%,#020617),var(--p-bg)) padding-box,linear-gradient(90deg,#06b6d4,#3b82f6,#8b5cf6,#ec4899,#06b6d4) border-box!important;background-size:100% 100%,280% 100%!important;animation:kyP3BorderFlow 2.2s linear infinite!important}
+.ky-v3-badge.tpl-premium-photon::after,.ky-badge-root.ky-tpl-premium-photon::after{content:"";position:absolute;z-index:1;left:0;right:0;bottom:1px;height:1px;background:linear-gradient(90deg,transparent,#fff,#22d3ee,transparent);animation:kyP3Scan 2s linear infinite}
+
+/* 6 — Hologram Shift */
+.ky-v3-badge.tpl-premium-hologram,.ky-badge-root.ky-tpl-premium-hologram{border-radius:12px!important;background:linear-gradient(115deg,color-mix(in srgb,var(--p-bg) 88%,#fff),color-mix(in srgb,var(--p-accent) 12%,var(--p-bg)),color-mix(in srgb,var(--p-bg) 84%,#fff)) padding-box,linear-gradient(105deg,#67e8f9,#c4b5fd,#f9a8d4,#fde68a,#86efac,#67e8f9) border-box!important;background-size:220% 100%,340% 100%!important;animation:kyP3BorderFlow 2.9s linear infinite,kyP3Float 4.1s ease-in-out infinite!important}
+
+/* 7 — Comet Orbit */
+.ky-v3-badge.tpl-premium-comet,.ky-badge-root.ky-tpl-premium-comet{border-radius:999px!important;background:linear-gradient(135deg,color-mix(in srgb,var(--p-bg) 88%,#020617),var(--p-bg)) padding-box,linear-gradient(90deg,#22d3ee,#fff,#a78bfa,#fb7185,#22d3ee) border-box!important;background-size:100% 100%,320% 100%!important;animation:kyP3BorderFlow 2.5s linear infinite!important}
+.ky-v3-badge.tpl-premium-comet::after,.ky-badge-root.ky-tpl-premium-comet::after{content:"";position:absolute;z-index:3;top:3px;left:8px;width:4px;height:4px;border-radius:50%;background:#fff;box-shadow:0 0 7px #fff,0 0 12px #22d3ee;animation:kyP3Spark 1.25s ease-in-out infinite alternate}
+
+/* 8 — Spectrum Crown */
+.ky-v3-badge.tpl-premium-spectrum,.ky-badge-root.ky-tpl-premium-spectrum{border-radius:8px 8px 15px 15px!important;background:linear-gradient(180deg,color-mix(in srgb,var(--p-bg) 80%,#fff),var(--p-bg)) padding-box,linear-gradient(90deg,#f43f5e,#f59e0b,#eab308,#10b981,#06b6d4,#6366f1,#d946ef,#f43f5e) border-box!important;background-size:100% 100%,380% 100%!important;animation:kyP3BorderFlow 3.5s linear infinite,kyP3Breathe 2.8s ease-in-out infinite!important}
+
+/* 9 — Quantum Glass */
+.ky-v3-badge.tpl-premium-quantum,.ky-badge-root.ky-tpl-premium-quantum{border-radius:14px!important;backdrop-filter:blur(10px) saturate(145%);background:linear-gradient(130deg,color-mix(in srgb,var(--p-bg) 58%,transparent),color-mix(in srgb,var(--p-accent) 18%,transparent)) padding-box,linear-gradient(110deg,#93c5fd,#c4b5fd,#f0abfc,#5eead4,#fde68a,#93c5fd) border-box!important;background-size:100% 100%,320% 100%!important;animation:kyP3BorderFlow 4.2s linear infinite,kyP3Pulse 3s ease-in-out infinite!important}
+
+/* 10 — Electric Frame */
+.ky-v3-badge.tpl-premium-electric,.ky-badge-root.ky-tpl-premium-electric{border-radius:4px!important;clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px);background:linear-gradient(100deg,color-mix(in srgb,var(--p-bg) 86%,#020617),var(--p-bg)) padding-box,linear-gradient(90deg,#00f5ff,#3b82f6,#8b5cf6,#ff2bd6,#ff4d4d,#00f5ff) border-box!important;background-size:100% 100%,360% 100%!important;animation:kyP3BorderFlow 1.9s linear infinite,kyP3Electric 2.4s steps(8,end) infinite!important}
+
+/* Editor premium card chrome — colorful moving frame, not a gold skin. */
+.ky-template-card-v3.ky-premium-template-v3{position:relative!important;border:1px solid transparent!important;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(105deg,#7c3aed,#22d3ee,#f43f5e,#facc15,#34d399,#7c3aed) border-box!important;background-size:100% 100%,320% 100%!important;animation:kyP3BorderFlow 4s linear infinite!important;overflow:hidden!important}
+.ky-template-card-v3.ky-premium-template-v3 .preview{height:78px!important;background:radial-gradient(circle at 20% 20%,#eef2ff 0,transparent 45%),linear-gradient(180deg,#fff,#f7f8fc)!important}
+.ky-template-card-v3.ky-premium-template-v3 .name{padding-right:46px!important}
+.ky-premium-v3-mark{position:absolute;right:6px;bottom:6px;display:inline-flex;align-items:center;gap:3px;padding:3px 5px;border-radius:999px;background:rgba(255,255,255,.9);color:#7c3aed;font-size:6.8px;font-weight:900;border:1px solid rgba(124,58,237,.18);pointer-events:none}
+
+@media(prefers-reduced-motion:reduce){.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"],.ky-template-card-v3.ky-premium-template-v3,.ky-v3-badge[class*="tpl-premium-"]::before,.ky-badge-root[class*="ky-tpl-premium-"]::before,.ky-v3-badge[class*="tpl-premium-"]::after,.ky-badge-root[class*="ky-tpl-premium-"]::after{animation:none!important}}
