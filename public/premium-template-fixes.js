@@ -18,6 +18,7 @@ function setVars(id,field,value){
  const card=q(`#v3Templates [data-template="${CSS.escape(id)}"] .ky-v3-badge`);if(card){card.style.setProperty(prop,value);if(field==='text')card.style.setProperty('color',value)}
 }
 function syncPair(cap,value){const p=q(`#tpl${cap}Picker`),h=q(`#tpl${cap}Hex`);if(p&&p.value!==value)p.value=value;if(h&&h.value!==value)h.value=value}
+function readPair(cap,fallback){const h=q(`#tpl${cap}Hex`)?.value,p=q(`#tpl${cap}Picker`)?.value;return HEX.test(String(h||''))?h:(HEX.test(String(p||''))?p:fallback)}
 function commit(target){
  const id=activePremiumId();if(!id)return false;
  const m=/^tpl(Bg|Text|Accent)(Picker|Hex)$/.exec(target.id||'');if(!m)return false;
@@ -25,8 +26,16 @@ function commit(target){
  const value=String(target.value||'').trim();if(!HEX.test(value))return true;
  const editor=q('#v3TemplateEditor');if(editor)editor.dataset.kyTemplateId=id;
  syncPair(cap,value);setVars(id,field,value);
- window.handleInput?.(`templateColors.${id}.${field}`,value);
- for(const ms of [0,24,70,140])setTimeout(()=>setVars(id,field,value),ms);
+ const colors={
+  bg:field==='bg'?value:readPair('Bg','#243a8b'),
+  text:field==='text'?value:readPair('Text','#ffffff'),
+  accent:field==='accent'?value:readPair('Accent','#ce3f44')
+ };
+ /* Send the complete palette. premium-experience-v2 can now keep its local
+    palette and the saved admin configuration in sync without reverting. */
+ window.handleInput?.(`templateColors.${id}`,colors);
+ requestAnimationFrame(()=>{setVars(id,'bg',colors.bg);setVars(id,'text',colors.text);setVars(id,'accent',colors.accent)});
+ setTimeout(()=>{setVars(id,'bg',colors.bg);setVars(id,'text',colors.text);setVars(id,'accent',colors.accent)},60);
  return true;
 }
 function patchActive(){const id=activePremiumId(),editor=q('#v3TemplateEditor');if(id&&editor)editor.dataset.kyTemplateId=id}
