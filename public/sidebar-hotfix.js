@@ -19,10 +19,10 @@ function loadExtras(){
  loadScript('ky-icon-system','/badge-icon-system.js?v=20260914-4');
  loadScript('ky-surface-settings','/admin-surface-settings.js?v=20260914-3');
  loadScript('ky-premium-experience','/premium-experience-v2.js?v=20260914-4');
- loadScript('ky-premium-template-fixes','/premium-template-fixes.js?v=20260914-1');
+ loadScript('ky-premium-template-fixes','/premium-template-fixes.js?v=20260914-5');
  loadScript('ky-product-detail-icon-layout','/product-detail-icon-layout.js?v=20260914-4');
  loadScript('ky-text-style-controls','/text-style-controls.js?v=20260914-2');
- loadStyle('ky-premium-intensity','/premium-intensity.css?v=20260914-1');
+ loadStyle('ky-premium-intensity','/premium-intensity.css?v=20260914-5');
 }
 function boot(){bind();repair();observeMenu();loadExtras();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
