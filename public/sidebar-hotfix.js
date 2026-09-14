@@ -11,31 +11,16 @@ function togglePanel(id){const menu=normalizeStructure();if(!menu||!id)return;co
 function repair(){if(repairing)return;repairing=true;try{const menu=normalizeStructure();if(!menu)return;const active=qsa(':scope > .ky-accordion-panel.active',menu);if(active.length>1)active.slice(1).forEach(p=>p.classList.remove('active'));const activeId=active[0]?.id||'';qsa(':scope > .ky-menu-card',menu).forEach(card=>{const isActive=card.dataset.target===activeId;card.classList.toggle('active',isActive);card.setAttribute('aria-expanded',isActive?'true':'false');});}finally{repairing=false;}}
 function bind(){const menu=normalizeStructure();if(!menu||menu.dataset.kyHotfixBound)return;menu.dataset.kyHotfixBound='1';menu.addEventListener('click',e=>{const card=e.target.closest('.ky-menu-card');if(!card||!menu.contains(card))return;e.preventDefault();e.stopImmediatePropagation();togglePanel(card.dataset.target);},true);menu.addEventListener('keydown',e=>{const card=e.target.closest('.ky-menu-card');if(!card||!menu.contains(card)||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();e.stopImmediatePropagation();togglePanel(card.dataset.target);},true);closeAll();}
 function schedule(){if(scheduled||repairing)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;repair();});}
-function loadIconPacks(){if(document.querySelector('script[data-ky-icon-system]'))return;const s=document.createElement('script');s.src='/badge-icon-system.js?v=20260914-3';s.dataset.kyIconSystem='1';document.body.appendChild(s);}
-function loadSurfaceSettings(){if(document.querySelector('script[data-ky-surface-settings]'))return;const s=document.createElement('script');s.src='/admin-surface-settings.js?v=20260914-1';s.dataset.kySurfaceSettings='1';document.body.appendChild(s);}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{bind();repair();loadIconPacks();loadSurfaceSettings();},{once:true});else{bind();repair();loadIconPacks();loadSurfaceSettings();}
-setTimeout(()=>{bind();repair();loadIconPacks();loadSurfaceSettings();},200);setTimeout(()=>{bind();repair();loadIconPacks();loadSurfaceSettings();},800);setTimeout(()=>{bind();repair();},1600);
+function loadScript(key,src){if(document.querySelector(`script[data-${key}]`))return;const s=document.createElement('script');s.src=src;s.dataset[key.replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]='1';document.body.appendChild(s);}
+function loadExtras(){loadScript('ky-icon-system','/badge-icon-system.js?v=20260914-3');loadScript('ky-surface-settings','/admin-surface-settings.js?v=20260914-2');loadScript('ky-premium-experience','/premium-experience-v2.js?v=20260914-3');}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{bind();repair();loadExtras();},{once:true});else{bind();repair();loadExtras();}
+setTimeout(()=>{bind();repair();loadExtras();},200);setTimeout(()=>{bind();repair();loadExtras();},800);setTimeout(()=>{bind();repair();},1600);
 const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true});
 })();
 
-/* Device editor -> live preview synchronization.
-   Any Masaüstü/Mobil editor tab immediately switches the preview to the same device. */
+/* Device editor -> live preview synchronization. */
 (function(){
 'use strict';
-function syncPreviewDevice(device){
-  if(device!=='desktop'&&device!=='mobile')return;
-  const target=document.querySelector(`.ky-device-btn[data-device="${device}"]`);
-  if(!target)return;
-  if(!target.classList.contains('active')){
-    target.click();
-  }else{
-    const canvas=document.getElementById('stageCanvas');
-    if(canvas)canvas.classList.toggle('mobile-view',device==='mobile');
-  }
-}
-document.addEventListener('click',event=>{
-  const tab=event.target.closest('[data-edit-device]');
-  if(!tab)return;
-  syncPreviewDevice(tab.dataset.editDevice);
-},true);
+function syncPreviewDevice(device){if(device!=='desktop'&&device!=='mobile')return;const target=document.querySelector(`.ky-device-btn[data-device="${device}"]`);if(!target)return;if(!target.classList.contains('active'))target.click();else document.getElementById('stageCanvas')?.classList.toggle('mobile-view',device==='mobile');}
+document.addEventListener('click',event=>{const tab=event.target.closest('[data-edit-device]');if(tab)syncPreviewDevice(tab.dataset.editDevice);},true);
 })();
