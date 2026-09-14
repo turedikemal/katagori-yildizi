@@ -666,7 +666,7 @@ app.get('/install', (req, res) => {
 });
 
 app.get('/api/oauth/callback/ikas', async (req, res) => {
-  const shop = safeShop(req.query.shop || 'thegoatz');
+  const shop = safeShop(req.query.shop || req.query.storeName || 'thegoatz');
   try {
     if (req.query.code && IKAS_CLIENT_SECRET) {
       const tokenResponse = await fetch(`https://${shop}.myikas.com/api/admin/oauth/token`, {
@@ -681,15 +681,16 @@ app.get('/api/oauth/callback/ikas', async (req, res) => {
         })
       });
       const token = await tokenResponse.json().catch(() => ({}));
-      if (token.access_token) {
-        if (pool) {
-          await pool.query(
-            `INSERT INTO stores (shop_domain, access_token, updated_at) VALUES ($1, $2, NOW())
-             ON CONFLICT (shop_domain) DO UPDATE SET access_token = EXCLUDED.access_token, updated_at = NOW()`,
-            [shop, token.access_token]
-          );
-        } else memoryDB.stores[shop] = token.access_token;
-      }
+      if (!tokenResponse.ok || !token.access_token) throw new Error(token.error_description || token.error || `Token alınamadı (${tokenResponse.status})`);
+      if (pool) {
+        await pool.query(
+          `INSERT INTO stores (shop_domain, access_token, token_expires_at, updated_at) VALUES ($1, $2, NULL, NOW())
+           ON CONFLICT (shop_domain) DO UPDATE SET access_token = EXCLUDED.access_token, token_expires_at = NULL, updated_at = NOW()`,
+          [shop, token.access_token]
+        );
+      } else memoryDB.stores[shop] = token.access_token;
+    } else {
+      throw new Error('Yetkilendirme kodu alınamadı.');
     }
     syncIkasStoreData(shop).catch(() => {});
     res.redirect(`/admin?shop=${encodeURIComponent(shop)}&installed=true`);
