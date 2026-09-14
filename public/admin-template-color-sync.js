@@ -31,17 +31,28 @@ function currentColors(){
     accent:readColor('Accent','#ce3f44')
   };
 }
+function outlineTextColor(text,bg){
+  const contrast=value=>{
+    const m=/^#([0-9a-f]{6})$/i.exec(String(value||''));
+    if(!m)return 0;
+    const rgb=[0,2,4].map(i=>parseInt(m[1].slice(i,i+2),16)/255).map(x=>x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4));
+    const luminance=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];
+    return 1.05/(luminance+.05);
+  };
+  return contrast(text)>=3?text:contrast(bg)>=3?bg:'#17213a';
+}
 function apply(el,c){
   if(!el||!c)return;
+  const text=c.id==='gradient-pill'?outlineTextColor(c.text,c.bg):c.text;
   el.style.setProperty('--badge-bg',c.bg);
-  el.style.setProperty('--badge-text',c.text);
+  el.style.setProperty('--badge-text',text);
   el.style.setProperty('--badge-accent',c.accent);
   el.style.setProperty('--grad-a',c.bg);
   el.style.setProperty('--grad-b',c.accent);
   el.style.setProperty('--ky-primary-bg',c.bg);
-  el.style.setProperty('--ky-primary-text',c.text);
+  el.style.setProperty('--ky-primary-text',text);
   el.style.setProperty('--ky-accent',c.accent);
-  el.style.color=c.text;
+  el.style.color=text;
 }
 function sync(){
   scheduled=false;
