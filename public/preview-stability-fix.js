@@ -1,8 +1,8 @@
-/* Kategori Yildizi — stable preview animation + deferred persistence gate v6. */
+/* Kategori Yildizi — stable preview animation + deferred persistence gate v5. */
 (function(){
 'use strict';
-if(window.__KY_PREVIEW_STABILITY_FIX_V6__)return;
-window.__KY_PREVIEW_STABILITY_FIX_V6__=true;
+if(window.__KY_PREVIEW_STABILITY_FIX_V5__)return;
+window.__KY_PREVIEW_STABILITY_FIX_V5__=true;
 
 const q=(s,r=document)=>r.querySelector(s);
 const qa=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -39,20 +39,8 @@ function playEntryOnce(){
  playTimer=setTimeout(()=>canvas.classList.remove('ky-preview-play-entry'),animationDuration()+100);
 }
 
-function premiumPreviewActive(){
- return !!q('#stageCanvas .ky-v3-badge[class*="tpl-premium-"]') ||
-        !!q('#v3Templates [data-template^="premium-"].active');
-}
-
 function isDeferredPath(path){
- const p=String(path||'');
- if(/^(deviceSettings|pageSettings)\./.test(p))return true;
- /* Premium size/spacing is applied directly to the existing badge DOM by
-    premium-sizing-enable.js. Do not let the core renderer replace the badge
-    between slider frames, otherwise the user sees default -> custom -> default
-    -> custom size oscillation. Persist the value later instead. */
- if(premiumPreviewActive() && /^(styling\.(paddingX|paddingY|scale))$/.test(p))return true;
- return false;
+ return /^(deviceSettings|pageSettings)\./.test(String(path||''));
 }
 
 function queueConfigWrite(path,val){
