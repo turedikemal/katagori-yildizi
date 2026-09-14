@@ -17,7 +17,7 @@ function loadExtras(){
  loadScript('ky-surface-settings','/admin-surface-settings.js?v=20260914-2');
  loadScript('ky-premium-experience','/premium-experience-v2.js?v=20260914-3');
  loadScript('ky-premium-template-fixes','/premium-template-fixes.js?v=20260914-1');
- loadScript('ky-product-detail-icon-layout','/product-detail-icon-layout.js?v=20260914-1');
+ loadScript('ky-product-detail-icon-layout','/product-detail-icon-layout.js?v=20260914-2');
  loadScript('ky-text-style-controls','/text-style-controls.js?v=20260914-1');
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{bind();repair();loadExtras();},{once:true});else{bind();repair();loadExtras();}
