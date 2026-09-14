@@ -169,6 +169,10 @@ function loadPremiumExperience(){
   s.onload=loadUi;
   document.body.appendChild(s);
 }
+function loadFinalFixes(){
+  if(document.querySelector('script[data-ky-editor-final-fixes],script[src^="/editor-final-fixes.js"]'))return;
+  const s=document.createElement('script');s.src='/editor-final-fixes.js?v=20260914-1';s.dataset.kyEditorFinalFixes='1';document.body.appendChild(s);
+}
 
 document.addEventListener('input',e=>{
   if(e.target.closest('#v3TemplateEditor,#panelTemplates'))schedule();
@@ -187,6 +191,7 @@ function boot(){
   setTimeout(syncEditorFromRenderedBadge,90);
   setTimeout(syncEditorFromRenderedBadge,550);
   setTimeout(loadPremiumExperience,120);
+  setTimeout(loadFinalFixes,180);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
