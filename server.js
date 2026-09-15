@@ -500,7 +500,7 @@ async function loadOverrides(shop) {
 
 function rankedCategories(rawCatalog, config, overrides = []) {
   if (!rawCatalog?.categories || !rawCatalog?.products) return [];
-  const period = config?.ranking?.period || '30days';
+  const period = 'all_time';
   const metric = config?.ranking?.metric || 'quantity';
   const excludedProducts = new Set(config?.rules?.excludedProducts || []);
   const excludedCategories = new Set(config?.rules?.excludedCategories || []);
@@ -534,7 +534,17 @@ function rankedCategories(rawCatalog, config, overrides = []) {
           };
         })
         .filter(product => product.quantity >= Number(config?.ranking?.minSalesThreshold || 0))
-        .sort((a, b) => b.sortValue - a.sortValue || a.name.localeCompare(b.name, 'tr'));
+        .sort((a, b) => {
+          const aQuantity = Number(a.quantity || 0);
+          const aOrders = Number(a.orders || 0);
+          const aName = String(a.name || '');
+          const bQuantity = Number(b.quantity || 0);
+          const bOrders = Number(b.orders || 0);
+          const bName = String(b.name || '');
+          if (aQuantity !== bQuantity) return bQuantity - aQuantity;
+          if (aOrders !== bOrders) return bOrders - aOrders;
+          return aName.localeCompare(bName, 'tr');
+        });
 
       rows.forEach((product, index) => { product.rank = index + 1; });
       for (const product of rows) {
