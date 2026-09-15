@@ -342,14 +342,17 @@ function bindCategoryCard(card,index){
  oldHead.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();oldHead.click()}};
 
  qa('input[data-hide-product]',body).forEach(normalizeVisibilitySwitch);
+ qa('select[data-rank-product]',body).forEach(sel=>sel.onchange=async function(){const catId=this.dataset.rankCat,prodId=this.dataset.rankProduct,val=this.value;if(!catId||!prodId)return;const manualRank=val?Number(val):null;try{const r=await fetch(`/api/admin/categories/override?shop=${encodeURIComponent(shop)}`,{method:'POST',body:JSON.stringify({categoryId:catId,productId:prodId,manualRank,hidden:undefined}),headers:{'Content-Type':'application/json'}});if(!r.ok)throw new Error((await r.json()).message||'Sıralama güncellenemedi');const data=await r.json();if(data.categories){state.categories=data.categories;renderCategories();renderPreview()}}catch(e){console.error('[Rank select]',e);this.value='';}});
 
  let bulk=q(':scope > .ky-v4-category-bulk',body);
  if(!bulk){
   bulk=document.createElement('div');bulk.className='ky-v4-category-bulk';
-  bulk.innerHTML='<span>Kategori ürünleri</span><button type="button" class="ky-v4-bulk-open">Tümünü Aç</button><button type="button" class="ky-v4-bulk-close">Tümünü Kapat</button>';
+  bulk.innerHTML='<span>Kategori ürünleri</span><button type="button" class="ky-v4-bulk-btn-auto" data-bulk-op="auto" style="padding:4px 7px;background:#f0f1f3;border:1px solid #d0d5dd;border-radius:5px;cursor:pointer;font-weight:500;margin-left:8px">Hepsini Otomatik Yap</button><button type="button" class="ky-v4-bulk-btn-lock" data-bulk-op="lock" style="padding:4px 7px;background:#f0f1f3;border:1px solid #d0d5dd;border-radius:5px;cursor:pointer;font-weight:500">Otomatik Seçimini Kaldır</button><button type="button" class="ky-v4-bulk-open">Tümünü Aç</button><button type="button" class="ky-v4-bulk-close">Tümünü Kapat</button>';
   body.prepend(bulk);
   q('.ky-v4-bulk-open',bulk).onclick=e=>{e.stopPropagation();bulkCategory(card,true)};
   q('.ky-v4-bulk-close',bulk).onclick=e=>{e.stopPropagation();bulkCategory(card,false)};
+  q('.ky-v4-bulk-btn-auto',bulk).onclick=async e=>{e.stopPropagation();const categoryId=String(card.dataset.categoryId||'');if(!categoryId)return;bulk.classList.add('is-busy');try{const r=await fetch(`/api/admin/categories/bulk-clear?shop=${encodeURIComponent(shop)}`,{method:'POST',body:JSON.stringify({categoryId}),headers:{'Content-Type':'application/json'}});if(!r.ok)throw new Error((await r.json()).message||'Otomatik yapılamadı');const data=await r.json();if(data.categories){state.categories=data.categories;renderCategories();renderPreview()}alert('Hepsini Otomatik Yap işlemi tamamlandı');}catch(e){alert('Hata: '+e.message)}finally{bulk.classList.remove('is-busy')}};
+  q('.ky-v4-bulk-btn-lock',bulk).onclick=async e=>{e.stopPropagation();const categoryId=String(card.dataset.categoryId||'');if(!categoryId)return;bulk.classList.add('is-busy');try{const r=await fetch(`/api/admin/categories/bulk-lock?shop=${encodeURIComponent(shop)}`,{method:'POST',body:JSON.stringify({categoryId}),headers:{'Content-Type':'application/json'}});if(!r.ok)throw new Error((await r.json()).message||'Sabitlenemiyor');const data=await r.json();if(data.categories){state.categories=data.categories;renderCategories();renderPreview()}alert('Otomatik Seçimini Kaldır işlemi tamamlandı');}catch(e){alert('Hata: '+e.message)}finally{bulk.classList.remove('is-busy')}};
  }
  refreshBulkState(card);
 }
