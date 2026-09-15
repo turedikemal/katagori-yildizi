@@ -1,9 +1,9 @@
-/* Kategori Yildizi — premium preview guard v1
-   Keeps premium template previews readable, distinct and stable without replaying DOM animations. */
+/* Kategori Yildizi — premium preview guard v2
+   Keeps premium template previews readable, distinct and stable. Allows new v3 effects. */
 (function(){
 'use strict';
-if(window.__KY_PREMIUM_PREVIEW_GUARD_V1__)return;
-window.__KY_PREMIUM_PREVIEW_GUARD_V1__=true;
+if(window.__KY_PREMIUM_PREVIEW_GUARD_V2__)return;
+window.__KY_PREMIUM_PREVIEW_GUARD_V2__=true;
 
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const DEFAULTS={
@@ -83,17 +83,30 @@ function repairStage(){
 function injectCss(){
  if(q('#kyPremiumPreviewGuardCss'))return;
  const s=document.createElement('style');s.id='kyPremiumPreviewGuardCss';s.textContent=`
+ /* Disable legacy ::before (old sheen on all except Liquid). */
  #stageCanvas .ky-v3-badge[class*="tpl-premium-"]::before,
  #v3Templates .ky-v3-badge[class*="tpl-premium-"]::before{content:none!important;display:none!important;animation:none!important;background:none!important;box-shadow:none!important}
+
+ /* Re-enable Liquid sheen on stage only. */
+ #stageCanvas .ky-v3-badge.tpl-premium-liquid::before{content:""!important;display:block!important;animation:inherit!important;background:inherit!important}
+
+ /* Disable gallery preview ::after (old effect). */
  #v3Templates .ky-premium-template-v3 .preview::after{content:none!important;display:none!important;animation:none!important}
+
+ /* Allow new v3 effects on stage: Photon scan, Comet spark. */
+ #stageCanvas .ky-v3-badge.tpl-premium-photon::after,
+ #stageCanvas .ky-v3-badge.tpl-premium-comet::after{content:""!important;display:block!important;animation:inherit!important}
+
+ /* Block old ::after effects not in v3. */
  #stageCanvas .ky-v3-badge.tpl-premium-aurora::after,
  #stageCanvas .ky-v3-badge.tpl-premium-prism::after,
  #stageCanvas .ky-v3-badge.tpl-premium-nebula::after,
- #stageCanvas .ky-v3-badge.tpl-premium-liquid::after,
  #stageCanvas .ky-v3-badge.tpl-premium-hologram::after,
  #stageCanvas .ky-v3-badge.tpl-premium-spectrum::after,
  #stageCanvas .ky-v3-badge.tpl-premium-quantum::after,
  #stageCanvas .ky-v3-badge.tpl-premium-electric::after{content:none!important;display:none!important;animation:none!important}
+
+ /* Text and icon stability. */
  #stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-badge-text,
  #v3Templates .ky-v3-badge[class*="tpl-premium-"] .ky-badge-text{position:relative!important;z-index:5!important;opacity:1!important;visibility:visible!important;mix-blend-mode:normal!important;text-shadow:0 1px 2px rgba(0,0,0,.18)}
  #stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon,
@@ -111,3 +124,4 @@ function bind(){
 function start(){injectCss();repair();bind();setTimeout(repair,350);setTimeout(repair,1000)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
+
