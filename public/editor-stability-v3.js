@@ -120,8 +120,9 @@ function setDisabled(ids,on){
 function enforceTemplateRules(){
  cleanupLegacyNotes();
  const p=premium();
- setDisabled(['v3PadX','v3PadY','v3Scale'],p);
- if(p)note(q('#panelSizing .ky-group'),'kyV4SizingNote','Boyutlar & boşluklar yalnızca normal şablonlarda kullanılabilir. Premium şablonlarda oran ve boşluklar tasarımın kendi sistemidir.',true);
+ setDisabled(['v3PadX','v3PadY'],p);
+ setDisabled(['v3Scale'],false);
+ if(p)note(q('#panelSizing .ky-group'),'kyV4SizingNote','Premium şablonun iç boşlukları tasarım tarafından korunur. Şablon Boyutu masaüstü ve mobil için ayrı ayrı ayarlanabilir.',true);
  else q('#kyV4SizingNote')?.remove();
 
  const gradientAllowed=!p&&BASIC_GRADIENT.has(templateId());
@@ -192,6 +193,7 @@ function applyVisualControls(){
    b.style.setProperty('--badge-px',px+'px');
    b.style.setProperty('--badge-py',py+'px');
    b.style.setProperty('--badge-scale',String(scale));
+   b.style.removeProperty('scale');
    b.style.setProperty('--badge-shadow',shadow);
    b.style.setProperty('box-shadow',shadow,'important');
   }else{
@@ -202,6 +204,8 @@ function applyVisualControls(){
    b.style.removeProperty('border-width');
    b.style.removeProperty('border-style');
    b.style.removeProperty('border-color');
+   b.style.setProperty('--badge-scale','1');
+   b.style.setProperty('scale',String(scale),'important');
    b.style.setProperty('--badge-shadow',shadow);
   }
   qa('.ky-premium-icon',b).forEach(i=>i.style.setProperty('font-size',iconSize+'px','important'));
