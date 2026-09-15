@@ -361,7 +361,7 @@ async function fetchIkasMerchantId(accessToken) {
 
 async function fetchIkasProducts(accessToken) {
   return fetchPagedWithFallback(accessToken, [
-    page => `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categoryIds basePrice mainImage { url } } } }`,
+    page => `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categoryIds basePrice mainImage { url } variants { id } } } }`,
     page => `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categories { id name } variants { id price { sellPrice currency } stock { stockCount } } } } }`,
     page => `query { listProduct(pagination: { page: ${page}, limit: 100 }) { data { id name categories { id name } variants { id } } } }`
   ], 'listProduct', 50);
@@ -370,6 +370,8 @@ async function fetchIkasProducts(accessToken) {
 async function fetchIkasOrders(accessToken) {
   return fetchPagedWithFallback(accessToken, [
     page => `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { productId quantity price } } } }`,
+    page => `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { variantId quantity price } } } }`,
+    page => `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { quantity price variant { id productId } } } } }`,
     page => `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { quantity price product { id name } } } } }`,
     page => `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { quantity product { id } } } } }`
   ], 'listOrder', 80);
@@ -442,12 +444,27 @@ function emptyMetric() {
 
 function buildRawCatalog(categories, products, orders, merchantId = '') {
   const metrics = {};
+  // An ikas order row may carry a variant id in productId. Normalize every
+  // supported line-item id to its parent catalogue product before aggregating.
+  const soldItemToProduct = new Map();
+  for (const product of products) {
+    const productId = String(product?.id || '');
+    if (!productId) continue;
+    soldItemToProduct.set(productId, productId);
+    for (const variant of product.variants || []) {
+      const variantId = String(variant?.id || '');
+      if (variantId) soldItemToProduct.set(variantId, productId);
+    }
+  }
   for (const order of orders) {
     if (order?.cancelledAt) continue;
     const timestamp = orderTimestamp(order);
     const seenProducts = new Set();
     for (const item of order.orderLineItems || []) {
-      const productId = item?.productId || item?.product?.id;
+      const soldItemId = item?.productId || item?.variantId || item?.variant?.id || item?.product?.id;
+      const nestedProductId = item?.product?.id || item?.variant?.productId || item?.variant?.product?.id;
+      const productId = soldItemToProduct.get(String(nestedProductId || soldItemId || ''))
+        || soldItemToProduct.get(String(soldItemId || ''));
       if (!productId) continue;
       if (!metrics[productId]) metrics[productId] = {};
       const quantity = Math.max(0, Number(item.quantity || 1));
