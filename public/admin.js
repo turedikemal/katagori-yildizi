@@ -45,6 +45,21 @@ const TEMPLATES=[
  ['ticket-line','Bilet Rozet','ticket','#fff',BLUE,RED]
 ].map(([id,name,variant,bg,text,accent])=>({id,name,variant,bg,text,accent}));
 
+// Merge premium templates from premium-experience-v2.js
+const PREMIUM_TEMPLATES=[
+ {id:'premium-aurora',name:'Aurora Halo',variant:'premium-aurora',bg:'#18204a',text:'#ffffff',accent:'#a855f7'},
+ {id:'premium-prism',name:'Prizma Akışı',variant:'premium-prism',bg:'#16265f',text:'#ffffff',accent:'#ff3366'},
+ {id:'premium-nebula',name:'Nebula Pulse',variant:'premium-nebula',bg:'#171235',text:'#ffffff',accent:'#e879f9'},
+ {id:'premium-liquid',name:'Sıvı Krom',variant:'premium-liquid',bg:'#243a8b',text:'#ffffff',accent:'#22d3ee'},
+ {id:'premium-photon',name:'Foton Rayı',variant:'premium-photon',bg:'#0f1f4d',text:'#ffffff',accent:'#06b6d4'},
+ {id:'premium-hologram',name:'Hologram Shift',variant:'premium-hologram',bg:'#f3f4ff',text:'#243a8b',accent:'#d946ef'},
+ {id:'premium-comet',name:'Comet Orbit',variant:'premium-comet',bg:'#172554',text:'#ffffff',accent:'#22d3ee'},
+ {id:'premium-spectrum',name:'Spektrum Taç',variant:'premium-spectrum',bg:'#243a8b',text:'#ffffff',accent:'#f43f5e'},
+ {id:'premium-quantum',name:'Kuantum Cam',variant:'premium-quantum',bg:'#36457d',text:'#ffffff',accent:'#a78bfa'},
+ {id:'premium-electric',name:'Elektrik Çerçeve',variant:'premium-electric',bg:'#101b45',text:'#ffffff',accent:'#00f5ff'}
+];
+TEMPLATES.push(...PREMIUM_TEMPLATES);
+
 const ICONS={none:'',award:'◆',crown:'♛',star:'★',medal:'◉',trophy:'♜',fire:'◆',sparkles:'✦',bolt:'ϟ',heart:'♥',gem:'⬥',ribbon:'⌑',trend:'↗',tag:'◇',cart:'▣',leaf:'◖',diamond:'◆',check:'✓',target:'◎',rocket:'▲'};
 const LEGACY_PREMIUM={premium1:'premium-crown-orbit',premium2:'premium-trophy-glow',premium3:'premium-medal-spin',premium4:'premium-flame-winner',premium5:'premium-diamond-shine',premium6:'premium-rocket-rank',premium7:'premium-crown-orbit',premium8:'premium-trophy-glow',premium9:'premium-diamond-shine'};
 let state={config:structuredClone(DEFAULT),categories:[],analytics:{},device:'desktop',view:'category',selectedCategory:0,dirty:false,undo:[],redo:[]};

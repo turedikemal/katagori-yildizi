@@ -1,0 +1,47 @@
+FIX: Premium templates missing from admin.js TEMPLATES array
+
+ISSUE:
+- admin.js line 29 TEMPLATES array only contains 16 standard templates
+- premium-experience-v2.js separately defines 10 PREMIUM templates  
+- When user selects 'Sıvı Krom' (premium-liquid), badgeHTML() line 152:
+  const t=TEMPLATES.find(x=>x.id===c.templateId)||TEMPLATES[0]
+  TEMPLATES.find() returns undefined (not found)
+  Falls back to TEMPLATES[0] = navy-pill (default pill shape)
+- Result: sol panel shows premium template, sağ preview shows default pill
+
+ROOT CAUSE:
+Line 29: TEMPLATES only has standard templates, NOT premium ones
+Line 152: badgeHTML() searches in TEMPLATES, misses premium IDs
+
+SOLUTION:
+Merge premium-experience-v2.js PREMIUM array into admin.js TEMPLATES at load time.
+OR append PREMIUM array to TEMPLATES definition.
+
+The premium template CSS classes exist (premium-templates-v3.css has .tpl-premium-liquid etc)
+The template IDs are correct (premium-experience-v2.js properly sets currentTemplateId)
+Only the TEMPLATES lookup array is incomplete.
+
+PATCH:
+After line 46 TEMPLATES definition, add:
+
+// Merge premium templates (from premium-experience-v2.js)
+const PREMIUM_TEMPLATES=[
+ {id:'premium-aurora',name:'Aurora Halo',variant:'premium-aurora',bg:'#18204a',text:'#ffffff',accent:'#a855f7'},
+ {id:'premium-prism',name:'Prizma Akışı',variant:'premium-prism',bg:'#16265f',text:'#ffffff',accent:'#ff3366'},
+ {id:'premium-nebula',name:'Nebula Pulse',variant:'premium-nebula',bg:'#171235',text:'#ffffff',accent:'#e879f9'},
+ {id:'premium-liquid',name:'Sıvı Krom',variant:'premium-liquid',bg:'#243a8b',text:'#ffffff',accent:'#22d3ee'},
+ {id:'premium-photon',name:'Foton Rayı',variant:'premium-photon',bg:'#0f1f4d',text:'#ffffff',accent:'#06b6d4'},
+ {id:'premium-hologram',name:'Hologram Shift',variant:'premium-hologram',bg:'#f3f4ff',text:'#243a8b',accent:'#d946ef'},
+ {id:'premium-comet',name:'Comet Orbit',variant:'premium-comet',bg:'#172554',text:'#ffffff',accent:'#22d3ee'},
+ {id:'premium-spectrum',name:'Spektrum Taç',variant:'premium-spectrum',bg:'#243a8b',text:'#ffffff',accent:'#f43f5e'},
+ {id:'premium-quantum',name:'Kuantum Cam',variant:'premium-quantum',bg:'#36457d',text:'#ffffff',accent:'#a78bfa'},
+ {id:'premium-electric',name:'Elektrik Çerçeve',variant:'premium-electric',bg:'#101b45',text:'#ffffff',accent:'#00f5ff'}
+];
+TEMPLATES.push(...PREMIUM_TEMPLATES);
+
+This way:
+- badgeHTML() line 152 will find premium templates
+- t.variant = 'premium-liquid' (not 'gradient' override)
+- CSS class .ky-v3-badge.premium-liquid.tpl-premium-liquid applied correctly
+- Left panel thumbnail and right preview render identically
+
