@@ -38,7 +38,7 @@ function enhance(){
  BASIC.forEach(([id,name])=>{const b=existing.get(id);if(!b)return;b.querySelector(':scope > span:last-child').textContent=name;basicGrid.appendChild(b);});
  const premium=document.createElement('section');premium.className='ky-icon-section ky-icon-premium';premium.innerHTML=`<div class="ky-icon-section-head"><div><strong>Premium Rozetler <span class="ky-premium-crown">♛</span></strong><span>İki renkli, şeffaf ve sürekli hareketli</span></div><span class="ky-icon-count">${PREMIUM.length}</span></div><div class="ky-icon-section-grid"></div>`;
  const premiumGrid=q('.ky-icon-section-grid',premium);
- PREMIUM.forEach(([id,name])=>{const b=document.createElement('button');b.type='button';b.className='ky-icon-choice ky-premium-choice';b.dataset.icon=id;b.innerHTML=`<b>${iconSvg(id)}</b><span>${name}</span><i>PREMIUM</i>`;b.addEventListener('click',()=>{selectedType=id;window.handleInput?.('icon.enabled',true);window.selectIcon?.(id);});premiumGrid.appendChild(b);});
+ PREMIUM.forEach(([id,name])=>{const b=document.createElement('button');b.type='button';b.className='ky-icon-choice ky-premium-choice';b.dataset.icon=id;b.innerHTML=`<b>${iconSvg(id)}</b><span>${name}</span><i>PREMIUM</i>`;b.addEventListener('click',()=>{selectedType=id;window.handleInput?.('icon.enabled',true);window.selectIcon?.(id);window.captureIcon?.({dataset:{icon:id}});});premiumGrid.appendChild(b);});
  wrap.append(basic,premium);host.replaceChildren(wrap);syncActive(host);
 }
 function queue(){if(scheduled)return;scheduled=true;requestAnimationFrame(enhance);}
