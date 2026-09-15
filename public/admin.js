@@ -135,14 +135,14 @@ function renderCategories(){
  const openIds=new Set([...host.querySelectorAll('.ky-category-card.open[data-category-id]')].map(card=>card.dataset.categoryId));
  const scroller=host.closest('.ky-sidebar-content'),scrollTop=scroller?.scrollTop||0;
  host.innerHTML=state.categories.map(cat=>`<div class="ky-category-card ${openIds.has(String(cat.id))?'open':''}" data-category-id="${esc(cat.id)}"><div class="ky-category-head"><div><strong>${esc(cat.name)}</strong><span>${(cat.products||[]).length} ürün</span></div></div>${(cat.products||[]).slice(0,20).map(p=>`<div class="ky-rank-row"><span class="ky-rank-num">${p.rank||'—'}</span><div class="ky-rank-product"><strong>${esc(p.name)}</strong><small>${Number(p.sales||0)} satış</small></div><select class="ky-select ky-rank-select" data-rank-cat="${esc(cat.id)}" data-rank-product="${esc(p.id)}"><option value="">Otomatik</option>${manualRankOptions(cat,p)}</select><label class="ky-switch" title="Rozeti gizle"><input type="checkbox" data-hide-cat="${esc(cat.id)}" data-hide-product="${esc(p.id)}" ${p.hidden?'checked':''}><span class="ky-switch-slider"></span></label></div>`).join('')}</div>`).join('');
- host.querySelectorAll('[data-rank-product]').forEach(el=>el.onchange=()=>overrideProduct(el.dataset.rankCat,el.dataset.rankProduct,el.value?Number(el.value):undefined,undefined));
+ host.querySelectorAll('[data-rank-product]').forEach(el=>el.onchange=()=>overrideProduct(el.dataset.rankCat,el.dataset.rankProduct,el.value?Number(el.value):null,undefined));
  host.querySelectorAll('[data-hide-product]').forEach(el=>el.onchange=()=>overrideProduct(el.dataset.hideCat,el.dataset.hideProduct,undefined,el.checked));
  if(scroller)requestAnimationFrame(()=>{scroller.scrollTop=scrollTop;});
 }
 async function overrideProduct(categoryId,productId,manualRank,hidden){
  const category=state.categories.find(c=>String(c.id)===String(categoryId)),product=category?.products?.find(p=>String(p.id)===String(productId));
  const before=product?{rank:product.rank,manual:product.manual,hidden:product.hidden}:null;
- const nextManual=manualRank===undefined?(product?.manual?Number(product.rank):null):(manualRank??null),nextHidden=hidden===undefined?Boolean(product?.hidden):Boolean(hidden);
+ const nextManual=manualRank===undefined?(product?.manual?Number(product.rank):null):manualRank,nextHidden=hidden===undefined?Boolean(product?.hidden):Boolean(hidden);
  if(product){if(manualRank!==undefined){product.manual=nextManual!=null;if(nextManual!=null)product.rank=nextManual;}product.hidden=nextHidden;}
  renderPreview();notifyCategoryPreview();
  try{
