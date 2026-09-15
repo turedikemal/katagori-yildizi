@@ -63,7 +63,7 @@ function style(){if(q('#kySurfaceSettingsStyle'))return;const s=document.createE
 function onSurface(surface){if(surface===activeSurface){syncTabs();syncPreview();return}profiles[activeSurface][activeDevice]=controlSnapshot();activeSurface=surface;applyProfile(activeSurface,activeDevice)}
 function onDevice(device){if(device===activeDevice){syncTabs();syncPreview();return}profiles[activeSurface][activeDevice]=controlSnapshot();activeDevice=device;setTimeout(()=>applyProfile(activeSurface,activeDevice),35)}
 function captureIcon(choice){if(!ready||!choice)return;const id=choice.dataset.icon;if(!id)return;const p=profiles[activeSurface][activeDevice]||(profiles[activeSurface][activeDevice]=controlSnapshot());p.icon=p.icon||{};p.icon.type=id;p.icon.enabled=id!=='none';cfg('icon.type',id);cfg('icon.enabled',id!=='none');persist(30)}
-function bind(){document.addEventListener('click',e=>{
+function bind(){window.captureIcon=captureIcon;document.addEventListener('click',e=>{
  const s=e.target.closest('[data-edit-surface]');if(s){e.preventDefault();e.stopPropagation();onSurface(s.dataset.editSurface);return}
  const d=e.target.closest('[data-edit-device]');if(d){setTimeout(()=>onDevice(d.dataset.editDevice),45);return}
  const topD=e.target.closest('.ky-device-btn[data-device]');if(topD){activeDevice=topD.dataset.device;setTimeout(()=>applyProfile(activeSurface,activeDevice),30);return}
