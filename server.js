@@ -540,12 +540,20 @@ function rankedCategories(rawCatalog, config, overrides = []) {
   return rawCatalog.categories
     .filter(category => !excludedCategories.has(category.id))
     .map(category => {
-      const rows = rawCatalog.products
+      const categoryProducts = rawCatalog.products
         .filter(product => product.categoryIds.includes(category.id))
         .filter(product => !excludedProducts.has(product.id))
-        .filter(product => !(config?.ranking?.excludeOutOfStock && product.stockCount !== null && product.stockCount <= 0))
+        .filter(product => !(config?.ranking?.excludeOutOfStock && product.stockCount !== null && product.stockCount <= 0));
+      const metricValue = product => {
+        const m = product.metrics?.[period] || emptyMetric();
+        return Number(metric === 'revenue' ? m.revenue : metric === 'orders' ? m.orders : m.quantity) || 0;
+      };
+      // A category with no sales in the selected window must not fall back to
+      // alphabetical order. Use its all-time sales so "best seller" remains real.
+      const effectivePeriod = categoryProducts.some(product => metricValue(product) > 0) ? period : 'all_time';
+      const rows = categoryProducts
         .map(product => {
-          const periodMetric = product.metrics?.[period] || emptyMetric();
+          const periodMetric = product.metrics?.[effectivePeriod] || emptyMetric();
           const quantity = Number(periodMetric.quantity || 0);
           const orders = Number(periodMetric.orders || 0);
           const revenue = Number(periodMetric.revenue || 0);
