@@ -17,7 +17,7 @@ function observeMenu(){const menu=qs('#menuList');if(!menu||menu.dataset.kyObser
 function loadScript(key,src){const base=src.split('?')[0];if(document.querySelector(`script[data-${key}],script[src^="${base}"]`))return;const s=document.createElement('script');s.src=src;s.async=false;s.dataset[key.replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]='1';document.body.appendChild(s)}
 function loadStyle(key,href){const base=href.split('?')[0];if(document.querySelector(`link[data-${key}],link[href^="${base}"]`))return;const l=document.createElement('link');l.rel='stylesheet';l.href=href;l.dataset[key.replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]='1';document.head.appendChild(l)}
 function loadExtras(){
- loadScript('ky-editor-stability-v3','/editor-stability-v3.js?v=20260914-8');
+ loadScript('ky-editor-stability-v3','/editor-stability-v3.js?v=20260915-9');
  loadScript('ky-category-selector','/category-selector.js?v=20260914-2');
  loadScript('ky-icon-system','/badge-icon-system.js?v=20260914-4');
  loadScript('ky-surface-settings','/admin-surface-settings.js?v=20260914-3');

@@ -179,22 +179,29 @@ function applyVisualControls(){
  });
 
  qa('.ky-v3-badge',canvas).forEach(b=>{
-  b.style.setProperty('--badge-radius',radius+'px');
-  b.style.setProperty('--badge-border-width',width+'px');
-  b.style.setProperty('--badge-border',border);
   b.style.setProperty('--badge-opacity',String(opacity));
-  b.style.setProperty('border-radius',radius+'px','important');
-  b.style.setProperty('border-width',width+'px','important');
-  b.style.setProperty('border-style','solid','important');
-  b.style.setProperty('border-color',border,'important');
   b.style.setProperty('opacity',String(opacity),'important');
   if(!isPremium){
+   b.style.setProperty('--badge-radius',radius+'px');
+   b.style.setProperty('--badge-border-width',width+'px');
+   b.style.setProperty('--badge-border',border);
+   b.style.setProperty('border-radius',radius+'px','important');
+   b.style.setProperty('border-width',width+'px','important');
+   b.style.setProperty('border-style','solid','important');
+   b.style.setProperty('border-color',border,'important');
    b.style.setProperty('--badge-px',px+'px');
    b.style.setProperty('--badge-py',py+'px');
    b.style.setProperty('--badge-scale',String(scale));
    b.style.setProperty('--badge-shadow',shadow);
    b.style.setProperty('box-shadow',shadow,'important');
   }else{
+   b.style.removeProperty('--badge-radius');
+   b.style.removeProperty('--badge-border-width');
+   b.style.removeProperty('--badge-border');
+   b.style.removeProperty('border-radius');
+   b.style.removeProperty('border-width');
+   b.style.removeProperty('border-style');
+   b.style.removeProperty('border-color');
    b.style.setProperty('--badge-shadow',shadow);
   }
   qa('.ky-premium-icon',b).forEach(i=>i.style.setProperty('font-size',iconSize+'px','important'));
