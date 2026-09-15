@@ -575,18 +575,33 @@ function rankedCategories(rawCatalog, config, overrides = []) {
         .filter(product => product.quantity >= Number(config?.ranking?.minSalesThreshold || 0))
         .sort((a, b) => b.sortValue - a.sortValue || a.name.localeCompare(b.name, 'tr'));
 
-      rows.forEach((product, index) => { product.rank = index + 1; });
+      const manualSlots = new Map();
       for (const product of rows) {
         const override = overridesMap.get(`${category.id}:${product.id}`);
         if (!override) continue;
         if (override.manualRank != null) {
-          product.rank = Math.max(1, Math.min(20, Number(override.manualRank)));
-          product.manual = true;
+          const requestedRank = Math.max(1, Math.min(20, Number(override.manualRank)));
+          // The write endpoint prevents duplicates. This guard also repairs
+          // legacy duplicate overrides deterministically.
+          if (!manualSlots.has(requestedRank)) {
+            product.rank = requestedRank;
+            product.manual = true;
+            manualSlots.set(requestedRank, product);
+          }
         }
         product.hidden = Boolean(override.hidden);
       }
-      rows.sort((a, b) => a.rank - b.rank || b.sortValue - a.sortValue);
-      return { id: category.id, name: category.name, products: rows };
+      const automatic = rows.filter(product => !product.manual);
+      const ordered = [];
+      const lastPosition = Math.max(rows.length, ...manualSlots.keys(), 0);
+      let automaticIndex = 0;
+      for (let rank = 1; rank <= lastPosition && ordered.length < rows.length; rank += 1) {
+        const product = manualSlots.get(rank) || automatic[automaticIndex++];
+        if (!product) continue;
+        product.rank = rank;
+        ordered.push(product);
+      }
+      return { id: category.id, name: category.name, products: ordered };
     })
     .filter(category => category.products.length > 0);
 }
@@ -814,15 +829,37 @@ app.post('/api/admin/categories/override', async (req, res) => {
     const manualRank = req.body.manualRank == null || req.body.manualRank === '' ? null : Math.max(1, Math.min(20, Number(req.body.manualRank)));
     const hidden = Boolean(req.body.hidden);
     if (pool) {
-      await pool.query(
-        `INSERT INTO category_overrides (shop_domain, category_id, product_id, manual_rank, hidden, updated_at)
-         VALUES ($1, $2, $3, $4, $5, NOW())
-         ON CONFLICT (shop_domain, category_id, product_id) DO UPDATE
-         SET manual_rank = EXCLUDED.manual_rank, hidden = EXCLUDED.hidden, updated_at = NOW()`,
-        [shop, categoryId, productId, manualRank, hidden]
-      );
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        if (manualRank != null) {
+          await client.query(
+            `UPDATE category_overrides SET manual_rank = NULL, updated_at = NOW()
+             WHERE shop_domain = $1 AND category_id = $2 AND product_id <> $3 AND manual_rank = $4`,
+            [shop, categoryId, productId, manualRank]
+          );
+        }
+        await client.query(
+          `INSERT INTO category_overrides (shop_domain, category_id, product_id, manual_rank, hidden, updated_at)
+           VALUES ($1, $2, $3, $4, $5, NOW())
+           ON CONFLICT (shop_domain, category_id, product_id) DO UPDATE
+           SET manual_rank = EXCLUDED.manual_rank, hidden = EXCLUDED.hidden, updated_at = NOW()`,
+          [shop, categoryId, productId, manualRank, hidden]
+        );
+        await client.query('COMMIT');
+      } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+      } finally {
+        client.release();
+      }
     } else {
       const list = memoryDB.overrides[shop] || (memoryDB.overrides[shop] = []);
+      if (manualRank != null) {
+        for (const item of list) {
+          if (item.categoryId === categoryId && item.productId !== productId && item.manualRank === manualRank) item.manualRank = null;
+        }
+      }
       const index = list.findIndex(x => x.categoryId === categoryId && x.productId === productId);
       const next = { categoryId, productId, manualRank, hidden };
       if (index >= 0) list[index] = next; else list.push(next);
