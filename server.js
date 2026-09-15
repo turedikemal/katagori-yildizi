@@ -797,6 +797,95 @@ app.post('/api/admin/categories/override', async (req, res) => {
   }
 });
 
+// Bulk clear: Remove all manual_rank overrides for a category (keep hidden as-is)
+app.post('/api/admin/categories/bulk-clear', async (req, res) => {
+  try {
+    const shop = safeShop(req.body.shop || req.query.shop);
+    const categoryId = String(req.body.categoryId || '');
+    if (!categoryId) return res.status(400).json({ success: false, message: 'Kategori gerekli.' });
+    if (pool) {
+      await pool.query(
+        `UPDATE category_overrides SET manual_rank = NULL, updated_at = NOW()
+         WHERE shop_domain = $1 AND category_id = $2`,
+        [shop, categoryId]
+      );
+    } else {
+      const list = memoryDB.overrides[shop] || [];
+      list.forEach(x => {
+        if (x.categoryId === categoryId) x.manualRank = null;
+      });
+    }
+    const catalogState = await loadCatalog(shop);
+    const settings = await loadSettings(shop);
+    const overrides = await loadOverrides(shop);
+    res.json({ success: true, categories: rankedCategories(catalogState.catalog, settings.draft, overrides) });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Bulk lock: For products without manual override (auto), set manual_rank to current rank
+app.post('/api/admin/categories/bulk-lock', async (req, res) => {
+  try {
+    const shop = safeShop(req.body.shop || req.query.shop);
+    const categoryId = String(req.body.categoryId || '');
+    if (!categoryId) return res.status(400).json({ success: false, message: 'Kategori gerekli.' });
+    
+    // First, get current state with auto-calculated ranks
+    const catalogState = await loadCatalog(shop);
+    const settings = await loadSettings(shop);
+    const overrides = await loadOverrides(shop);
+    const ranked = rankedCategories(catalogState.catalog, settings.draft, overrides);
+    const category = ranked.find(c => String(c.id) === String(categoryId));
+    
+    if (!category) return res.status(404).json({ success: false, message: 'Kategori bulunamadı.' });
+    
+    // For each product without manual override, insert override with current rank
+    if (pool) {
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        for (const product of (category.products || [])) {
+          if (!product.manual) {
+            // Only lock auto products
+            await client.query(
+              `INSERT INTO category_overrides (shop_domain, category_id, product_id, manual_rank, updated_at)
+               VALUES ($1, $2, $3, $4, NOW())
+               ON CONFLICT (shop_domain, category_id, product_id) DO UPDATE
+               SET manual_rank = EXCLUDED.manual_rank, updated_at = NOW()
+               WHERE category_overrides.manual_rank IS NULL`,
+              [shop, categoryId, product.id, product.rank]
+            );
+          }
+        }
+        await client.query('COMMIT');
+      } catch (e) {
+        await client.query('ROLLBACK');
+        throw e;
+      } finally {
+        client.release();
+      }
+    } else {
+      const list = memoryDB.overrides[shop] || (memoryDB.overrides[shop] = []);
+      for (const product of (category.products || [])) {
+        if (!product.manual) {
+          const existing = list.find(x => x.categoryId === categoryId && x.productId === product.id);
+          if (existing && existing.manualRank === null) {
+            existing.manualRank = product.rank;
+          } else if (!existing) {
+            list.push({ categoryId, productId: product.id, manualRank: product.rank, hidden: false });
+          }
+        }
+      }
+    }
+    
+    const updatedOverrides = await loadOverrides(shop);
+    res.json({ success: true, categories: rankedCategories(catalogState.catalog, settings.draft, updatedOverrides) });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 app.get('/api/profile', async (req, res) => {
   try {
     const shop = safeShop(req.query.shop);
