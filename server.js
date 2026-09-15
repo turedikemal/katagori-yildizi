@@ -444,6 +444,9 @@ function emptyMetric() {
 
 function buildRawCatalog(categories, products, orders, merchantId = '') {
   const metrics = {};
+  let lineItemCount = 0;
+  let matchedLineItemCount = 0;
+  const lineItemShapes = new Set();
   // An ikas order row may carry a variant id in productId. Normalize every
   // supported line-item id to its parent catalogue product before aggregating.
   const soldItemToProduct = new Map();
@@ -461,11 +464,14 @@ function buildRawCatalog(categories, products, orders, merchantId = '') {
     const timestamp = orderTimestamp(order);
     const seenProducts = new Set();
     for (const item of order.orderLineItems || []) {
+      lineItemCount += 1;
+      lineItemShapes.add(Object.keys(item || {}).sort().join(','));
       const soldItemId = item?.productId || item?.variantId || item?.variant?.id || item?.product?.id;
       const nestedProductId = item?.product?.id || item?.variant?.productId || item?.variant?.product?.id;
       const productId = soldItemToProduct.get(String(nestedProductId || soldItemId || ''))
         || soldItemToProduct.get(String(soldItemId || ''));
       if (!productId) continue;
+      matchedLineItemCount += 1;
       if (!metrics[productId]) metrics[productId] = {};
       const quantity = Math.max(0, Number(item.quantity || 1));
       const unitPrice = Number(item.price || 0);
@@ -478,6 +484,14 @@ function buildRawCatalog(categories, products, orders, merchantId = '') {
       }
     }
   }
+
+  console.log('[SYNC] Satış eşleştirme', {
+    orders: orders.length,
+    lineItems: lineItemCount,
+    matchedLineItems: matchedLineItemCount,
+    productVariants: soldItemToProduct.size - products.length,
+    lineItemShapes: [...lineItemShapes].slice(0, 5)
+  });
 
   const categoryMap = new Map(categories.map(c => [String(c.id), { id: String(c.id), name: c.name || 'Kategori' }]));
   for (const product of products) {
