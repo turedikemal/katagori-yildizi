@@ -58,6 +58,7 @@ function updatePadXMax(){
  const wrap=q('#stageCanvas .ky-mock-img-wrap');
  const badge=wrap?.querySelector('.ky-v3-badge');
  if(!wrap||!badge)return;
+ if([...badge.classList].some(cls=>cls.startsWith('tpl-premium-')))return;
  const scaleRaw=parseFloat(getComputedStyle(badge).getPropertyValue('--badge-scale'));
  const scale=Number.isFinite(scaleRaw)&&scaleRaw>0?scaleRaw:1;
  const available=Math.max(0,wrap.clientWidth-4);

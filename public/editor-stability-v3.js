@@ -215,6 +215,16 @@ function applyVisualControls(){
  applyStripMotion();
 }
 
+function bindScaleWithoutPreviewRebuild(){
+ const el=q('#v3Scale');if(!el||el.dataset.kyLiveScaleBound==='1')return;
+ el.dataset.kyLiveScaleBound='1';
+ el.oninput=()=>{
+  const label=q('#v3ScaleVal');if(label)label.textContent=el.value+'%';
+  schedule();
+ };
+ el.onchange=()=>schedule();
+}
+
 function removeBadgeEffects(badge){
  if(!badge)return;
  for(const cls of [...badge.classList]){
@@ -534,6 +544,7 @@ function toast(text){
 function sync(){
  injectStyle();
  enforceTemplateRules();
+ bindScaleWithoutPreviewRebuild();
  stylePremiumGallery();
  normalizeCategories();
  applyVisualControls();
