@@ -51,7 +51,19 @@ function renderPremiumEditor(force=false){
   h.oninput=()=>{if(/^#[0-9a-f]{6}$/i.test(h.value)){p.value=h.value;apply(h.value)}};
  }
 }
-function updatePremiumCard(id){const card=q(`#v3Templates [data-template="${id}"]`),badge=q('.ky-v3-badge',card),c=palettes[id];if(badge){badge.style.setProperty('--badge-bg',c.bg);badge.style.setProperty('--badge-text',c.text);badge.style.setProperty('--badge-accent',c.accent)}}
+function updatePremiumCard(id){const card=q(`#v3Templates [data-template="${id}"]`),badge=q('.ky-v3-badge',card),c=palettes[id];applyPremiumIdentity(badge,id,c,false)}
+function applyPremiumIdentity(el,id,c,storefront=false){
+ if(!el)return;
+ const prefix=storefront?'ky-tpl-':'tpl-',target=prefix+id;
+ for(const cls of [...el.classList]){
+  if(cls.startsWith(prefix+'premium-')&&cls!==target)el.classList.remove(cls);
+  if(!storefront&&LEGACY_VARIANTS.includes(cls))el.classList.remove(cls);
+ }
+ el.classList.add(target);
+ for(const [name,value] of [['--badge-bg',c.bg],['--badge-text',c.text],['--badge-accent',c.accent],['--p-bg',c.bg],['--p-text',c.text],['--p-accent',c.accent]]){
+  if(el.style.getPropertyValue(name)!==value)el.style.setProperty(name,value);
+ }
+}
 function selectPremium(id){
  if(!PREMIUM_IDS.has(id))return;
  currentTemplateId=id;templateTab='premium';sessionStorage.setItem('ky-premium-template-tab','premium');
@@ -66,18 +78,14 @@ function applyPreviewPremium(){
  if(processing||!PREMIUM_IDS.has(currentTemplateId))return;
  processing=true;
  try{
-  const c=palettes[currentTemplateId],target='tpl-'+currentTemplateId;
+  const c=palettes[currentTemplateId];
+  const source=q(`#v3Templates [data-template="${CSS.escape(currentTemplateId)}"] .ky-v3-badge`);
+  applyPremiumIdentity(source,currentTemplateId,c,false);
   qa('#stageCanvas .ky-v3-badge').forEach(b=>{
-   if(!b.classList.contains(target)){
-    for(const cls of [...b.classList])if(cls.startsWith('tpl-'))b.classList.remove(cls);
-    LEGACY_VARIANTS.forEach(x=>b.classList.remove(x));
-    b.classList.add(target);
-   }
-   if(b.style.getPropertyValue('--badge-bg')!==c.bg)b.style.setProperty('--badge-bg',c.bg);
-   if(b.style.getPropertyValue('--badge-text')!==c.text)b.style.setProperty('--badge-text',c.text);
-   if(b.style.getPropertyValue('--badge-accent')!==c.accent)b.style.setProperty('--badge-accent',c.accent);
+   applyPremiumIdentity(b,currentTemplateId,c,false);
    if(b.style.color!==c.text)b.style.setProperty('color',c.text);
   });
+  qa('#stageCanvas .ky-badge-root').forEach(b=>applyPremiumIdentity(b,currentTemplateId,c,true));
  }finally{processing=false}
 }
 function schedulePreview(){if(previewScheduled)return;previewScheduled=true;requestAnimationFrame(()=>{previewScheduled=false;applyPreviewPremium()})}
