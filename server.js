@@ -107,7 +107,7 @@ function getDefaultConfig() {
     },
     icon: {
       enabled: true,
-      type: 'award',
+      type: '',
       size: 14,
       mode: 'mono',
       color: '#ffffff',
@@ -534,13 +534,17 @@ function rankedCategories(rawCatalog, config, overrides = []) {
           };
         })
         .filter(product => product.quantity >= Number(config?.ranking?.minSalesThreshold || 0))
-        .sort((a, b) => b.sortValue - a.sortValue || a.name.localeCompare(b.name, 'tr'));
+        .sort((a, b) => {
+          if (a.quantity !== b.quantity) return b.quantity - a.quantity;
+          if (a.orders !== b.orders) return b.orders - a.orders;
+          return a.name.localeCompare(b.name, 'tr');
+        });
 
       rows.forEach((product, index) => { product.rank = index + 1; });
       for (const product of rows) {
         const override = overridesMap.get(`${category.id}:${product.id}`);
         if (!override) continue;
-        if (override.manualRank != null) {
+        if (override.pinned && override.manualRank != null) {
           product.rank = Math.max(1, Math.min(20, Number(override.manualRank)));
           product.manual = true;
         }
