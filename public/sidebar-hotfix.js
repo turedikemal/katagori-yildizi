@@ -20,7 +20,7 @@ function loadExtras(){
  loadScript('ky-editor-stability-v3','/editor-stability-v3.js?v=20260915-11');
  loadScript('ky-category-selector','/category-selector.js?v=20260914-2');
  loadScript('ky-icon-system','/badge-icon-system.js?v=20260914-4');
- loadScript('ky-surface-settings','/admin-surface-settings.js?v=20260914-3');
+ loadScript('ky-surface-settings','/admin-surface-settings.js?v=20260915-4');
  loadScript('ky-premium-experience','/premium-experience-v2.js?v=20260915-6');
  loadScript('ky-premium-template-fixes','/premium-template-fixes.js?v=20260914-6');
  loadScript('ky-product-detail-icon-layout','/product-detail-icon-layout.js?v=20260914-5');
