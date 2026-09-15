@@ -369,7 +369,7 @@ async function fetchIkasProducts(accessToken) {
 
 async function fetchIkasOrders(accessToken) {
   return fetchPagedWithFallback(accessToken, [
-    page => `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { productId quantity price } } } }`,
+    page => `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { productId variantId quantity price } } } }`,
     page => `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { variantId quantity price } } } }`,
     page => `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { quantity price variant { id productId } } } } }`,
     page => `query { listOrder(pagination: { page: ${page}, limit: 100 }) { data { id orderedAt cancelledAt orderLineItems { quantity price product { id name } } } } }`,
