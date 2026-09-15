@@ -1,0 +1,240 @@
+/* Premium Collection V5 - Truly Distinct Geometries & Materials */
+
+/* Mercury Flow - Liquid metal kinetic */
+.storefront.premium-mercury-flow {
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1328 100%);
+  --primary: #64b5f6;
+  --accent: #42a5f5;
+  --shadow: rgba(100, 181, 246, 0.15);
+}
+.admin.premium-mercury-flow {
+  background: linear-gradient(to bottom, #0d1117 0%, #161b22 100%);
+  border: 1px solid #30363d;
+  --preview-bg: #0d1117;
+}
+.premium-mercury-flow .card {
+  background: linear-gradient(145deg, rgba(100, 181, 246, 0.05) 0%, transparent 100%);
+  border: 1px solid rgba(100, 181, 246, 0.2);
+  clip-path: polygon(0 20%, 100% 0%, 100% 80%, 0 100%);
+  animation: mercury-flow 6s ease-in-out infinite;
+}
+@keyframes mercury-flow {
+  0%, 100% { transform: translateX(0) skewY(1deg); }
+  50% { transform: translateX(8px) skewY(-1deg); }
+}
+
+/* Crystal Veil - Refractive prismatic geometry */
+.storefront.premium-crystal-veil {
+  background: linear-gradient(120deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  --primary: #a8d8ff;
+  --accent: #7ec8ff;
+  --shadow: rgba(126, 200, 255, 0.2);
+}
+.admin.premium-crystal-veil {
+  background: linear-gradient(to bottom, #0d1117 0%, #161b22 100%);
+  border: 1px solid #30363d;
+  --preview-bg: #0d1117;
+}
+.premium-crystal-veil .card {
+  background: linear-gradient(45deg, rgba(168, 216, 255, 0.08) 0%, rgba(126, 200, 255, 0.04) 50%, transparent 100%);
+  border: 2px solid rgba(168, 216, 255, 0.3);
+  clip-path: polygon(10% 0%, 90% 0%, 100% 35%, 100% 100%, 0 100%, 0 35%);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+.premium-crystal-veil .card:hover {
+  transform: rotateY(5deg) rotateX(-2deg);
+}
+
+/* Eclipse Core - Concentric ring orbital structure */
+.storefront.premium-eclipse-core {
+  background: radial-gradient(ellipse at center, #1a0033 0%, #0d0019 50%, #050009 100%);
+  --primary: #9c27b0;
+  --accent: #7b1fa2;
+  --shadow: rgba(156, 39, 176, 0.25);
+}
+.admin.premium-eclipse-core {
+  background: linear-gradient(to bottom, #0d1117 0%, #161b22 100%);
+  border: 1px solid #30363d;
+  --preview-bg: #0d1117;
+}
+.premium-eclipse-core .card {
+  background: radial-gradient(circle at center, rgba(156, 39, 176, 0.1) 0%, rgba(123, 31, 162, 0.05) 60%, transparent 100%);
+  border: 1px solid rgba(156, 39, 176, 0.3);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(156, 39, 176, 0.2), inset 0 0 20px rgba(156, 39, 176, 0.05);
+  aspect-ratio: 1;
+}
+
+/* Neon Circuit - Pixelated tech geometry */
+.storefront.premium-neon-circuit {
+  background: linear-gradient(90deg, #0a0e1f 0%, #1a0033 50%, #0f001a 100%);
+  --primary: #00ff88;
+  --accent: #00dd77;
+  --shadow: rgba(0, 255, 136, 0.2);
+}
+.admin.premium-neon-circuit {
+  background: linear-gradient(to bottom, #0d1117 0%, #161b22 100%);
+  border: 1px solid #30363d;
+  --preview-bg: #0d1117;
+}
+.premium-neon-circuit .card {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.08) 0%, transparent 100%);
+  border: 2px solid rgba(0, 255, 136, 0.4);
+  clip-path: polygon(
+    0% 20%, 10% 10%, 20% 0%, 30% 5%, 40% 0%, 50% 10%, 60% 0%, 70% 5%, 80% 0%, 90% 10%, 100% 20%,
+    100% 40%, 95% 50%, 100% 60%, 95% 70%, 100% 80%,
+    80% 100%, 70% 95%, 60% 100%, 50% 90%, 40% 100%, 30% 95%, 20% 100%, 10% 90%, 0% 80%,
+    0% 60%, 5% 50%, 0% 40%
+  );
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.3), inset 0 0 10px rgba(0, 255, 136, 0.1);
+}
+.premium-neon-circuit .card:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.5), inset 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+/* Prism Cut - Faceted gemstone asymmetry */
+.storefront.premium-prism-cut {
+  background: linear-gradient(110deg, #1a0f2e 0%, #2d1b4e 50%, #1a0f2e 100%);
+  --primary: #ce93d8;
+  --accent: #ba68c8;
+  --shadow: rgba(206, 147, 216, 0.2);
+}
+.admin.premium-prism-cut {
+  background: linear-gradient(to bottom, #0d1117 0%, #161b22 100%);
+  border: 1px solid #30363d;
+  --preview-bg: #0d1117;
+}
+.premium-prism-cut .card {
+  background: linear-gradient(135deg, rgba(206, 147, 216, 0.12) 0%, rgba(186, 104, 200, 0.06) 100%);
+  border: 1.5px solid rgba(206, 147, 216, 0.35);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+.premium-prism-cut .card:hover {
+  background: linear-gradient(135deg, rgba(206, 147, 216, 0.18) 0%, rgba(186, 104, 200, 0.1) 100%);
+}
+
+/* Frosted Atelier - Matte frosted glass effect */
+.storefront.premium-frosted-atelier {
+  background: linear-gradient(to bottom, #f5f5f5 0%, #e8e8e8 100%);
+  --primary: #455a64;
+  --accent: #37474f;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+.admin.premium-frosted-atelier {
+  background: linear-gradient(to bottom, #ffffff 0%, #f5f5f5 100%);
+  border: 1px solid #d0d0d0;
+  --preview-bg: #ffffff;
+}
+.premium-frosted-atelier .card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+.premium-frosted-atelier .card:hover {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+}
+
+/* Architect Frame - Strict rectilinear modular grid */
+.storefront.premium-architect-frame {
+  background: linear-gradient(90deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+  --primary: #bdbdbd;
+  --accent: #9e9e9e;
+  --shadow: rgba(255, 255, 255, 0.08);
+}
+.admin.premium-architect-frame {
+  background: linear-gradient(to bottom, #0d1117 0%, #161b22 100%);
+  border: 1px solid #30363d;
+  --preview-bg: #0d1117;
+}
+.premium-architect-frame .card {
+  background: linear-gradient(180deg, rgba(189, 189, 189, 0.08) 0%, transparent 100%);
+  border: 2px solid rgba(189, 189, 189, 0.25);
+  border-radius: 0;
+  clip-path: none;
+  position: relative;
+}
+.premium-architect-frame .card::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px solid rgba(189, 189, 189, 0.15);
+  pointer-events: none;
+}
+
+/* Orbit Tail - Curved flowing ribbon with trailing motion */
+.storefront.premium-orbit-tail {
+  background: linear-gradient(135deg, #0d1f3e 0%, #1a2f52 50%, #0d1f3e 100%);
+  --primary: #4fc3f7;
+  --accent: #29b6f6;
+  --shadow: rgba(79, 195, 247, 0.2);
+}
+.admin.premium-orbit-tail {
+  background: linear-gradient(to bottom, #0d1117 0%, #161b22 100%);
+  border: 1px solid #30363d;
+  --preview-bg: #0d1117;
+}
+.premium-orbit-tail .card {
+  background: linear-gradient(120deg, rgba(79, 195, 247, 0.08) 0%, transparent 60%);
+  border: 1px solid rgba(79, 195, 247, 0.25);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  animation: orbit-tail 5s ease-in-out infinite;
+}
+@keyframes orbit-tail {
+  0%, 100% { transform: rotate(-45deg) translateY(0); }
+  50% { transform: rotate(-45deg) translateY(-12px); }
+}
+
+/* Editorial Slab - Typographic serif-inspired horizontal layering */
+.storefront.premium-editorial-slab {
+  background: linear-gradient(to bottom, #fef5e7 0%, #fdf2e9 100%);
+  --primary: #8b4513;
+  --accent: #6b3410;
+  --shadow: rgba(0, 0, 0, 0.08);
+}
+.admin.premium-editorial-slab {
+  background: linear-gradient(to bottom, #ffffff 0%, #faf9f8 100%);
+  border: 1px solid #e0dbd6;
+  --preview-bg: #ffffff;
+}
+.premium-editorial-slab .card {
+  background: linear-gradient(to right, rgba(139, 69, 19, 0.04) 0%, transparent 50%, rgba(107, 52, 16, 0.04) 100%);
+  border-top: 3px solid rgba(139, 69, 19, 0.2);
+  border-bottom: 3px solid rgba(139, 69, 19, 0.2);
+  border-left: 1px solid rgba(139, 69, 19, 0.1);
+  border-right: 1px solid rgba(139, 69, 19, 0.1);
+  border-radius: 2px;
+  padding: 16px 20px;
+}
+.premium-editorial-slab .card:hover {
+  border-top-color: rgba(139, 69, 19, 0.35);
+  border-bottom-color: rgba(139, 69, 19, 0.35);
+}
+
+/* Voltage Cut - Sharp diagonal angular shard aesthetic */
+.storefront.premium-voltage-cut {
+  background: linear-gradient(150deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);
+  --primary: #ffb84d;
+  --accent: #ff9800;
+  --shadow: rgba(255, 184, 77, 0.25);
+}
+.admin.premium-voltage-cut {
+  background: linear-gradient(to bottom, #0d1117 0%, #161b22 100%);
+  border: 1px solid #30363d;
+  --preview-bg: #0d1117;
+}
+.premium-voltage-cut .card {
+  background: linear-gradient(135deg, rgba(255, 184, 77, 0.1) 0%, rgba(255, 152, 0, 0.05) 100%);
+  border: 2px solid rgba(255, 184, 77, 0.35);
+  clip-path: polygon(0 0%, 85% 0%, 100% 15%, 100% 100%, 15% 100%, 0 85%);
+  box-shadow: -8px 8px 16px rgba(255, 152, 0, 0.15);
+}
+.premium-voltage-cut .card:hover {
+  box-shadow: -12px 12px 24px rgba(255, 152, 0, 0.25);
+  clip-path: polygon(0 0%, 85% 0%, 100% 12%, 100% 100%, 12% 100%, 0 85%);
+}
+

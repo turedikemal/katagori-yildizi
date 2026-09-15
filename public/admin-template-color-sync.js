@@ -158,7 +158,7 @@ function loadPremiumExperience(){
   const loadUi=()=>{
     if(document.querySelector('script[data-ky-premium-experience]'))return;
     const s=document.createElement('script');
-    s.src='/premium-experience-v2.js?v=20260914-1';
+    s.src='/premium-experience-v2.js?v=20260915-v5-new';
     s.dataset.kyPremiumExperience='1';
     document.body.appendChild(s);
   };

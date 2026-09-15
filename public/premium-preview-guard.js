@@ -7,18 +7,24 @@ window.__KY_PREMIUM_PREVIEW_GUARD_V2__=true;
 
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const DEFAULTS={
- 'premium-aurora':{bg:'#18204a',text:'#ffffff',accent:'#a855f7'},
- 'premium-prism':{bg:'#16265f',text:'#ffffff',accent:'#ff3366'},
- 'premium-nebula':{bg:'#171235',text:'#ffffff',accent:'#e879f9'},
- 'premium-liquid':{bg:'#243a8b',text:'#ffffff',accent:'#22d3ee'},
- 'premium-photon':{bg:'#0f1f4d',text:'#ffffff',accent:'#06b6d4'},
- 'premium-hologram':{bg:'#f3f4ff',text:'#243a8b',accent:'#d946ef'},
- 'premium-comet':{bg:'#172554',text:'#ffffff',accent:'#22d3ee'},
- 'premium-spectrum':{bg:'#243a8b',text:'#ffffff',accent:'#f43f5e'},
- 'premium-quantum':{bg:'#36457d',text:'#ffffff',accent:'#a78bfa'},
- 'premium-electric':{bg:'#101b45',text:'#ffffff',accent:'#00f5ff'}
+ 'premium-mercury-flow':{bg:'#0a0e27',text:'#64b5f6',accent:'#42a5f5'},
+ 'premium-crystal-veil':{bg:'#1a1a2e',text:'#a8d8ff',accent:'#7ec8ff'},
+ 'premium-eclipse-core':{bg:'#1a0033',text:'#9c27b0',accent:'#7b1fa2'},
+ 'premium-neon-circuit':{bg:'#0a0e1f',text:'#00ff88',accent:'#00dd77'},
+ 'premium-prism-cut':{bg:'#1a0f2e',text:'#ce93d8',accent:'#ba68c8'},
+ 'premium-frosted-atelier':{bg:'#f5f5f5',text:'#455a64',accent:'#37474f'},
+ 'premium-architect-frame':{bg:'#1a1a1a',text:'#bdbdbd',accent:'#9e9e9e'},
+ 'premium-orbit-tail':{bg:'#0d1f3e',text:'#4fc3f7',accent:'#29b6f6'},
+ 'premium-editorial-slab':{bg:'#fef5e7',text:'#8b4513',accent:'#6b3410'},
+ 'premium-voltage-cut':{bg:'#1a0a2e',text:'#ffb84d',accent:'#ff9800'}
 };
 const IDS=new Set(Object.keys(DEFAULTS));
+const PREMIUM_TEMPLATE_MIGRATIONS={
+ 'premium-aurora':'premium-mercury-flow','premium-prism':'premium-crystal-veil','premium-nebula':'premium-eclipse-core',
+ 'premium-liquid':'premium-neon-circuit','premium-photon':'premium-prism-cut','premium-hologram':'premium-frosted-atelier',
+ 'premium-comet':'premium-architect-frame','premium-spectrum':'premium-orbit-tail','premium-quantum':'premium-editorial-slab',
+ 'premium-electric':'premium-voltage-cut'
+};
 let raf=0,observer=null;
 
 function premiumId(el){
@@ -27,9 +33,10 @@ function premiumId(el){
  return cls?cls.slice(4):'';
 }
 function activeId(){
- const card=q('#v3Templates .ky-template-card-v3.active[data-template^="premium-"]');
+ let card=q('#v3Templates .ky-template-card-v3.active[data-template^="premium-"]');
  if(card&&IDS.has(card.dataset.template))return card.dataset.template;
- const badge=q('#stageCanvas .ky-v3-badge[class*="tpl-premium-"]');
+ if(card){const migrated=PREMIUM_TEMPLATE_MIGRATIONS[card.dataset.template];if(migrated&&IDS.has(migrated))return migrated;}
+ let badge=q('#stageCanvas .ky-v3-badge[class*="tpl-premium-"]');
  const id=premiumId(badge);return IDS.has(id)?id:'';
 }
 function hex(v){return /^#[0-9a-f]{6}$/i.test(String(v||'').trim())?String(v).trim().toLowerCase():''}
@@ -83,30 +90,7 @@ function repairStage(){
 function injectCss(){
  if(q('#kyPremiumPreviewGuardCss'))return;
  const s=document.createElement('style');s.id='kyPremiumPreviewGuardCss';s.textContent=`
- /* Disable legacy ::before (old sheen on all except Liquid). */
- #stageCanvas .ky-v3-badge[class*="tpl-premium-"]::before,
- #v3Templates .ky-v3-badge[class*="tpl-premium-"]::before{content:none!important;display:none!important;animation:none!important;background:none!important;box-shadow:none!important}
-
- /* Re-enable Liquid sheen on stage only. */
- #stageCanvas .ky-v3-badge.tpl-premium-liquid::before{content:""!important;display:block!important;animation:inherit!important;background:inherit!important}
-
- /* Disable gallery preview ::after (old effect). */
- #v3Templates .ky-premium-template-v3 .preview::after{content:none!important;display:none!important;animation:none!important}
-
- /* Allow new v3 effects on stage: Photon scan, Comet spark. */
- #stageCanvas .ky-v3-badge.tpl-premium-photon::after,
- #stageCanvas .ky-v3-badge.tpl-premium-comet::after{content:""!important;display:block!important;animation:inherit!important}
-
- /* Block old ::after effects not in v3. */
- #stageCanvas .ky-v3-badge.tpl-premium-aurora::after,
- #stageCanvas .ky-v3-badge.tpl-premium-prism::after,
- #stageCanvas .ky-v3-badge.tpl-premium-nebula::after,
- #stageCanvas .ky-v3-badge.tpl-premium-hologram::after,
- #stageCanvas .ky-v3-badge.tpl-premium-spectrum::after,
- #stageCanvas .ky-v3-badge.tpl-premium-quantum::after,
- #stageCanvas .ky-v3-badge.tpl-premium-electric::after{content:none!important;display:none!important;animation:none!important}
-
- /* Text and icon stability. */
+ /* Text and icon stability only. */
  #stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-badge-text,
  #v3Templates .ky-v3-badge[class*="tpl-premium-"] .ky-badge-text{position:relative!important;z-index:5!important;opacity:1!important;visibility:visible!important;mix-blend-mode:normal!important;text-shadow:0 1px 2px rgba(0,0,0,.18)}
  #stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon,

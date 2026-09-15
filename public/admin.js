@@ -45,20 +45,26 @@ const TEMPLATES=[
  ['ticket-line','Bilet Rozet','ticket','#fff',BLUE,RED]
 ].map(([id,name,variant,bg,text,accent])=>({id,name,variant,bg,text,accent}));
 const PREMIUM_PREVIEW_TEMPLATES=[
- ['premium-aurora','Aurora Halo','#18204a','#ffffff','#a855f7'],
- ['premium-prism','Prizma Akışı','#16265f','#ffffff','#ff3366'],
- ['premium-nebula','Nebula Pulse','#171235','#ffffff','#e879f9'],
- ['premium-liquid','Sıvı Krom','#243a8b','#ffffff','#22d3ee'],
- ['premium-photon','Foton Rayı','#0f1f4d','#ffffff','#06b6d4'],
- ['premium-hologram','Hologram Shift','#f3f4ff','#243a8b','#d946ef'],
- ['premium-comet','Comet Orbit','#172554','#ffffff','#22d3ee'],
- ['premium-spectrum','Spektrum Taç','#243a8b','#ffffff','#f43f5e'],
- ['premium-quantum','Kuantum Cam','#36457d','#ffffff','#a78bfa'],
- ['premium-electric','Elektrik Çerçeve','#101b45','#ffffff','#00f5ff']
-].map(([id,name,bg,text,accent])=>({id,name,variant:'',bg,text,accent}));
+ ['premium-mercury-flow','Cıva Akış','#0a0e27','#64b5f6','#42a5f5'],
+ ['premium-crystal-veil','Kristal Perde','#1a1a2e','#a8d8ff','#7ec8ff'],
+ ['premium-eclipse-core','Eclipse Core','#1a0033','#9c27b0','#7b1fa2'],
+ ['premium-neon-circuit','Neon Circuit','#0a0e1f','#00ff88','#00dd77'],
+ ['premium-prism-cut','Prism Cut','#1a0f2e','#ce93d8','#ba68c8'],
+ ['premium-frosted-atelier','Frosted Atelier','#f5f5f5','#455a64','#37474f'],
+ ['premium-architect-frame','Architect Frame','#1a1a1a','#bdbdbd','#9e9e9e'],
+ ['premium-orbit-tail','Orbit Tail','#0d1f3e','#4fc3f7','#29b6f6'],
+ ['premium-editorial-slab','Editorial Slab','#fef5e7','#8b4513','#6b3410'],
+ ['premium-voltage-cut','Voltage Cut','#1a0a2e','#ffb84d','#ff9800']
+].map(([id,name,bg,text,accent])=>({id,name,variant:'',bg,text,accent}));;
 
 const ICONS={none:'',award:'◆',crown:'♛',star:'★',medal:'◉',trophy:'♜',fire:'◆',sparkles:'✦',bolt:'ϟ',heart:'♥',gem:'⬥',ribbon:'⌑',trend:'↗',tag:'◇',cart:'▣',leaf:'◖',diamond:'◆',check:'✓',target:'◎',rocket:'▲'};
 const LEGACY_PREMIUM={premium1:'premium-crown-orbit',premium2:'premium-trophy-glow',premium3:'premium-medal-spin',premium4:'premium-flame-winner',premium5:'premium-diamond-shine',premium6:'premium-rocket-rank',premium7:'premium-crown-orbit',premium8:'premium-trophy-glow',premium9:'premium-diamond-shine'};
+const PREMIUM_TEMPLATE_MIGRATIONS={
+ 'premium-aurora':'premium-mercury-flow','premium-prism':'premium-crystal-veil','premium-nebula':'premium-eclipse-core',
+ 'premium-liquid':'premium-neon-circuit','premium-photon':'premium-prism-cut','premium-hologram':'premium-frosted-atelier',
+ 'premium-comet':'premium-architect-frame','premium-spectrum':'premium-orbit-tail','premium-quantum':'premium-editorial-slab',
+ 'premium-electric':'premium-voltage-cut'
+};
 let state={config:structuredClone(DEFAULT),categories:[],analytics:{},device:'desktop',view:'category',selectedCategory:0,dirty:false,undo:[],redo:[]};
 
 function ensureV3Assets(){
@@ -68,7 +74,7 @@ function ensureV3Assets(){
  const copy=byId('btnCopyCode'); if(copy){copy.textContent='Kurulum otomatik';copy.disabled=true;copy.title='Rozetler uygulama tarafından otomatik uygulanır.';}
 }
 async function api(path,opts={}){const url=new URL(path,API); if(!url.searchParams.has('shop'))url.searchParams.set('shop',shop);const init={...opts,headers:{...(opts.headers||{})}};if(init.body&&typeof init.body!=='string'){init.headers['Content-Type']='application/json';init.body=JSON.stringify({...init.body,shop});}const r=await fetch(url.toString(),init);let data={};try{data=await r.json()}catch{}if(!r.ok)throw new Error(data.message||data.error||('HTTP '+r.status));return data;}
-function normalizeConfig(raw){const c=deepMerge(DEFAULT,raw||{});if(!c.texts.productText)c.texts.productText=c.texts.rankOtherText||c.texts.rank1Text||DEFAULT.texts.productText;if(c.styling.fontSize==null)c.styling.fontSize=12;if(c.styling.useStoreThemeFont==null)c.styling.useStoreThemeFont=true;c.ranking.maxRank=clamp(c.ranking.maxRank||3,1,20);c.rules.hideIfRankAbove=clamp(c.rules.hideIfRankAbove||20,1,20);return c;}
+function normalizeConfig(raw){const c=deepMerge(DEFAULT,raw||{});if(!c.texts.productText)c.texts.productText=c.texts.rankOtherText||c.texts.rank1Text||DEFAULT.texts.productText;if(c.styling.fontSize==null)c.styling.fontSize=12;if(c.styling.useStoreThemeFont==null)c.styling.useStoreThemeFont=true;c.ranking.maxRank=clamp(c.ranking.maxRank||3,1,20);c.rules.hideIfRankAbove=clamp(c.rules.hideIfRankAbove||20,1,20);if(c.templateId&&PREMIUM_TEMPLATE_MIGRATIONS[c.templateId]){c.templateId=PREMIUM_TEMPLATE_MIGRATIONS[c.templateId];}return c;}
 async function init(){ensureV3Assets();buildAllPanels();mountAccordion();bindGlobal();closePanels();sessionStorage.removeItem('ky-active-panel');try{const data=await api('/api/admin/settings');state.config=normalizeConfig(data.draftConfig);state.categories=Array.isArray(data.categories)?data.categories:[];state.analytics=data.analytics||{};state.dirty=!!data.hasUnpublishedChanges;setConnection(true,data.shop||shop);}catch(e){state.config=structuredClone(DEFAULT);setConnection(false,shop);toast('Ayarlar alınamadı: '+e.message,'error');}renderAll();}
 function setConnection(ok,label){const old=byId('connectionStatus');if(!old)return;old.className='ky-connection'+(ok?' connected':'');old.innerHTML=`<span class="ky-connection-dot"></span><span class="ky-connection-copy"><strong>${ok?'Bağlı':'Bağlantı kontrol ediliyor'}</strong><span>${esc(label||shop)}</span></span>`;}
 function buildAllPanels(){

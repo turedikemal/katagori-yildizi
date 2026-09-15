@@ -4,17 +4,26 @@
 'use strict';
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const PREMIUM=[
- {id:'premium-aurora',name:'Aurora Halo',bg:'#18204a',text:'#ffffff',accent:'#a855f7'},
- {id:'premium-prism',name:'Prizma Akışı',bg:'#16265f',text:'#ffffff',accent:'#ff3366'},
- {id:'premium-nebula',name:'Nebula Pulse',bg:'#171235',text:'#ffffff',accent:'#e879f9'},
- {id:'premium-liquid',name:'Sıvı Krom',bg:'#243a8b',text:'#ffffff',accent:'#22d3ee'},
- {id:'premium-photon',name:'Foton Rayı',bg:'#0f1f4d',text:'#ffffff',accent:'#06b6d4'},
- {id:'premium-hologram',name:'Hologram Shift',bg:'#f3f4ff',text:'#243a8b',accent:'#d946ef'},
- {id:'premium-comet',name:'Comet Orbit',bg:'#172554',text:'#ffffff',accent:'#22d3ee'},
- {id:'premium-spectrum',name:'Spektrum Taç',bg:'#243a8b',text:'#ffffff',accent:'#f43f5e'},
- {id:'premium-quantum',name:'Kuantum Cam',bg:'#36457d',text:'#ffffff',accent:'#a78bfa'},
- {id:'premium-electric',name:'Elektrik Çerçeve',bg:'#101b45',text:'#ffffff',accent:'#00f5ff'}
+ {id:'premium-mercury-flow',name:'Cıva Akış',category:'Kinetik'},
+ {id:'premium-crystal-veil',name:'Kristal Perde',category:'Kırılma'},
+ {id:'premium-eclipse-core',name:'Eclipse Core',category:'Orbital'},
+ {id:'premium-neon-circuit',name:'Neon Circuit',category:'Teknoloji'},
+ {id:'premium-prism-cut',name:'Prism Cut',category:'Geometri'},
+ {id:'premium-frosted-atelier',name:'Frosted Atelier',category:'Donuk'},
+ {id:'premium-architect-frame',name:'Architect Frame',category:'Modüler'},
+ {id:'premium-orbit-tail',name:'Orbit Tail',category:'Çatı'},
+ {id:'premium-editorial-slab',name:'Editorial Slab',category:'Yayım'},
+ {id:'premium-voltage-cut',name:'Voltage Cut',category:'Sert'}
 ];
+
+const PREMIUM_TEMPLATE_MIGRATIONS={
+ 'premium-aurora':'premium-mercury-flow','premium-prism':'premium-crystal-veil','premium-nebula':'premium-eclipse-core',
+ 'premium-liquid':'premium-neon-circuit','premium-photon':'premium-prism-cut','premium-hologram':'premium-frosted-atelier',
+ 'premium-comet':'premium-architect-frame','premium-spectrum':'premium-orbit-tail','premium-quantum':'premium-editorial-slab',
+ 'premium-electric':'premium-voltage-cut'
+};
+function migrateTemplateId(id){return PREMIUM_TEMPLATE_MIGRATIONS[id]||id;}
+
 const PREMIUM_IDS=new Set(PREMIUM.map(x=>x.id));
 const LEGACY_VARIANTS=['atelier','contour','editorial','medallion','sage','frame','frosted','luxe','stamp','arc','ranktab','signature','fold','colorblock','understated','ticket','pill'];
 const palettes=Object.fromEntries(PREMIUM.map(x=>[x.id,{bg:x.bg,text:x.text,accent:x.accent}]));
@@ -25,12 +34,25 @@ let wrapped=false,uiScheduled=false,previewScheduled=false,processing=false,stag
 
 function makeTabs(kind,firstLabel,secondLabel){const tabs=document.createElement('div');tabs.className='ky-premium-tabs';tabs.dataset.premiumTabs=kind;tabs.innerHTML=`<button type="button" data-premium-tab="basic">${firstLabel}</button><button type="button" class="premium" data-premium-tab="premium"><span class="ky-premium-tab-crown">♛</span>${secondLabel}</button>`;return tabs}
 function setTabActive(tabs,mode){qa('[data-premium-tab]',tabs).forEach(b=>b.classList.toggle('active',b.dataset.premiumTab===mode))}
-function linkCss(){if(q('link[data-ky-premium-template-v3]'))return;const l=document.createElement('link');l.rel='stylesheet';l.href='/premium-templates-v3.css?v=20260915-enhanced-v3';l.dataset.kyPremiumTemplateV3='1';document.head.appendChild(l)}
+function linkCss(){
+  if(q('link[data-ky-premium-v5]'))return;
+  const l=document.createElement('link');
+  l.rel='stylesheet';
+  l.href='/premium-collection-v5.css?v=20260915-v5-new';
+  l.dataset.kyPremiumV5='1';
+  document.head.appendChild(l);
+  if(q('link[data-ky-premium-template-v3]'))return;
+  const l3=document.createElement('link');
+  l3.rel='stylesheet';
+  l3.href='/premium-templates-v3.css?v=20260915-enhanced-v3';
+  l3.dataset.kyPremiumTemplateV3='1';
+  document.head.appendChild(l3);
+}
 
 function applyIconTab(){const wrap=q('#v3Icons .ky-icon-sections');if(!wrap)return;const basic=q('.ky-icon-basic',wrap),premium=q('.ky-icon-premium',wrap),tabs=q('[data-premium-tabs="icons"]');if(!basic||!premium||!tabs)return;basic.hidden=iconTab!=='basic';premium.hidden=iconTab!=='premium';setTabActive(tabs,iconTab)}
 function ensureIconTabs(){const host=q('#v3Icons'),wrap=q('#v3Icons .ky-icon-sections');if(!host||!wrap)return;const basic=q('.ky-icon-basic',wrap),premium=q('.ky-icon-premium',wrap);if(!basic||!premium)return;const bt=q('.ky-icon-section-head strong',basic);if(bt)bt.textContent='Rozetler';let tabs=q('[data-premium-tabs="icons"]');if(!tabs){tabs=makeTabs('icons','Rozetler','Premium');host.parentNode.insertBefore(tabs,host);tabs.addEventListener('click',e=>{const b=e.target.closest('[data-premium-tab]');if(!b)return;iconTab=b.dataset.premiumTab;sessionStorage.setItem('ky-premium-icon-tab',iconTab);applyIconTab()})}applyIconTab()}
 
-function premiumCard(t){const c=palettes[t.id],card=document.createElement('button');card.type='button';card.className='ky-template-card-v3 ky-premium-template-v3';card.dataset.template=t.id;card.dataset.premiumV3='1';card.innerHTML=`<span class="preview"><span class="ky-v3-badge tpl-${t.id}" style="--badge-bg:${c.bg};--badge-text:${c.text};--badge-accent:${c.accent};font-size:9px;padding:6px 9px"><span>✦</span><span>#1 Çok Satan</span></span></span><span class="name">${t.name}</span><span class="ky-premium-v3-mark">♛ Premium</span>`;card.addEventListener('click',()=>selectPremium(t.id));return card}
+function premiumCard(t){const c=palettes[t.id],card=document.createElement('button');card.type='button';card.className='ky-template-card-v3 ky-premium-template-v3';card.dataset.template=t.id;card.dataset.premiumV3='1';card.innerHTML=`<span class="preview"><span class="ky-v3-badge tpl-${t.id}" style="--badge-bg:${c.bg};--badge-text:${c.text};--badge-accent:${c.accent};font-size:9px;padding:6px 9px"><span>#1 Çok Satan</span></span></span><span class="name">${t.name}</span><span class="ky-premium-v3-mark">♛ Premium</span>`;card.addEventListener('click',()=>selectPremium(t.id));return card}
 function ensurePremiumCards(){const host=q('#v3Templates');if(!host)return;PREMIUM.forEach(t=>{if(!q(`[data-template="${t.id}"]`,host))host.appendChild(premiumCard(t))})}
 function cleanStandardCards(){const host=q('#v3Templates');if(!host)return;qa('.ky-template-card-v3[data-template]',host).forEach(card=>{if(PREMIUM_IDS.has(card.dataset.template))return;card.classList.remove('ky-premium-template-choice','ky-premium-template-v3');qa('.ky-premium-template-mark,.ky-premium-v3-mark',card).forEach(x=>x.remove())})}
 function applyTemplateTab(){const host=q('#v3Templates'),tabs=q('[data-premium-tabs="templates"]');if(!host||!tabs)return;cleanStandardCards();ensurePremiumCards();qa('.ky-template-card-v3[data-template]',host).forEach(card=>{const premium=PREMIUM_IDS.has(card.dataset.template);card.hidden=templateTab==='premium'?!premium:premium;card.classList.toggle('active',card.dataset.template===currentTemplateId)});setTabActive(tabs,templateTab);host.classList.toggle('premium-open',templateTab==='premium')}
@@ -66,10 +88,11 @@ function applyPremiumIdentity(el,id,c,storefront=false){
 }
 function selectPremium(id){
  if(!PREMIUM_IDS.has(id))return;
- currentTemplateId=id;templateTab='premium';sessionStorage.setItem('ky-premium-template-tab','premium');
+ const migrated=PREMIUM_TEMPLATE_MIGRATIONS[id]||id;
+ currentTemplateId=migrated;templateTab='premium';sessionStorage.setItem('ky-premium-template-tab','premium');
  applyTemplateTab();renderPremiumEditor(true);
- window.handleInput?.('templateId',id);
- const path=`templateColors.${id}`,value={...palettes[id]};
+ window.handleInput?.('templateId',migrated);
+ const path=`templateColors.${migrated}`,value={...palettes[migrated]};
  if(typeof window.__KY_QUEUE_CONFIG_WRITE__==='function')window.__KY_QUEUE_CONFIG_WRITE__(path,value);else window.handleInput?.(path,value);
  schedulePreview();
 }
