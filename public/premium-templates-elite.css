@@ -108,3 +108,26 @@
 
 @media(max-width:760px){.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{min-width:118px!important;max-width:154px!important;height:28px!important;min-height:28px!important;padding:4px 9px 4px 4px!important;gap:5px!important}.ky-v3-badge[class*="tpl-premium-elite-"]>:first-child,.ky-badge-root[class*="ky-tpl-premium-elite-"]>:first-child,.ky-badge-root[class*="ky-tpl-premium-elite-"]>:first-child{flex-basis:19px!important;width:19px!important;height:19px!important;font-size:9px!important}}
 @media(prefers-reduced-motion:reduce){.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"],.ky-v3-badge[class*="tpl-premium-elite-"]::before,.ky-badge-root[class*="ky-tpl-premium-elite-"]::before{animation:none!important}}
+
+/* Full-width premium bars for the two strip placements only. */
+#stageCanvas .ky-focus-underbar>.ky-v3-badge[class*="tpl-premium-elite-"],
+#stageCanvas .ky-focus-insidebar>.ky-v3-badge[class*="tpl-premium-elite-"],
+#stageCanvas .ky-v3-badge-position.pos-bottom-bar .ky-v3-badge[class*="tpl-premium-elite-"],
+#stageCanvas .ky-v3-badge-position.pos-bottom-inside .ky-v3-badge[class*="tpl-premium-elite-"]{
+ width:100%!important;min-width:100%!important;max-width:none!important;
+ justify-content:center!important;padding-left:10px!important;padding-right:10px!important;
+ border-radius:0!important;transform:none!important;text-align:center!important
+}
+#stageCanvas .ky-focus-underbar,#stageCanvas .ky-focus-insidebar,
+#stageCanvas .ky-v3-badge-position.pos-bottom-bar,
+#stageCanvas .ky-v3-badge-position.pos-bottom-inside{width:100%!important;padding-left:0!important;padding-right:0!important}
+
+.ky-pos-under-full>.ky-offset-shell,.ky-pos-bottom-full>.ky-offset-shell{
+ display:flex!important;width:100%!important;max-width:none!important
+}
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-"]{
+ width:100%!important;min-width:100%!important;max-width:none!important;
+ justify-content:center!important;padding-left:10px!important;padding-right:10px!important;
+ border-radius:0!important;transform:none!important;text-align:center!important
+}

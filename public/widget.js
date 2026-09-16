@@ -30,7 +30,7 @@ let lastMobile=matchMedia('(max-width:768px)').matches;
 
 function injectRuntimeStyles(){
  if(!document.querySelector('link[data-ky-color-integrity]')){
-   const l=document.createElement('link');l.rel='stylesheet';l.href=`${API_HOST}/template-color-integrity.css?v=20260913-1`;l.dataset.kyColorIntegrity='1';document.head.appendChild(l);
+   const l=document.createElement('link');l.rel='stylesheet';l.href=`${API_HOST}/template-color-integrity.css?v=20260917-3`;l.dataset.kyColorIntegrity='1';document.head.appendChild(l);
  }
  if(document.getElementById('ky-runtime-v2'))return;
  const s=document.createElement('style');s.id='ky-runtime-v2';s.textContent=`
@@ -41,7 +41,7 @@ function injectRuntimeStyles(){
  .ky-hover-tilt:hover{rotate:-3deg;scale:1.02}.ky-hover-pulse:hover{animation:ky-pulse .7s ease-in-out infinite alternate}
  .ky-hover-slide-left:hover{translate:-5px 0}.ky-hover-slide-right:hover{translate:5px 0}
  .ky-offset-shell{display:inline-flex;max-width:100%}
- .ky-pos-bottom-full>.ky-offset-shell,.ky-pos-under-full>.ky-offset-shell{display:flex;width:100%}.ky-pos-bottom-full .ky-badge-root:not([class*="ky-tpl-premium-elite-"]),.ky-pos-under-full .ky-badge-root:not([class*="ky-tpl-premium-elite-"]){width:100%;justify-content:center;border-radius:0!important}
+ .ky-pos-bottom-full>.ky-offset-shell,.ky-pos-under-full>.ky-offset-shell{display:flex;width:100%;max-width:none}.ky-pos-bottom-full .ky-badge-root,.ky-pos-under-full .ky-badge-root{width:100%;min-width:100%;max-width:none;justify-content:center;border-radius:0!important;transform:none!important}
  .ky-pos-under-full{position:relative;display:flex;width:100%;inset:auto!important;z-index:10;box-sizing:border-box}
  .ky-tpl-category-context .ky-detail-badge-wrap{display:inline-flex;align-items:center;margin-left:2px;border:0!important;outline:0!important;background:transparent!important;box-shadow:none!important;padding:0!important}
  .ky-premium-icon{--p-main:#243a8b;--p-accent:#f2b84b;display:inline-flex!important;width:1.35em;height:1.35em;align-items:center;justify-content:center;flex:0 0 auto;background:transparent!important}.ky-premium-icon svg{width:100%;height:100%;display:block;overflow:visible}.ky-premium-icon .p-main{fill:var(--ky-icon-main,var(--p-main))}.ky-premium-icon .p-accent,.ky-premium-icon .p-star,.ky-premium-icon .p-spark{fill:var(--ky-icon-accent,var(--p-accent))}.ky-premium-icon .p-trail{fill:none;stroke:var(--ky-icon-accent,var(--p-accent));stroke-width:3;stroke-linecap:round}
