@@ -111,5 +111,33 @@
 .tpl-premium-elite-porcelain-seal .ky-badge-text,.ky-tpl-premium-elite-porcelain-seal .ky-badge-text{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;text-align:center!important}
 .tpl-premium-elite-infinity .ky-badge-text,.ky-tpl-premium-elite-infinity .ky-badge-text{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:68px!important;text-align:center!important}
 .ky-template-card-v3.ky-elite-template-card{position:relative!important;min-height:102px;border:1px solid #e5e3de!important;border-radius:11px!important;background:#fff!important;box-shadow:0 4px 12px rgba(29,42,84,.055)!important;overflow:hidden!important}.ky-template-card-v3.ky-elite-template-card .preview{height:70px!important;display:flex!important;align-items:center!important;justify-content:center!important;background:linear-gradient(180deg,#fff,#f7f6f3)!important;overflow:visible!important}.ky-template-card-v3.ky-elite-template-card .name{color:#243a8b!important;padding:6px 43px 6px 6px!important;font-size:8.5px!important;font-weight:800!important}.ky-template-card-v3.ky-elite-template-card.active{border-color:#b9a06b!important;box-shadow:0 0 0 2px rgba(185,160,107,.12),0 7px 16px rgba(40,52,80,.09)!important}.ky-template-card-v3.ky-elite-template-card .ky-premium-v3-mark{background:#fbf3d8!important;color:#735719!important;border:1px solid #dfc77e!important;box-shadow:none!important}
+
+/* Vivid collection refresh: saturated jewel colours, readable centered copy. */
+.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{filter:saturate(1.22) contrast(1.04);text-align:center!important}
+.ky-v3-badge[class*="tpl-premium-elite-"] .ky-badge-text,.ky-badge-root[class*="ky-tpl-premium-elite-"] .ky-badge-text{display:block!important;min-width:0!important;max-width:min(112px,100%)!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:normal!important;word-break:normal!important;text-align:center!important;line-height:1.08!important;font-size:clamp(7px,.82em,10px)!important}
+.tpl-premium-elite-cosmos,.ky-tpl-premium-elite-cosmos{background:radial-gradient(circle at 34% 21%,color-mix(in srgb,var(--p-accent) 58%,#fff) 0 5%,color-mix(in srgb,var(--p-bg) 76%,#d22bff) 22%,var(--p-bg) 64%,color-mix(in srgb,var(--p-bg) 76%,#000) 100%)!important}
+.tpl-premium-elite-solar,.ky-tpl-premium-elite-solar{background:radial-gradient(circle at 50% 22%,#fff8b8 0 5%,var(--p-accent) 6% 18%,transparent 19%),linear-gradient(180deg,color-mix(in srgb,var(--p-bg) 78%,#ff7a00),var(--p-bg))!important}
+.tpl-premium-elite-galaxy,.ky-tpl-premium-elite-galaxy{background:radial-gradient(circle at 30% 20%,color-mix(in srgb,var(--p-accent) 62%,transparent),transparent 38%),linear-gradient(145deg,color-mix(in srgb,var(--p-bg) 70%,#6d28d9),var(--p-bg))!important}
+.tpl-premium-elite-pearl,.ky-tpl-premium-elite-pearl{background:radial-gradient(circle at 35% 22%,#fff 0 12%,color-mix(in srgb,var(--p-bg) 72%,var(--p-accent)) 100%)!important}
+.tpl-premium-elite-infinity,.ky-tpl-premium-elite-infinity{background:linear-gradient(135deg,color-mix(in srgb,var(--p-bg) 88%,#00d9ff),color-mix(in srgb,var(--p-accent) 42%,var(--p-bg)))!important}
+.tpl-premium-elite-porcelain-seal,.ky-tpl-premium-elite-porcelain-seal{background:radial-gradient(circle,#fff 0 43%,color-mix(in srgb,var(--p-bg) 58%,var(--p-accent)) 44% 65%,color-mix(in srgb,var(--p-accent) 32%,#fff) 66%)!important}
+
+/* Circular and sculptural badges need a little more copy room. */
+.tpl-premium-elite-cosmos .ky-badge-text,.ky-tpl-premium-elite-cosmos .ky-badge-text,
+.tpl-premium-elite-solar .ky-badge-text,.ky-tpl-premium-elite-solar .ky-badge-text,
+.tpl-premium-elite-galaxy .ky-badge-text,.ky-tpl-premium-elite-galaxy .ky-badge-text,
+.tpl-premium-elite-porcelain-seal .ky-badge-text,.ky-tpl-premium-elite-porcelain-seal .ky-badge-text{max-width:50px!important;font-size:clamp(6.5px,.69em,8px)!important;line-height:1.04!important}
+.tpl-premium-elite-infinity .ky-badge-text,.ky-tpl-premium-elite-infinity .ky-badge-text{max-width:70px!important;white-space:normal!important;font-size:clamp(7px,.72em,8.5px)!important}
+
+/* Outside-bottom placement keeps every premium silhouette and aligns it to the right. */
+#stageCanvas .ky-focus-underbar:has(.ky-v3-badge[class*="tpl-premium-elite-"]){min-height:0!important;padding:5px 3px 1px!important;justify-content:flex-end!important;overflow:visible!important;background:transparent!important}
+#stageCanvas .ky-focus-underbar .ky-v3-badge[class*="tpl-premium-elite-"]{justify-content:center!important;transform-origin:right center!important}
+#stageCanvas .ky-focus-insidebar:has(.ky-v3-badge[class*="tpl-premium-elite-"]){padding:6px!important;justify-content:flex-end!important;align-items:flex-end!important;overflow:visible!important;background:transparent!important}
+#stageCanvas .ky-focus-insidebar .ky-v3-badge[class*="tpl-premium-elite-"]{justify-content:center!important;transform-origin:right bottom!important}
+#stageCanvas .ky-v3-badge-position.pos-bottom-bar:has(.ky-v3-badge[class*="tpl-premium-elite-"]),#stageCanvas .ky-v3-badge-position.pos-bottom-inside:has(.ky-v3-badge[class*="tpl-premium-elite-"]){left:auto!important;right:6px!important;width:auto!important;justify-content:flex-end!important;overflow:visible!important}
+#stageCanvas .ky-v3-badge-position.pos-bottom-bar .ky-v3-badge[class*="tpl-premium-elite-"],#stageCanvas .ky-v3-badge-position.pos-bottom-inside .ky-v3-badge[class*="tpl-premium-elite-"]{justify-content:center!important}
+.ky-pos-under-full:has(.ky-badge-root[class*="ky-tpl-premium-elite-"]){justify-content:flex-end!important;padding-top:5px!important;background:transparent!important}
+.ky-pos-under-full .ky-offset-shell:has(.ky-badge-root[class*="ky-tpl-premium-elite-"]){display:flex!important;width:100%!important;justify-content:flex-end!important}
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-"],.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-"]{justify-content:center!important}
 @media(max-width:720px){.ky-template-card-v3.ky-elite-template-card{min-height:98px}.ky-template-card-v3.ky-elite-template-card .preview{height:66px!important}.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{max-width:132px!important;transform-origin:center}}
 @media(prefers-reduced-motion:reduce){.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{animation:none!important}}
