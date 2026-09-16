@@ -17,6 +17,26 @@ const DEFAULTS={
  'premium-spectrum':{bg:'#243a8b',text:'#ffffff',accent:'#f43f5e'},
  'premium-quantum':{bg:'#36457d',text:'#ffffff',accent:'#a78bfa'},
  'premium-electric':{bg:'#101b45',text:'#ffffff',accent:'#00f5ff'}
+ ,'premium-elite-lumen':{bg:'#09142f',text:'#ffffff',accent:'#42e8ff'}
+ ,'premium-elite-cosmos':{bg:'#170d35',text:'#ffffff',accent:'#c779ff'}
+ ,'premium-elite-opal':{bg:'#f4f1ff',text:'#243a8b',accent:'#ff63c3'}
+ ,'premium-elite-vortex':{bg:'#080b24',text:'#ffffff',accent:'#00f5d4'}
+ ,'premium-elite-sapphire':{bg:'#071e4c',text:'#ffffff',accent:'#45a3ff'}
+ ,'premium-elite-solar':{bg:'#35100a',text:'#fff9e8',accent:'#ffb000'}
+ ,'premium-elite-crystal':{bg:'#16245c',text:'#ffffff',accent:'#7cf8ff'}
+ ,'premium-elite-midnight':{bg:'#070b18',text:'#ffffff',accent:'#596cff'}
+ ,'premium-elite-silk':{bg:'#172b38',text:'#ffffff',accent:'#65ffc4'}
+ ,'premium-elite-plasma':{bg:'#24072f',text:'#ffffff',accent:'#ff42d0'}
+ ,'premium-elite-galaxy':{bg:'#101642',text:'#ffffff',accent:'#9d7bff'}
+ ,'premium-elite-chrome':{bg:'#243a8b',text:'#ffffff',accent:'#a8ecff'}
+ ,'premium-elite-zenith':{bg:'#102c46',text:'#ffffff',accent:'#38d7ff'}
+ ,'premium-elite-diamond':{bg:'#1b2052',text:'#ffffff',accent:'#ff5ecb'}
+ ,'premium-elite-firefly':{bg:'#152715',text:'#ffffff',accent:'#d8ff52'}
+ ,'premium-elite-polar':{bg:'#092d35',text:'#ffffff',accent:'#45ffd1'}
+ ,'premium-elite-digital':{bg:'#0d1538',text:'#ffffff',accent:'#31e7ff'}
+ ,'premium-elite-pearl':{bg:'#fff8fb',text:'#243a8b',accent:'#e887ff'}
+ ,'premium-elite-meteor':{bg:'#17152e',text:'#ffffff',accent:'#ff7657'}
+ ,'premium-elite-infinity':{bg:'#102b40',text:'#ffffff',accent:'#66e5ff'}
 };
 const IDS=new Set(Object.keys(DEFAULTS));
 let raf=0,observer=null;
@@ -84,16 +104,9 @@ function injectCss(){
  if(q('#kyPremiumPreviewGuardCss'))return;
  const s=document.createElement('style');s.id='kyPremiumPreviewGuardCss';s.textContent=`
  #stageCanvas .ky-v3-badge[class*="tpl-premium-"]::before,
- #v3Templates .ky-v3-badge[class*="tpl-premium-"]::before{content:none!important;display:none!important;animation:none!important;background:none!important;box-shadow:none!important}
- #v3Templates .ky-premium-template-v3 .preview::after{content:none!important;display:none!important;animation:none!important}
- #stageCanvas .ky-v3-badge.tpl-premium-aurora::after,
- #stageCanvas .ky-v3-badge.tpl-premium-prism::after,
- #stageCanvas .ky-v3-badge.tpl-premium-nebula::after,
- #stageCanvas .ky-v3-badge.tpl-premium-liquid::after,
- #stageCanvas .ky-v3-badge.tpl-premium-hologram::after,
- #stageCanvas .ky-v3-badge.tpl-premium-spectrum::after,
- #stageCanvas .ky-v3-badge.tpl-premium-quantum::after,
- #stageCanvas .ky-v3-badge.tpl-premium-electric::after{content:none!important;display:none!important;animation:none!important}
+ #stageCanvas .ky-v3-badge[class*="tpl-premium-"]::after,
+ #v3Templates .ky-v3-badge[class*="tpl-premium-"]::before,
+ #v3Templates .ky-v3-badge[class*="tpl-premium-"]::after{pointer-events:none!important}
  #stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-badge-text,
  #v3Templates .ky-v3-badge[class*="tpl-premium-"] .ky-badge-text{position:relative!important;z-index:5!important;opacity:1!important;visibility:visible!important;mix-blend-mode:normal!important;text-shadow:0 1px 2px rgba(0,0,0,.18)}
  #stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon,
