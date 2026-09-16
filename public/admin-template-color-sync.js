@@ -160,7 +160,7 @@ function observe(){
   if(templates)mo.observe(templates,opts);
   if(editor){
     editorObserver?.disconnect();
-    editorObserver=new MutationObserver(()=>{patchEditor();setTimeout(syncEditorFromRenderedBadge,0);});
+    editorObserver=new MutationObserver(()=>{patchEditor();});
     editorObserver.observe(editor,opts);
   }
 }
@@ -206,3 +206,4 @@ function boot(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
+
