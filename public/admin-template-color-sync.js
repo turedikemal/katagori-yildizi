@@ -111,6 +111,17 @@ function patchEditor(){
   patchField('text');
   patchField('accent');
 }
+function updateEditorState(){
+  const id=renderedTemplateId();
+  const editor=q('#v3TemplateEditor');
+  if(!id||!editor)return;
+  editor.dataset.kyTemplateId=id;
+  qa('.ky-template-card-v3[data-template]').forEach(card=>card.classList.toggle('active',card.dataset.template===id));
+  const name=q(`.ky-template-card-v3[data-template="${CSS.escape(id)}"] .name`)?.textContent?.trim();
+  const title=q('#v3TemplateEditor .ky-template-editor-title strong');
+  if(name&&title)title.textContent=`${name} renkleri`;
+  patchEditor();
+}
 function colorFromRenderedBadge(prop,fallback){
   const id=renderedTemplateId();
   if(!id)return fallback;
@@ -181,7 +192,7 @@ document.addEventListener('change',e=>{
   if(e.target.closest('#v3TemplateEditor,#panelTemplates'))schedule();
 },true);
 document.addEventListener('click',e=>{
-  if(e.target.closest('[data-template]'))setTimeout(()=>{patchEditor();syncEditorFromRenderedBadge();},30);
+  if(e.target.closest('[data-template]'))setTimeout(()=>{patchEditor();updateEditorState();},30);
   if(e.target.closest('.ky-device-btn,[data-edit-device],.ky-view-tab'))setTimeout(syncEditorFromRenderedBadge,120);
 },true);
 
