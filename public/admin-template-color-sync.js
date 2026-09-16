@@ -160,7 +160,7 @@ function observe(){
   if(templates)mo.observe(templates,opts);
   if(editor){
     editorObserver?.disconnect();
-    editorObserver=new MutationObserver(()=>{patchEditor();setTimeout(syncEditorFromRenderedBadge,0);});
+    editorObserver=new MutationObserver(()=>{patchEditor();});
     editorObserver.observe(editor,opts);
   }
 }
@@ -199,8 +199,8 @@ document.addEventListener('click',e=>{
 function boot(){
   observe();
   patchEditor();
-  setTimeout(syncEditorFromRenderedBadge,90);
-  setTimeout(syncEditorFromRenderedBadge,550);
+  //setTimeout(syncEditorFromRenderedBadge,90);  // REMOVED: no reverse-sync on click
+  //setTimeout(syncEditorFromRenderedBadge,550);  // REMOVED: no reverse-sync on click
   setTimeout(loadPremiumExperience,120);
   setTimeout(loadFinalFixes,180);
 }

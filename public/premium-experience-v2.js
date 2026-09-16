@@ -118,8 +118,6 @@ function selectPremium(id){
  currentTemplateId=id;templateTab=PREMIUM_IDS.has(id)?'premium':'basic';sessionStorage.setItem('ky-premium-template-tab',templateTab);
  applyTemplateTab();renderPremiumEditor(true);
  window.handleInput?.('templateId',id);
- const path=`templateColors.${id}`,value={...palettes[id]};
- if(typeof window.__KY_QUEUE_CONFIG_WRITE__==='function')window.__KY_QUEUE_CONFIG_WRITE__(path,value);else window.handleInput?.(path,value);
  schedulePreview();
 }
 
