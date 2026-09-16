@@ -52,7 +52,8 @@
 
 /* Gallery cards keep premium chrome, but selected template preview shows the unique motion above. */
 .ky-template-card-v3.ky-premium-template-v3{border-width:2px!important;background-size:100% 100%,420% 100%!important;animation:kyP3BorderFlow 2.8s linear infinite,kyPremiumCardPulse 2.2s ease-in-out infinite!important;will-change:background-position,box-shadow}
-.ky-template-card-v3.ky-premium-template-v3.active{box-shadow:0 0 0 2px rgba(124,58,237,.16),0 0 28px rgba(34,211,238,.34),0 0 40px rgba(244,63,94,.15)!important}
+.ky-template-card-v3.ky-premium-template-v3.active{background:#fff!important;border-color:rgba(36,58,139,.40)!important;box-shadow:0 0 0 2px rgba(124,58,237,.16),0 0 28px rgba(34,211,238,.34),0 0 40px rgba(244,63,94,.15)!important}
 .ky-template-card-v3[data-template="premium-prism"]{animation-duration:1.7s,2.1s!important}.ky-template-card-v3[data-template="premium-nebula"]{animation-duration:3.4s,2.8s!important}.ky-template-card-v3[data-template="premium-liquid"]{animation-duration:3.1s,2.5s!important}.ky-template-card-v3[data-template="premium-photon"]{animation-duration:1.5s,2s!important}.ky-template-card-v3[data-template="premium-hologram"]{animation-duration:2.4s,2.7s!important}.ky-template-card-v3[data-template="premium-comet"]{animation-duration:1.8s,2s!important}.ky-template-card-v3[data-template="premium-spectrum"]{animation-duration:3s,2.6s!important}.ky-template-card-v3[data-template="premium-quantum"]{animation-duration:3.8s,3s!important}.ky-template-card-v3[data-template="premium-electric"]{animation-duration:1.15s,1.8s!important}
 
 @media(prefers-reduced-motion:reduce){.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"],.ky-template-card-v3.ky-premium-template-v3,.ky-v3-badge[class*="tpl-premium-"]::after,.ky-badge-root[class*="ky-tpl-premium-"]::after{animation:none!important}}
+
