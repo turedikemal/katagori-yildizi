@@ -37,6 +37,14 @@ const DEFAULTS={
  ,'premium-elite-pearl':{bg:'#fffafc',text:'#243a8b',accent:'#d895e8'}
  ,'premium-elite-meteor':{bg:'#24182d',text:'#ffffff',accent:'#ff876b'}
  ,'premium-elite-infinity':{bg:'#153449',text:'#ffffff',accent:'#75e6ff'}
+ ,'premium-elite-ivory':{bg:'#fffdf7',text:'#243a8b',accent:'#c9a55d'}
+ ,'premium-elite-champagne':{bg:'#fff7df',text:'#5a4520',accent:'#d8ad4f'}
+ ,'premium-elite-rose':{bg:'#fff1f5',text:'#66304a',accent:'#e287ad'}
+ ,'premium-elite-porcelain':{bg:'#f5f9ff',text:'#243a8b',accent:'#78a9e8'}
+ ,'premium-elite-mint':{bg:'#effbf7',text:'#205348',accent:'#70c9ad'}
+ ,'premium-elite-paper':{bg:'#fffefb',text:'#262f4d',accent:'#d56b61'}
+ ,'premium-elite-lavender':{bg:'#f7f3ff',text:'#493c70',accent:'#a98be8'}
+ ,'premium-elite-porcelain-seal':{bg:'#fffefe',text:'#264b72',accent:'#79b8d8'}
 };
 const IDS=new Set(Object.keys(DEFAULTS));
 let raf=0,observer=null;
