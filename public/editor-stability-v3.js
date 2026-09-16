@@ -206,7 +206,8 @@ function applyVisualControls(){
    b.style.removeProperty('border-style');
    b.style.removeProperty('border-color');
    b.style.setProperty('--badge-scale','1');
-   b.style.setProperty('scale',String(scale),'important');
+   const fullStrip=!!b.closest('.ky-focus-underbar,.ky-focus-insidebar,.ky-v3-badge-position.pos-bottom-bar,.ky-v3-badge-position.pos-bottom-inside');
+   b.style.setProperty('scale',fullStrip?'1':String(scale),'important');
    b.style.setProperty('--badge-shadow',shadow);
   }
   qa('.ky-premium-icon',b).forEach(i=>i.style.setProperty('font-size',iconSize+'px','important'));
