@@ -16,26 +16,34 @@ const LEGACY=[
  {id:'premium-electric',name:'Elektrik Çerçeve',bg:'#101b45',text:'#ffffff',accent:'#00f5ff'}
 ];
 const PREMIUM=[
- {id:'premium-elite-lumen',name:'Lümen İmza',bg:'#09142f',text:'#ffffff',accent:'#42e8ff',mark:'✦'},
- {id:'premium-elite-cosmos',name:'Kozmik Taç',bg:'#170d35',text:'#ffffff',accent:'#c779ff',mark:'♛'},
- {id:'premium-elite-opal',name:'Opal Akış',bg:'#f4f1ff',text:'#243a8b',accent:'#ff63c3',mark:'◈'},
- {id:'premium-elite-vortex',name:'Neon Vortex',bg:'#080b24',text:'#ffffff',accent:'#00f5d4',mark:'◎'},
- {id:'premium-elite-sapphire',name:'Safir Portal',bg:'#071e4c',text:'#ffffff',accent:'#45a3ff',mark:'◇'},
- {id:'premium-elite-solar',name:'Solar Flare',bg:'#35100a',text:'#fff9e8',accent:'#ffb000',mark:'☀'},
- {id:'premium-elite-crystal',name:'Kristal Prizma',bg:'#16245c',text:'#ffffff',accent:'#7cf8ff',mark:'◆'},
- {id:'premium-elite-midnight',name:'Gece Yarısı',bg:'#070b18',text:'#ffffff',accent:'#596cff',mark:'✧'},
- {id:'premium-elite-silk',name:'Aurora İpek',bg:'#172b38',text:'#ffffff',accent:'#65ffc4',mark:'〰'},
- {id:'premium-elite-plasma',name:'Plazma Çekirdek',bg:'#24072f',text:'#ffffff',accent:'#ff42d0',mark:'◉'},
- {id:'premium-elite-galaxy',name:'Galaksi Mührü',bg:'#101642',text:'#ffffff',accent:'#9d7bff',mark:'✺'},
- {id:'premium-elite-chrome',name:'Krom Dalgası',bg:'#243a8b',text:'#ffffff',accent:'#a8ecff',mark:'◒'},
- {id:'premium-elite-zenith',name:'Zenit Işık',bg:'#102c46',text:'#ffffff',accent:'#38d7ff',mark:'△'},
- {id:'premium-elite-diamond',name:'Elmas Spektrum',bg:'#1b2052',text:'#ffffff',accent:'#ff5ecb',mark:'♦'},
- {id:'premium-elite-firefly',name:'Ateş Böceği',bg:'#152715',text:'#ffffff',accent:'#d8ff52',mark:'✣'},
- {id:'premium-elite-polar',name:'Kutup Işığı',bg:'#092d35',text:'#ffffff',accent:'#45ffd1',mark:'⌁'},
- {id:'premium-elite-digital',name:'Dijital Lüks',bg:'#0d1538',text:'#ffffff',accent:'#31e7ff',mark:'⌘'},
- {id:'premium-elite-pearl',name:'İnci Halo',bg:'#fff8fb',text:'#243a8b',accent:'#e887ff',mark:'○'},
- {id:'premium-elite-meteor',name:'Meteor İz',bg:'#17152e',text:'#ffffff',accent:'#ff7657',mark:'☄'},
- {id:'premium-elite-infinity',name:'Sonsuzluk Camı',bg:'#102b40',text:'#ffffff',accent:'#66e5ff',mark:'∞'}
+ {id:'premium-elite-lumen',name:'Maison Kurdele',bg:'#182142',text:'#ffffff',accent:'#d9b76e',mark:'M'},
+ {id:'premium-elite-cosmos',name:'Kraliyet Mührü',bg:'#321744',text:'#ffffff',accent:'#f3cf78',mark:'♛'},
+ {id:'premium-elite-opal',name:'Opal Editorial',bg:'#fffaf7',text:'#243a8b',accent:'#d77bb5',mark:'O'},
+ {id:'premium-elite-vortex',name:'Neon Tabela',bg:'#090c1d',text:'#ffffff',accent:'#42ffe8',mark:'✦'},
+ {id:'premium-elite-sapphire',name:'Safir Çift Etiket',bg:'#102c61',text:'#ffffff',accent:'#75c7ff',mark:'S'},
+ {id:'premium-elite-solar',name:'Güneş Madalyonu',bg:'#5a240d',text:'#fff8df',accent:'#ffc75b',mark:'☀'},
+ {id:'premium-elite-crystal',name:'Kristal Bilet',bg:'#222c64',text:'#ffffff',accent:'#9ceeff',mark:'◆'},
+ {id:'premium-elite-midnight',name:'Gece İmzası',bg:'#080b15',text:'#ffffff',accent:'#7387ff',mark:'✧'},
+ {id:'premium-elite-silk',name:'İpek Moda Etiketi',bg:'#17333a',text:'#ffffff',accent:'#8bf1c7',mark:'S'},
+ {id:'premium-elite-plasma',name:'Plazma Monogram',bg:'#310a39',text:'#ffffff',accent:'#ff68dd',mark:'P'},
+ {id:'premium-elite-galaxy',name:'Galaksi Rozeti',bg:'#16184b',text:'#ffffff',accent:'#ad8cff',mark:'✺'},
+ {id:'premium-elite-chrome',name:'Krom Heykel',bg:'#34517a',text:'#ffffff',accent:'#c6f3ff',mark:'C'},
+ {id:'premium-elite-zenith',name:'Zenit Ok',bg:'#123651',text:'#ffffff',accent:'#48dcff',mark:'Z'},
+ {id:'premium-elite-diamond',name:'Art Deco Elmas',bg:'#25204c',text:'#ffffff',accent:'#f0c66d',mark:'♦'},
+ {id:'premium-elite-firefly',name:'Botanik Işık',bg:'#17311f',text:'#ffffff',accent:'#d7ef82',mark:'✣'},
+ {id:'premium-elite-polar',name:'Kutup Katmanı',bg:'#0c3940',text:'#ffffff',accent:'#6fffd4',mark:'⌁'},
+ {id:'premium-elite-digital',name:'Dijital Plaka',bg:'#101936',text:'#ffffff',accent:'#41e8ff',mark:'⌘'},
+ {id:'premium-elite-pearl',name:'İnci Çerçeve',bg:'#fffafc',text:'#243a8b',accent:'#d895e8',mark:'○'},
+ {id:'premium-elite-meteor',name:'Meteor Kurdele',bg:'#24182d',text:'#ffffff',accent:'#ff876b',mark:'☄'},
+ {id:'premium-elite-infinity',name:'Sonsuzluk Cam Kart',bg:'#153449',text:'#ffffff',accent:'#75e6ff',mark:'∞'},
+ {id:'premium-elite-ivory',name:'Fildişi Atelier',bg:'#fffdf7',text:'#243a8b',accent:'#c9a55d',mark:'A'},
+ {id:'premium-elite-champagne',name:'Şampanya Kurdele',bg:'#fff7df',text:'#5a4520',accent:'#d8ad4f',mark:'✦'},
+ {id:'premium-elite-rose',name:'Rose Quartz',bg:'#fff1f5',text:'#66304a',accent:'#e287ad',mark:'◇'},
+ {id:'premium-elite-porcelain',name:'Porselen Mavi',bg:'#f5f9ff',text:'#243a8b',accent:'#78a9e8',mark:'P'},
+ {id:'premium-elite-mint',name:'Mint İpek',bg:'#effbf7',text:'#205348',accent:'#70c9ad',mark:'S'},
+ {id:'premium-elite-paper',name:'Paper Luxe',bg:'#fffefb',text:'#262f4d',accent:'#d56b61',mark:'L'},
+ {id:'premium-elite-lavender',name:'Lavanta Cam',bg:'#f7f3ff',text:'#493c70',accent:'#a98be8',mark:'○'},
+ {id:'premium-elite-porcelain-seal',name:'Porselen Mühür',bg:'#fffefe',text:'#264b72',accent:'#79b8d8',mark:'❋'}
 ];
 const PREMIUM_IDS=new Set(PREMIUM.map(x=>x.id));
 const CUSTOM=[...LEGACY,...PREMIUM];
@@ -49,7 +57,7 @@ let wrapped=false,uiScheduled=false,previewScheduled=false,processing=false,stag
 
 function makeTabs(kind,firstLabel,secondLabel){const tabs=document.createElement('div');tabs.className='ky-premium-tabs';tabs.dataset.premiumTabs=kind;tabs.innerHTML=`<button type="button" data-premium-tab="basic">${firstLabel}</button><button type="button" class="premium" data-premium-tab="premium"><span class="ky-premium-tab-crown">♛</span>${secondLabel}</button>`;return tabs}
 function setTabActive(tabs,mode){qa('[data-premium-tab]',tabs).forEach(b=>b.classList.toggle('active',b.dataset.premiumTab===mode))}
-function linkCss(){if(!q('link[data-ky-premium-template-v3]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/premium-templates-v3.css?v=20260916-1';l.dataset.kyPremiumTemplateV3='1';document.head.appendChild(l)}if(!q('link[data-ky-premium-elite]')){const e=document.createElement('link');e.rel='stylesheet';e.href='/premium-templates-elite.css?v=20260916-1';e.dataset.kyPremiumElite='1';document.head.appendChild(e)}}
+function linkCss(){if(!q('link[data-ky-premium-template-v3]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/premium-templates-v3.css?v=20260916-1';l.dataset.kyPremiumTemplateV3='1';document.head.appendChild(l)}if(!q('link[data-ky-premium-elite]')){const e=document.createElement('link');e.rel='stylesheet';e.href='/premium-templates-elite.css?v=20260916-3';e.dataset.kyPremiumElite='1';document.head.appendChild(e)}}
 
 function applyIconTab(){const wrap=q('#v3Icons .ky-icon-sections');if(!wrap)return;const basic=q('.ky-icon-basic',wrap),premium=q('.ky-icon-premium',wrap),tabs=q('[data-premium-tabs="icons"]');if(!basic||!premium||!tabs)return;basic.hidden=iconTab!=='basic';premium.hidden=iconTab!=='premium';setTabActive(tabs,iconTab)}
 function ensureIconTabs(){const host=q('#v3Icons'),wrap=q('#v3Icons .ky-icon-sections');if(!host||!wrap)return;const basic=q('.ky-icon-basic',wrap),premium=q('.ky-icon-premium',wrap);if(!basic||!premium)return;const bt=q('.ky-icon-section-head strong',basic);if(bt)bt.textContent='Rozetler';let tabs=q('[data-premium-tabs="icons"]');if(!tabs){tabs=makeTabs('icons','Rozetler','Premium');host.parentNode.insertBefore(tabs,host);tabs.addEventListener('click',e=>{const b=e.target.closest('[data-premium-tab]');if(!b)return;iconTab=b.dataset.premiumTab;sessionStorage.setItem('ky-premium-icon-tab',iconTab);applyIconTab()})}applyIconTab()}
@@ -110,6 +118,8 @@ function applyPreviewPremium(){
    if(b.style.color!==c.text)b.style.setProperty('color',c.text);
   });
   qa('#stageCanvas .ky-badge-root').forEach(b=>applyPremiumIdentity(b,currentTemplateId,c,true));
+  const live=q('#stageCanvas .ky-v3-badge');
+  if(live)document.dispatchEvent(new CustomEvent('ky:premium-template-applied',{detail:{id:currentTemplateId,html:live.outerHTML}}));
  }finally{processing=false}
 }
 function schedulePreview(){if(previewScheduled)return;previewScheduled=true;requestAnimationFrame(()=>{previewScheduled=false;applyPreviewPremium()})}
