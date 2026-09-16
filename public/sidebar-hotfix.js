@@ -21,8 +21,8 @@ function loadExtras(){
  loadScript('ky-category-selector','/category-selector.js?v=20260914-2');
  loadScript('ky-icon-system','/badge-icon-system.js?v=20260914-4');
  loadScript('ky-surface-settings','/admin-surface-settings.js?v=20260914-3');
- loadScript('ky-premium-experience','/premium-experience-v2.js?v=20260916-1');
- loadScript('ky-premium-template-fixes','/premium-template-fixes.js?v=20260916-1');
+ loadScript('ky-premium-experience','/premium-experience-v2.js?v=20260916-2');
+ loadScript('ky-premium-template-fixes','/premium-template-fixes.js?v=20260916-2');
  loadScript('ky-product-detail-icon-layout','/product-detail-icon-layout.js?v=20260914-5');
  loadScript('ky-text-style-controls','/text-style-controls.js?v=20260914-2');
  loadScript('ky-min-sales-hover-fix','/min-sales-hover-fix.js?v=20260915-1');
