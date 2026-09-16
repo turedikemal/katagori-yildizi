@@ -7,7 +7,6 @@ const q=(s,r=document)=>r.querySelector(s);
 const qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const shop=(new URLSearchParams(location.search).get('shop')||'thegoatz').replace(/\.myikas\.com$/i,'');
 const RELAY='https://review-hub-production-9515.up.railway.app/api/support-relay';
-const PREMIUM_TEMPLATES=new Set(['premium-aurora','premium-prism','premium-nebula','premium-liquid','premium-photon','premium-hologram','premium-comet','premium-spectrum','premium-quantum','premium-electric']);
 const PREMIUM_ICON_PALETTES={
  'premium-crown-orbit':['#243a8b','#f2b84b'],
  'premium-trophy-glow':['#1f3a8a','#ffd166'],
@@ -50,7 +49,9 @@ const templateId=()=>{
  const cls=badge&&[...badge.classList].find(x=>x.startsWith('tpl-'));
  return cls?cls.slice(4):'navy-pill';
 };
-const premium=()=>PREMIUM_TEMPLATES.has(templateId());
+/* All premium template families own their geometry. Generic border/radius
+   controls must never overwrite their circles, ribbons, seals or cut corners. */
+const premium=()=>templateId().startsWith('premium-');
 
 function injectStyle(){
  let s=q('#kyEditorStabilityV4');
