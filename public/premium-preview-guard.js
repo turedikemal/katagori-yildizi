@@ -17,34 +17,26 @@ const DEFAULTS={
  'premium-spectrum':{bg:'#243a8b',text:'#ffffff',accent:'#f43f5e'},
  'premium-quantum':{bg:'#36457d',text:'#ffffff',accent:'#a78bfa'},
  'premium-electric':{bg:'#101b45',text:'#ffffff',accent:'#00f5ff'}
- ,'premium-elite-lumen':{bg:'#17213d',text:'#ffffff',accent:'#c8a96b'}
- ,'premium-elite-cosmos':{bg:'#3b1f32',text:'#ffffff',accent:'#d5b06e'}
- ,'premium-elite-opal':{bg:'#fbf7f2',text:'#243a8b',accent:'#b77a92'}
- ,'premium-elite-vortex':{bg:'#161a24',text:'#ffffff',accent:'#bfa86d'}
- ,'premium-elite-sapphire':{bg:'#203b5c',text:'#ffffff',accent:'#9ebbd3'}
- ,'premium-elite-solar':{bg:'#6b3d22',text:'#fff8df',accent:'#d9b36a'}
- ,'premium-elite-crystal':{bg:'#303a59',text:'#ffffff',accent:'#b9c7d9'}
- ,'premium-elite-midnight':{bg:'#10131b',text:'#ffffff',accent:'#9ba3b7'}
- ,'premium-elite-silk':{bg:'#2f4a45',text:'#ffffff',accent:'#a8c1b5'}
- ,'premium-elite-plasma':{bg:'#493049',text:'#ffffff',accent:'#c3a0b8'}
- ,'premium-elite-galaxy':{bg:'#29294a',text:'#ffffff',accent:'#a8a3c4'}
- ,'premium-elite-chrome':{bg:'#4b5563',text:'#ffffff',accent:'#d8dde3'}
- ,'premium-elite-zenith':{bg:'#314b5b',text:'#ffffff',accent:'#9eb9c2'}
- ,'premium-elite-diamond':{bg:'#2e2938',text:'#ffffff',accent:'#d1b46d'}
- ,'premium-elite-firefly':{bg:'#344536',text:'#ffffff',accent:'#bac5a0'}
- ,'premium-elite-polar':{bg:'#36565a',text:'#ffffff',accent:'#a9ceca'}
- ,'premium-elite-digital':{bg:'#252c3d',text:'#ffffff',accent:'#adb7c9'}
- ,'premium-elite-pearl':{bg:'#fffafc',text:'#243a8b',accent:'#d895e8'}
- ,'premium-elite-meteor':{bg:'#4d3038',text:'#ffffff',accent:'#c88c88'}
- ,'premium-elite-infinity':{bg:'#365262',text:'#ffffff',accent:'#b6d2da'}
- ,'premium-elite-ivory':{bg:'#fffdf7',text:'#243a8b',accent:'#c9a55d'}
- ,'premium-elite-champagne':{bg:'#fff7df',text:'#5a4520',accent:'#d8ad4f'}
- ,'premium-elite-rose':{bg:'#fbf1f3',text:'#663f4e',accent:'#c78d9f'}
- ,'premium-elite-porcelain':{bg:'#f5f9ff',text:'#243a8b',accent:'#78a9e8'}
- ,'premium-elite-mint':{bg:'#effbf7',text:'#205348',accent:'#70c9ad'}
- ,'premium-elite-paper':{bg:'#fffefb',text:'#262f4d',accent:'#d56b61'}
- ,'premium-elite-lavender':{bg:'#f7f4fa',text:'#51465f',accent:'#ad9bbd'}
- ,'premium-elite-porcelain-seal':{bg:'#fffefe',text:'#264b72',accent:'#79b8d8'}
+ ,'premium-elite-obsidian':{bg:'#111216',text:'#fffdf7',accent:'#d9b45b'}
+ ,'premium-elite-sapphire-glass':{bg:'#0b2f6b',text:'#ffffff',accent:'#63d8ff'}
+ ,'premium-elite-platinum':{bg:'#d7dbe1',text:'#18233f',accent:'#ffffff'}
+ ,'premium-elite-emerald':{bg:'#064d42',text:'#ffffff',accent:'#75e0bd'}
+ ,'premium-elite-ruby':{bg:'#7d1328',text:'#ffffff',accent:'#f1a6a2'}
+ ,'premium-elite-marble':{bg:'#f4f0e7',text:'#2a3247',accent:'#b99b62'}
+ ,'premium-elite-carbon':{bg:'#20242c',text:'#ffffff',accent:'#6ca8ff'}
+ ,'premium-elite-champagne-silk':{bg:'#e8d7b4',text:'#4b3822',accent:'#fff7e5'}
+ ,'premium-elite-midnight-chrome':{bg:'#101a33',text:'#ffffff',accent:'#9eb7e7'}
+ ,'premium-elite-amethyst':{bg:'#4d236d',text:'#ffffff',accent:'#d5a8ff'}
+ ,'premium-elite-titanium':{bg:'#414952',text:'#ffffff',accent:'#73e2d1'}
+ ,'premium-elite-onyx-rose':{bg:'#181419',text:'#ffffff',accent:'#d69b9b'}
+ ,'premium-elite-pearl-lustre':{bg:'#f5f3f5',text:'#3e344b',accent:'#b598d1'}
+ ,'premium-elite-cobalt':{bg:'#1439a1',text:'#ffffff',accent:'#dbe7ff'}
+ ,'premium-elite-bronze':{bg:'#5a3525',text:'#ffffff',accent:'#cf9b63'}
+ ,'premium-elite-arctic':{bg:'#e9f3f6',text:'#214454',accent:'#77bfd4'}
+ ,'premium-elite-forest':{bg:'#243d2d',text:'#ffffff',accent:'#c1a36d'}
+ ,'premium-elite-bordeaux':{bg:'#641e32',text:'#ffffff',accent:'#e1b28f'}
+ ,'premium-elite-porcelain-blue':{bg:'#f5f7fb',text:'#203f79',accent:'#668ecf'}
+ ,'premium-elite-aurora-black':{bg:'#101318',text:'#ffffff',accent:'#7ee7d7'}
 };
 const IDS=new Set(Object.keys(DEFAULTS));
 let raf=0,observer=null;
