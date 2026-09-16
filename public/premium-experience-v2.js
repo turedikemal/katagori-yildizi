@@ -35,7 +35,15 @@ const PREMIUM=[
  {id:'premium-elite-digital',name:'Dijital Plaka',bg:'#101936',text:'#ffffff',accent:'#41e8ff',mark:'⌘'},
  {id:'premium-elite-pearl',name:'İnci Çerçeve',bg:'#fffafc',text:'#243a8b',accent:'#d895e8',mark:'○'},
  {id:'premium-elite-meteor',name:'Meteor Kurdele',bg:'#24182d',text:'#ffffff',accent:'#ff876b',mark:'☄'},
- {id:'premium-elite-infinity',name:'Sonsuzluk Cam Kart',bg:'#153449',text:'#ffffff',accent:'#75e6ff',mark:'∞'}
+ {id:'premium-elite-infinity',name:'Sonsuzluk Cam Kart',bg:'#153449',text:'#ffffff',accent:'#75e6ff',mark:'∞'},
+ {id:'premium-elite-ivory',name:'Fildişi Atelier',bg:'#fffdf7',text:'#243a8b',accent:'#c9a55d',mark:'A'},
+ {id:'premium-elite-champagne',name:'Şampanya Kurdele',bg:'#fff7df',text:'#5a4520',accent:'#d8ad4f',mark:'✦'},
+ {id:'premium-elite-rose',name:'Rose Quartz',bg:'#fff1f5',text:'#66304a',accent:'#e287ad',mark:'◇'},
+ {id:'premium-elite-porcelain',name:'Porselen Mavi',bg:'#f5f9ff',text:'#243a8b',accent:'#78a9e8',mark:'P'},
+ {id:'premium-elite-mint',name:'Mint İpek',bg:'#effbf7',text:'#205348',accent:'#70c9ad',mark:'S'},
+ {id:'premium-elite-paper',name:'Paper Luxe',bg:'#fffefb',text:'#262f4d',accent:'#d56b61',mark:'L'},
+ {id:'premium-elite-lavender',name:'Lavanta Cam',bg:'#f7f3ff',text:'#493c70',accent:'#a98be8',mark:'○'},
+ {id:'premium-elite-porcelain-seal',name:'Porselen Mühür',bg:'#fffefe',text:'#264b72',accent:'#79b8d8',mark:'❋'}
 ];
 const PREMIUM_IDS=new Set(PREMIUM.map(x=>x.id));
 const CUSTOM=[...LEGACY,...PREMIUM];
@@ -49,7 +57,7 @@ let wrapped=false,uiScheduled=false,previewScheduled=false,processing=false,stag
 
 function makeTabs(kind,firstLabel,secondLabel){const tabs=document.createElement('div');tabs.className='ky-premium-tabs';tabs.dataset.premiumTabs=kind;tabs.innerHTML=`<button type="button" data-premium-tab="basic">${firstLabel}</button><button type="button" class="premium" data-premium-tab="premium"><span class="ky-premium-tab-crown">♛</span>${secondLabel}</button>`;return tabs}
 function setTabActive(tabs,mode){qa('[data-premium-tab]',tabs).forEach(b=>b.classList.toggle('active',b.dataset.premiumTab===mode))}
-function linkCss(){if(!q('link[data-ky-premium-template-v3]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/premium-templates-v3.css?v=20260916-1';l.dataset.kyPremiumTemplateV3='1';document.head.appendChild(l)}if(!q('link[data-ky-premium-elite]')){const e=document.createElement('link');e.rel='stylesheet';e.href='/premium-templates-elite.css?v=20260916-2';e.dataset.kyPremiumElite='1';document.head.appendChild(e)}}
+function linkCss(){if(!q('link[data-ky-premium-template-v3]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/premium-templates-v3.css?v=20260916-1';l.dataset.kyPremiumTemplateV3='1';document.head.appendChild(l)}if(!q('link[data-ky-premium-elite]')){const e=document.createElement('link');e.rel='stylesheet';e.href='/premium-templates-elite.css?v=20260916-3';e.dataset.kyPremiumElite='1';document.head.appendChild(e)}}
 
 function applyIconTab(){const wrap=q('#v3Icons .ky-icon-sections');if(!wrap)return;const basic=q('.ky-icon-basic',wrap),premium=q('.ky-icon-premium',wrap),tabs=q('[data-premium-tabs="icons"]');if(!basic||!premium||!tabs)return;basic.hidden=iconTab!=='basic';premium.hidden=iconTab!=='premium';setTabActive(tabs,iconTab)}
 function ensureIconTabs(){const host=q('#v3Icons'),wrap=q('#v3Icons .ky-icon-sections');if(!host||!wrap)return;const basic=q('.ky-icon-basic',wrap),premium=q('.ky-icon-premium',wrap);if(!basic||!premium)return;const bt=q('.ky-icon-section-head strong',basic);if(bt)bt.textContent='Rozetler';let tabs=q('[data-premium-tabs="icons"]');if(!tabs){tabs=makeTabs('icons','Rozetler','Premium');host.parentNode.insertBefore(tabs,host);tabs.addEventListener('click',e=>{const b=e.target.closest('[data-premium-tab]');if(!b)return;iconTab=b.dataset.premiumTab;sessionStorage.setItem('ky-premium-icon-tab',iconTab);applyIconTab()})}applyIconTab()}
@@ -110,6 +118,8 @@ function applyPreviewPremium(){
    if(b.style.color!==c.text)b.style.setProperty('color',c.text);
   });
   qa('#stageCanvas .ky-badge-root').forEach(b=>applyPremiumIdentity(b,currentTemplateId,c,true));
+  const live=q('#stageCanvas .ky-v3-badge');
+  if(live)document.dispatchEvent(new CustomEvent('ky:premium-template-applied',{detail:{id:currentTemplateId,html:live.outerHTML}}));
  }finally{processing=false}
 }
 function schedulePreview(){if(previewScheduled)return;previewScheduled=true;requestAnimationFrame(()=>{previewScheduled=false;applyPreviewPremium()})}
