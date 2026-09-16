@@ -1,0 +1,203 @@
+/* Legacy Premium Templates → Static (No Animation)
+   10 templates moved from premium to standard templates tab.
+   Override all animation, transform, filter, and pseudo-element motion.
+   Load AFTER premium-templates-v3.css and premium-intensity.css.
+   Do NOT disable premium-elite-* animations.
+*/
+
+/* 1. Premium Aurora — static now */
+.ky-v3-badge.tpl-premium-aurora,
+.ky-badge-root.ky-tpl-premium-aurora {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.ky-v3-badge.tpl-premium-aurora::before,
+.ky-v3-badge.tpl-premium-aurora::after,
+.ky-badge-root.ky-tpl-premium-aurora::before,
+.ky-badge-root.ky-tpl-premium-aurora::after {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* 2. Premium Prism — static now */
+.ky-v3-badge.tpl-premium-prism,
+.ky-badge-root.ky-tpl-premium-prism {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.ky-v3-badge.tpl-premium-prism::before,
+.ky-v3-badge.tpl-premium-prism::after,
+.ky-badge-root.ky-tpl-premium-prism::before,
+.ky-badge-root.ky-tpl-premium-prism::after {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* 3. Premium Nebula — static now */
+.ky-v3-badge.tpl-premium-nebula,
+.ky-badge-root.ky-tpl-premium-nebula {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.ky-v3-badge.tpl-premium-nebula::before,
+.ky-v3-badge.tpl-premium-nebula::after,
+.ky-badge-root.ky-tpl-premium-nebula::before,
+.ky-badge-root.ky-tpl-premium-nebula::after {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* 4. Premium Liquid — static now */
+.ky-v3-badge.tpl-premium-liquid,
+.ky-badge-root.ky-tpl-premium-liquid {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.ky-v3-badge.tpl-premium-liquid::before,
+.ky-v3-badge.tpl-premium-liquid::after,
+.ky-badge-root.ky-tpl-premium-liquid::before,
+.ky-badge-root.ky-tpl-premium-liquid::after {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* 5. Premium Photon — static now */
+.ky-v3-badge.tpl-premium-photon,
+.ky-badge-root.ky-tpl-premium-photon {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.ky-v3-badge.tpl-premium-photon::before,
+.ky-v3-badge.tpl-premium-photon::after,
+.ky-badge-root.ky-tpl-premium-photon::before,
+.ky-badge-root.ky-tpl-premium-photon::after {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* 6. Premium Hologram — static now */
+.ky-v3-badge.tpl-premium-hologram,
+.ky-badge-root.ky-tpl-premium-hologram {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.ky-v3-badge.tpl-premium-hologram::before,
+.ky-v3-badge.tpl-premium-hologram::after,
+.ky-badge-root.ky-tpl-premium-hologram::before,
+.ky-badge-root.ky-tpl-premium-hologram::after {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* 7. Premium Comet — static now */
+.ky-v3-badge.tpl-premium-comet,
+.ky-badge-root.ky-tpl-premium-comet {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.ky-v3-badge.tpl-premium-comet::before,
+.ky-v3-badge.tpl-premium-comet::after,
+.ky-badge-root.ky-tpl-premium-comet::before,
+.ky-badge-root.ky-tpl-premium-comet::after {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* 8. Premium Spectrum — static now */
+.ky-v3-badge.tpl-premium-spectrum,
+.ky-badge-root.ky-tpl-premium-spectrum {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.ky-v3-badge.tpl-premium-spectrum::before,
+.ky-v3-badge.tpl-premium-spectrum::after,
+.ky-badge-root.ky-tpl-premium-spectrum::before,
+.ky-badge-root.ky-tpl-premium-spectrum::after {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* 9. Premium Quantum — static now */
+.ky-v3-badge.tpl-premium-quantum,
+.ky-badge-root.ky-tpl-premium-quantum {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.ky-v3-badge.tpl-premium-quantum::before,
+.ky-v3-badge.tpl-premium-quantum::after,
+.ky-badge-root.ky-tpl-premium-quantum::before,
+.ky-badge-root.ky-tpl-premium-quantum::after {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* 10. Premium Electric — static now */
+.ky-v3-badge.tpl-premium-electric,
+.ky-badge-root.ky-tpl-premium-electric {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.ky-v3-badge.tpl-premium-electric::before,
+.ky-v3-badge.tpl-premium-electric::after,
+.ky-badge-root.ky-tpl-premium-electric::before,
+.ky-badge-root.ky-tpl-premium-electric::after {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Respect prefers-reduced-motion — ensure no animations regardless */
+@media (prefers-reduced-motion: reduce) {
+  .ky-v3-badge[class*="tpl-premium-aurora"],
+  .ky-v3-badge[class*="tpl-premium-prism"],
+  .ky-v3-badge[class*="tpl-premium-nebula"],
+  .ky-v3-badge[class*="tpl-premium-liquid"],
+  .ky-v3-badge[class*="tpl-premium-photon"],
+  .ky-v3-badge[class*="tpl-premium-hologram"],
+  .ky-v3-badge[class*="tpl-premium-comet"],
+  .ky-v3-badge[class*="tpl-premium-spectrum"],
+  .ky-v3-badge[class*="tpl-premium-quantum"],
+  .ky-v3-badge[class*="tpl-premium-electric"],
+  .ky-badge-root[class*="ky-tpl-premium-aurora"],
+  .ky-badge-root[class*="ky-tpl-premium-prism"],
+  .ky-badge-root[class*="ky-tpl-premium-nebula"],
+  .ky-badge-root[class*="ky-tpl-premium-liquid"],
+  .ky-badge-root[class*="ky-tpl-premium-photon"],
+  .ky-badge-root[class*="ky-tpl-premium-hologram"],
+  .ky-badge-root[class*="ky-tpl-premium-comet"],
+  .ky-badge-root[class*="ky-tpl-premium-spectrum"],
+  .ky-badge-root[class*="ky-tpl-premium-quantum"],
+  .ky-badge-root[class*="ky-tpl-premium-electric"] {
+    animation: none !important;
+  }
+}
+
