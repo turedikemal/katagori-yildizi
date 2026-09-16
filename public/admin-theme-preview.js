@@ -68,6 +68,7 @@ function syncPlacement(){
 function cloneBadge(text){
  if(!lastBadge)return `<span class="ky-v3-badge pill" style="--badge-bg:#243a8b;--badge-text:#fff;--badge-radius:999px;--badge-px:10px;--badge-py:6px;font-size:11px"><span class="ky-badge-text">${esc(text)}</span></span>`;
  const tpl=document.createElement('template');tpl.innerHTML=lastBadge.trim();const el=tpl.content.firstElementChild;if(!el)return lastBadge;
+ if(lastPlacement==='under'||lastPlacement==='inside'){el.style.setProperty('scale','1','important');el.style.setProperty('transform','none','important')}
  let label=[...el.children].reverse().find(child=>child.tagName==='SPAN'&&!/(icon|premium)/i.test(child.className));
  if(!label){label=document.createElement('span');el.appendChild(label);}label.classList.add('ky-badge-text');label.textContent=text;return el.outerHTML;
 }
