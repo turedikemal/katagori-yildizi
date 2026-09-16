@@ -99,6 +99,17 @@
 .tpl-premium-elite-paper,.ky-tpl-premium-elite-paper{min-height:31px;padding:6px 11px!important;box-shadow:3px 3px 0 #f1ede4,0 6px 14px rgba(39,45,70,.08)!important}
 .tpl-premium-elite-lavender,.ky-tpl-premium-elite-lavender{min-height:33px;padding:6px 12px!important;box-shadow:inset 0 1px 0 #fff,0 6px 15px rgba(101,78,145,.09)!important}
 .tpl-premium-elite-porcelain-seal,.ky-tpl-premium-elite-porcelain-seal{width:62px;min-height:56px;padding:7px 5px!important}.tpl-premium-elite-porcelain-seal .ky-badge-text,.ky-tpl-premium-elite-porcelain-seal .ky-badge-text{max-width:48px;font-size:.68em}
+/* Keep compact vertical and circular compositions intact in the live preview. */
+.tpl-premium-elite-cosmos,.ky-tpl-premium-elite-cosmos{height:62px!important;min-width:62px!important;max-width:62px!important;aspect-ratio:1/1!important}
+.tpl-premium-elite-solar,.ky-tpl-premium-elite-solar{min-width:66px!important;max-width:66px!important}
+.tpl-premium-elite-galaxy,.ky-tpl-premium-elite-galaxy{min-width:64px!important;max-width:64px!important}
+.tpl-premium-elite-infinity,.ky-tpl-premium-elite-infinity{min-width:84px!important;max-width:84px!important}
+.tpl-premium-elite-porcelain-seal,.ky-tpl-premium-elite-porcelain-seal{min-width:62px!important;max-width:62px!important}
+.tpl-premium-elite-cosmos .ky-badge-text,.ky-tpl-premium-elite-cosmos .ky-badge-text,
+.tpl-premium-elite-solar .ky-badge-text,.ky-tpl-premium-elite-solar .ky-badge-text,
+.tpl-premium-elite-galaxy .ky-badge-text,.ky-tpl-premium-elite-galaxy .ky-badge-text,
+.tpl-premium-elite-infinity .ky-badge-text,.ky-tpl-premium-elite-infinity .ky-badge-text,
+.tpl-premium-elite-porcelain-seal .ky-badge-text,.ky-tpl-premium-elite-porcelain-seal .ky-badge-text{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;text-align:center!important}
 .ky-template-card-v3.ky-elite-template-card{position:relative!important;min-height:102px;border:1px solid #e5e3de!important;border-radius:11px!important;background:#fff!important;box-shadow:0 4px 12px rgba(29,42,84,.055)!important;overflow:hidden!important}.ky-template-card-v3.ky-elite-template-card .preview{height:70px!important;display:flex!important;align-items:center!important;justify-content:center!important;background:linear-gradient(180deg,#fff,#f7f6f3)!important;overflow:visible!important}.ky-template-card-v3.ky-elite-template-card .name{color:#243a8b!important;padding:6px 43px 6px 6px!important;font-size:8.5px!important;font-weight:800!important}.ky-template-card-v3.ky-elite-template-card.active{border-color:#b9a06b!important;box-shadow:0 0 0 2px rgba(185,160,107,.12),0 7px 16px rgba(40,52,80,.09)!important}.ky-template-card-v3.ky-elite-template-card .ky-premium-v3-mark{background:#fbf3d8!important;color:#735719!important;border:1px solid #dfc77e!important;box-shadow:none!important}
 @media(max-width:720px){.ky-template-card-v3.ky-elite-template-card{min-height:98px}.ky-template-card-v3.ky-elite-template-card .preview{height:66px!important}.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{max-width:132px!important;transform-origin:center}}
 @media(prefers-reduced-motion:reduce){.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{animation:none!important}}
