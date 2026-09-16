@@ -15,7 +15,7 @@ function renderedTemplateId(){
   return cls?cls.slice(4):'';
 }
 function activeTemplateId(){
-  return q('#v3TemplateEditor')?.dataset.kyTemplateId || renderedTemplateId() || q('.ky-template-card-v3.active[data-template]')?.dataset.template || q('[data-template].active')?.dataset.template || '';
+  return q('#v3TemplateEditor')?.dataset.kyTemplateId || q('.ky-template-card-v3.active[data-template]')?.dataset.template || '';
 }
 function readColor(name,fallback){
   const hex=q(`#tpl${name}Hex`)?.value;
@@ -53,6 +53,9 @@ function apply(el,c){
   el.style.setProperty('--ky-primary-bg',c.bg);
   el.style.setProperty('--ky-primary-text',text);
   el.style.setProperty('--ky-accent',c.accent);
+  el.style.setProperty('--v6-bg',c.bg);
+  el.style.setProperty('--v6-text',text);
+  el.style.setProperty('--v6-accent',c.accent);
   el.style.color=text;
 }
 function sync(){
@@ -105,24 +108,20 @@ function patchField(field){
 function patchEditor(){
   const editor=q('#v3TemplateEditor');
   if(!editor)return;
-  const id=renderedTemplateId()||q('.ky-template-card-v3.active[data-template]')?.dataset.template||editor.dataset.kyTemplateId||'';
+  const id=q('.ky-template-card-v3.active[data-template]')?.dataset.template || editor.dataset.kyTemplateId || '';
   if(id)editor.dataset.kyTemplateId=id;
   patchField('bg');
   patchField('text');
   patchField('accent');
 }
-function colorFromRenderedBadge(prop,fallback){
-  const id=renderedTemplateId();
+function colorFromEditor(prop,fallback){
+  const id=activeTemplateId();
   if(!id)return fallback;
-  const badge=q(`#stageCanvas .ky-v3-badge.tpl-${CSS.escape(id)}`) || q(`#stageCanvas .ky-badge-root.ky-tpl-${CSS.escape(id)}`);
-  if(!badge)return fallback;
-  const inline=badge.style.getPropertyValue(prop).trim();
-  if(HEX.test(inline))return inline;
-  const computed=getComputedStyle(badge).getPropertyValue(prop).trim();
-  return HEX.test(computed)?computed:fallback;
+  const val=readColor(prop==='--badge-bg'?'Bg':prop==='--badge-text'?'Text':'Accent',fallback);
+  return HEX.test(val)?val:fallback;
 }
-function syncEditorFromRenderedBadge(){
-  const id=renderedTemplateId();
+function syncEditorFromSelection(){
+  const id=activeTemplateId();
   const editor=q('#v3TemplateEditor');
   if(!id||!editor)return;
 
@@ -132,9 +131,9 @@ function syncEditorFromRenderedBadge(){
   const title=q('#v3TemplateEditor .ky-template-editor-title strong');
   if(name&&title)title.textContent=`${name} renkleri`;
 
-  const bg=colorFromRenderedBadge('--badge-bg',readColor('Bg','#243a8b'));
-  const text=colorFromRenderedBadge('--badge-text',readColor('Text','#ffffff'));
-  const accent=colorFromRenderedBadge('--badge-accent',readColor('Accent','#ce3f44'));
+  const bg=colorFromEditor('--badge-bg','#243a8b');
+  const text=colorFromEditor('--badge-text','#ffffff');
+  const accent=colorFromEditor('--badge-accent','#ce3f44');
   setPair('bg',bg);setPair('text',text);setPair('accent',accent);
   patchEditor();
   schedule();
@@ -149,7 +148,7 @@ function observe(){
   if(templates)mo.observe(templates,opts);
   if(editor){
     editorObserver?.disconnect();
-    editorObserver=new MutationObserver(()=>{patchEditor();setTimeout(syncEditorFromRenderedBadge,0);});
+    editorObserver=new MutationObserver(()=>{patchEditor();});
     editorObserver.observe(editor,opts);
   }
 }
@@ -158,7 +157,7 @@ function loadPremiumExperience(){
   const loadUi=()=>{
     if(document.querySelector('script[data-ky-premium-experience]'))return;
     const s=document.createElement('script');
-    s.src='/premium-experience-v2.js?v=20260914-1';
+    s.src='/premium-experience-v2.js?v=20260916-1';
     s.dataset.kyPremiumExperience='1';
     document.body.appendChild(s);
   };
@@ -181,15 +180,15 @@ document.addEventListener('change',e=>{
   if(e.target.closest('#v3TemplateEditor,#panelTemplates'))schedule();
 },true);
 document.addEventListener('click',e=>{
-  if(e.target.closest('[data-template]'))setTimeout(()=>{patchEditor();syncEditorFromRenderedBadge();},30);
-  if(e.target.closest('.ky-device-btn,[data-edit-device],.ky-view-tab'))setTimeout(syncEditorFromRenderedBadge,120);
+  if(e.target.closest('[data-template]'))setTimeout(()=>{patchEditor();syncEditorFromSelection();},30);
+  if(e.target.closest('.ky-device-btn,[data-edit-device],.ky-view-tab'))setTimeout(()=>{schedule();},120);
 },true);
 
 function boot(){
   observe();
   patchEditor();
-  setTimeout(syncEditorFromRenderedBadge,90);
-  setTimeout(syncEditorFromRenderedBadge,550);
+  setTimeout(syncEditorFromSelection,90);
+  setTimeout(syncEditorFromSelection,550);
   setTimeout(loadPremiumExperience,120);
   setTimeout(loadFinalFixes,180);
 }

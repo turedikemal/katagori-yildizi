@@ -1,191 +1,83 @@
-/* Kategori Yildizi — Premium Experience v5
-   Legacy premium designs are now standard; twenty elite designs form the premium collection. */
+/* Kategori Yildizi — Premium Experience v6 */
 (function(){
 'use strict';
-const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
-const LEGACY=[
- {id:'premium-aurora',name:'Aurora Halo',bg:'#18204a',text:'#ffffff',accent:'#a855f7'},
- {id:'premium-prism',name:'Prizma Akışı',bg:'#16265f',text:'#ffffff',accent:'#ff3366'},
- {id:'premium-nebula',name:'Nebula Pulse',bg:'#171235',text:'#ffffff',accent:'#e879f9'},
- {id:'premium-liquid',name:'Sıvı Krom',bg:'#243a8b',text:'#ffffff',accent:'#22d3ee'},
- {id:'premium-photon',name:'Foton Rayı',bg:'#0f1f4d',text:'#ffffff',accent:'#06b6d4'},
- {id:'premium-hologram',name:'Hologram Shift',bg:'#f3f4ff',text:'#243a8b',accent:'#d946ef'},
- {id:'premium-comet',name:'Comet Orbit',bg:'#172554',text:'#ffffff',accent:'#22d3ee'},
- {id:'premium-spectrum',name:'Spektrum Taç',bg:'#243a8b',text:'#ffffff',accent:'#f43f5e'},
- {id:'premium-quantum',name:'Kuantum Cam',bg:'#36457d',text:'#ffffff',accent:'#a78bfa'},
- {id:'premium-electric',name:'Elektrik Çerçeve',bg:'#101b45',text:'#ffffff',accent:'#00f5ff'}
-];
+const q=(s,r=document)=>r.querySelector(s);
+const qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const PREMIUM=[
- {id:'premium-elite-lumen',name:'Maison Kurdele',bg:'#1736d2',text:'#ffffff',accent:'#ffd447',mark:'M'},
- {id:'premium-elite-cosmos',name:'Kraliyet Mührü',bg:'#74149c',text:'#ffffff',accent:'#ffbe0b',mark:'♛'},
- {id:'premium-elite-opal',name:'Opal Editorial',bg:'#fff4e8',text:'#4b176f',accent:'#ff4f8b',mark:'O'},
- {id:'premium-elite-vortex',name:'Gece Tabelası',bg:'#07123f',text:'#ffffff',accent:'#00efff',mark:'✦'},
- {id:'premium-elite-sapphire',name:'Safir Çift Etiket',bg:'#0757c9',text:'#ffffff',accent:'#5df0ff',mark:'S'},
- {id:'premium-elite-solar',name:'Güneş Madalyonu',bg:'#d74400',text:'#ffffff',accent:'#ffd166',mark:'☀'},
- {id:'premium-elite-crystal',name:'Kristal Bilet',bg:'#4a16b8',text:'#ffffff',accent:'#7df9ff',mark:'◆'},
- {id:'premium-elite-midnight',name:'Gece İmzası',bg:'#11152d',text:'#ffffff',accent:'#ff2d95',mark:'✧'},
- {id:'premium-elite-silk',name:'İpek Moda Etiketi',bg:'#00745f',text:'#ffffff',accent:'#5cffcf',mark:'S'},
- {id:'premium-elite-plasma',name:'Kadife Monogram',bg:'#8a117b',text:'#ffffff',accent:'#ff62dc',mark:'P'},
- {id:'premium-elite-galaxy',name:'Gece Rozeti',bg:'#351176',text:'#ffffff',accent:'#80ffe8',mark:'✺'},
- {id:'premium-elite-chrome',name:'Krom Heykel',bg:'#7186a5',text:'#071c45',accent:'#00dcff',mark:'C'},
- {id:'premium-elite-zenith',name:'Zenit Ok',bg:'#007a91',text:'#ffffff',accent:'#eaff4f',mark:'Z'},
- {id:'premium-elite-diamond',name:'Art Deco Elmas',bg:'#321464',text:'#ffffff',accent:'#ffc857',mark:'♦'},
- {id:'premium-elite-firefly',name:'Botanik Işık',bg:'#126b35',text:'#ffffff',accent:'#d9ff42',mark:'✣'},
- {id:'premium-elite-polar',name:'Kutup Katmanı',bg:'#007c82',text:'#ffffff',accent:'#60ffe0',mark:'⌁'},
- {id:'premium-elite-digital',name:'Dijital Plaka',bg:'#0b2866',text:'#ffffff',accent:'#23e6ff',mark:'⌘'},
- {id:'premium-elite-pearl',name:'İnci Çerçeve',bg:'#fff3fb',text:'#61135f',accent:'#ff4fcd',mark:'○'},
- {id:'premium-elite-meteor',name:'Meteor Kurdele',bg:'#a51646',text:'#ffffff',accent:'#ff9f43',mark:'☄'},
- {id:'premium-elite-infinity',name:'Sonsuzluk Cam Kart',bg:'#005c78',text:'#ffffff',accent:'#44f3ff',mark:'∞'},
- {id:'premium-elite-ivory',name:'Fildişi Atelier',bg:'#fff5df',text:'#302861',accent:'#ff9f1c',mark:'A'},
- {id:'premium-elite-champagne',name:'Şampanya Kurdele',bg:'#ffe5a1',text:'#682d00',accent:'#e07800',mark:'✦'},
- {id:'premium-elite-rose',name:'Rose Quartz',bg:'#ffe4ef',text:'#7d134a',accent:'#ff3f8d',mark:'◇'},
- {id:'premium-elite-porcelain',name:'Porselen Mavi',bg:'#eaf6ff',text:'#073b8c',accent:'#008cff',mark:'P'},
- {id:'premium-elite-mint',name:'Mint İpek',bg:'#e4fff2',text:'#00664f',accent:'#00c98d',mark:'S'},
- {id:'premium-elite-paper',name:'Paper Luxe',bg:'#fff8ec',text:'#172252',accent:'#ff5c35',mark:'L'},
- {id:'premium-elite-lavender',name:'Lavanta Cam',bg:'#f2e9ff',text:'#4b1687',accent:'#9b4dff',mark:'○'},
- {id:'premium-elite-porcelain-seal',name:'Porselen Mühür',bg:'#edf9ff',text:'#064b78',accent:'#00aeef',mark:'❋'}
+ {id:'premium-v6-maison-ribbon',name:'Maison Ribbon',bg:'#1a2a5a',text:'#ffffff',accent:'#c8a96b'},
+ {id:'premium-v6-ivory-editorial',name:'Ivory Editorial',bg:'#fffbf7',text:'#2d3748',accent:'#b8956f'},
+ {id:'premium-v6-signature-plate',name:'Signature Plate',bg:'#1a1a1a',text:'#f0f0f0',accent:'#c8c8c8'},
+ {id:'premium-v6-atelier-seal',name:'Atelier Seal',bg:'#fffdf7',text:'#5a4a3a',accent:'#c9a55d'},
+ {id:'premium-v6-couture-label',name:'Couture Label',bg:'#3a3a3a',text:'#f5f5f5',accent:'#d8b45c'},
+ {id:'premium-v6-noir-prestige',name:'Noir Prestige',bg:'#1a1a1a',text:'#f0f0f0',accent:'#c8c8c8'},
+ {id:'premium-v6-velvet-crest',name:'Velvet Crest',bg:'#3d1f2a',text:'#f5e8ea',accent:'#d89bb5'},
+ {id:'premium-v6-emerald-signet',name:'Emerald Signet',bg:'#0d3a2a',text:'#f0f8f5',accent:'#7dd3a0'},
+ {id:'premium-v6-sapphire-royal',name:'Sapphire Royal',bg:'#0f2a5a',text:'#e0f0ff',accent:'#7db4ff'},
+ {id:'premium-v6-obsidian-mark',name:'Obsidian Mark',bg:'#0a0a0a',text:'#e0e0e0',accent:'#909090'},
+ {id:'premium-v6-crystal-arc',name:'Crystal Arc',bg:'#f0f5ff',text:'#3a4a6a',accent:'#8ab5e8'},
+ {id:'premium-v6-frosted-luxe',name:'Frosted Luxe',bg:'#f8f8fa',text:'#4a4a4a',accent:'#c8c8c8'},
+ {id:'premium-v6-prism-luxe',name:'Prism Luxe',bg:'#f0e8ff',text:'#5a4a8a',accent:'#b5a0d5'},
+ {id:'premium-v6-pearl-halo',name:'Pearl Halo',bg:'#fef5f0',text:'#6a5a5a',accent:'#d8b8a8'},
+ {id:'premium-v6-smoke-glass',name:'Smoke Glass',bg:'#f0f5ff',text:'#4a5a7a',accent:'#a8c8e0'},
+ {id:'premium-v6-heritage-emblem',name:'Heritage Emblem',bg:'#1a2a5a',text:'#f5f5f5',accent:'#d4a860'},
+ {id:'premium-v6-imperial-coin',name:'Imperial Coin',bg:'#3a2810',text:'#f5e8d0',accent:'#d9a870'},
+ {id:'premium-v6-monogram-tag',name:'Monogram Tag',bg:'#4a1f5a',text:'#f5e8f5',accent:'#d8b8d8'},
+ {id:'premium-v6-noble-frame',name:'Noble Frame',bg:'#0d3a4a',text:'#e0f0ff',accent:'#a8d8e0'},
+ {id:'premium-v6-porcelain-signature',name:'Porcelain Signature',bg:'#fefcff',text:'#0d2a6a',accent:'#8aa8e0'}
 ];
-/* Migrate only the former built-in palette; never overwrite a merchant's custom colours. */
-const PREVIOUS_ELITE_PALETTES={
- 'premium-elite-lumen':'#17213d|#ffffff|#c8a96b','premium-elite-cosmos':'#3b1f32|#ffffff|#d5b06e',
- 'premium-elite-opal':'#fbf7f2|#243a8b|#b77a92','premium-elite-vortex':'#161a24|#ffffff|#bfa86d',
- 'premium-elite-sapphire':'#203b5c|#ffffff|#9ebbd3','premium-elite-solar':'#6b3d22|#fff8df|#d9b36a',
- 'premium-elite-crystal':'#303a59|#ffffff|#b9c7d9','premium-elite-midnight':'#10131b|#ffffff|#9ba3b7',
- 'premium-elite-silk':'#2f4a45|#ffffff|#a8c1b5','premium-elite-plasma':'#493049|#ffffff|#c3a0b8',
- 'premium-elite-galaxy':'#29294a|#ffffff|#a8a3c4','premium-elite-chrome':'#4b5563|#ffffff|#d8dde3',
- 'premium-elite-zenith':'#314b5b|#ffffff|#9eb9c2','premium-elite-diamond':'#2e2938|#ffffff|#d1b46d',
- 'premium-elite-firefly':'#344536|#ffffff|#bac5a0','premium-elite-polar':'#36565a|#ffffff|#a9ceca',
- 'premium-elite-digital':'#252c3d|#ffffff|#adb7c9','premium-elite-pearl':'#fffafc|#243a8b|#d895e8',
- 'premium-elite-meteor':'#4d3038|#ffffff|#c88c88','premium-elite-infinity':'#365262|#ffffff|#b6d2da',
- 'premium-elite-ivory':'#fffdf7|#243a8b|#c9a55d','premium-elite-champagne':'#fff7df|#5a4520|#d8ad4f',
- 'premium-elite-rose':'#fbf1f3|#663f4e|#c78d9f','premium-elite-porcelain':'#f5f9ff|#243a8b|#78a9e8',
- 'premium-elite-mint':'#effbf7|#205348|#70c9ad','premium-elite-paper':'#fffefb|#262f4d|#d56b61',
- 'premium-elite-lavender':'#f7f4fa|#51465f|#ad9bbd','premium-elite-porcelain-seal':'#fffefe|#264b72|#79b8d8'
-};
 const PREMIUM_IDS=new Set(PREMIUM.map(x=>x.id));
-const CUSTOM=[...LEGACY,...PREMIUM];
+const CUSTOM=[...PREMIUM];
 const CUSTOM_IDS=new Set(CUSTOM.map(x=>x.id));
-const LEGACY_VARIANTS=['atelier','contour','editorial','medallion','sage','frame','frosted','luxe','stamp','arc','ranktab','signature','fold','colorblock','understated','ticket','pill'];
-const palettes=Object.fromEntries(CUSTOM.map(x=>[x.id,{bg:x.bg,text:x.text,accent:x.accent}]));
-let iconTab=sessionStorage.getItem('ky-premium-icon-tab')||'basic';
-let templateTab=sessionStorage.getItem('ky-premium-template-tab')||'basic';
+const palettes=Object.fromEntries(PREMIUM.map(x=>[x.id,{bg:x.bg,text:x.text,accent:x.accent}]));
 let currentTemplateId='';
 let wrapped=false,uiScheduled=false,previewScheduled=false,processing=false,stageObserver=null,templateObserver=null;
 
-function makeTabs(kind,firstLabel,secondLabel){const tabs=document.createElement('div');tabs.className='ky-premium-tabs';tabs.dataset.premiumTabs=kind;tabs.innerHTML=`<button type="button" data-premium-tab="basic">${firstLabel}</button><button type="button" class="premium" data-premium-tab="premium"><span class="ky-premium-tab-crown">♛</span>${secondLabel}</button>`;return tabs}
-function setTabActive(tabs,mode){qa('[data-premium-tab]',tabs).forEach(b=>b.classList.toggle('active',b.dataset.premiumTab===mode))}
-function linkCss(){if(!q('link[data-ky-premium-template-v3]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/premium-templates-v3.css?v=20260916-1';l.dataset.kyPremiumTemplateV3='1';document.head.appendChild(l)}if(!q('link[data-ky-premium-elite]')){const e=document.createElement('link');e.rel='stylesheet';e.href='/premium-templates-elite.css?v=20260916-7';e.dataset.kyPremiumElite='1';document.head.appendChild(e)}}
-
-function applyIconTab(){const wrap=q('#v3Icons .ky-icon-sections');if(!wrap)return;const basic=q('.ky-icon-basic',wrap),premium=q('.ky-icon-premium',wrap),tabs=q('[data-premium-tabs="icons"]');if(!basic||!premium||!tabs)return;basic.hidden=iconTab!=='basic';premium.hidden=iconTab!=='premium';setTabActive(tabs,iconTab)}
-function ensureIconTabs(){const host=q('#v3Icons'),wrap=q('#v3Icons .ky-icon-sections');if(!host||!wrap)return;const basic=q('.ky-icon-basic',wrap),premium=q('.ky-icon-premium',wrap);if(!basic||!premium)return;const bt=q('.ky-icon-section-head strong',basic);if(bt)bt.textContent='Rozetler';let tabs=q('[data-premium-tabs="icons"]');if(!tabs){tabs=makeTabs('icons','Rozetler','Premium');host.parentNode.insertBefore(tabs,host);tabs.addEventListener('click',e=>{const b=e.target.closest('[data-premium-tab]');if(!b)return;iconTab=b.dataset.premiumTab;sessionStorage.setItem('ky-premium-icon-tab',iconTab);applyIconTab()})}applyIconTab()}
-
-function premiumCard(t){const c=palettes[t.id],paid=PREMIUM_IDS.has(t.id),card=document.createElement('button'),mark=t.mark||'✦';card.type='button';card.className='ky-template-card-v3 '+(paid?'ky-premium-template-v3 ky-elite-template-card':'ky-legacy-template-v3');card.dataset.template=t.id;card.dataset.premiumV3=paid?'1':'0';card.innerHTML=`<span class="preview"><span class="ky-v3-badge tpl-${t.id}" style="--badge-bg:${c.bg};--badge-text:${c.text};--badge-accent:${c.accent};font-size:9px;padding:6px 9px"><span class="ky-premium-emblem" aria-hidden="true">${mark}</span><span class="ky-badge-text">#1 Çok Satan</span></span></span><span class="name">${t.name}</span>${paid?'<span class="ky-premium-v3-mark">♛ Premium</span>':''}`;card.addEventListener('click',()=>selectPremium(t.id));return card}
-function ensurePremiumCards(){const host=q('#v3Templates');if(!host)return;CUSTOM.forEach(t=>{if(!q(`[data-template="${t.id}"]`,host))host.appendChild(premiumCard(t))})}
-function cleanStandardCards(){const host=q('#v3Templates');if(!host)return;qa('.ky-template-card-v3[data-template]',host).forEach(card=>{if(PREMIUM_IDS.has(card.dataset.template))return;card.classList.remove('ky-premium-template-choice','ky-premium-template-v3','ky-elite-template-card');qa('.ky-premium-template-mark,.ky-premium-v3-mark',card).forEach(x=>x.remove())})}
-function applyTemplateTab(){const host=q('#v3Templates'),tabs=q('[data-premium-tabs="templates"]');if(!host||!tabs)return;cleanStandardCards();ensurePremiumCards();qa('.ky-template-card-v3[data-template]',host).forEach(card=>{const premium=PREMIUM_IDS.has(card.dataset.template);card.hidden=templateTab==='premium'?!premium:premium;card.classList.toggle('active',card.dataset.template===currentTemplateId)});setTabActive(tabs,templateTab);host.classList.toggle('premium-open',templateTab==='premium')}
-function ensureTemplateTabs(){const host=q('#v3Templates');if(!host)return;let tabs=q('[data-premium-tabs="templates"]');if(!tabs){tabs=makeTabs('templates','Şablonlar','Premium Şablonlar');host.parentNode.insertBefore(tabs,host);tabs.addEventListener('click',e=>{const b=e.target.closest('[data-premium-tab]');if(!b)return;templateTab=b.dataset.premiumTab==='premium'?'premium':'basic';sessionStorage.setItem('ky-premium-template-tab',templateTab);applyTemplateTab()})}ensurePremiumCards();applyTemplateTab()}
-
-function editorHtml(id){const t=CUSTOM.find(x=>x.id===id),c=palettes[id],paid=PREMIUM_IDS.has(id);return `<div class="ky-template-editor ky-premium-editor-v3"><div class="ky-template-editor-title"><strong>${t.name} renkleri</strong><span>${paid?'Bu Premium şablona özel':'Standart şablon renkleri'}</span></div>${colorField('tplBg','Ana Renk',c.bg)}${colorField('tplText','Metin',c.text)}${colorField('tplAccent','Vurgu / Işık Rengi',c.accent)}</div>`}
-function colorField(id,label,value){return `<div class="ky-field"><label class="ky-label">${label}</label><div class="ky-color-row"><input id="${id}Picker" type="color" value="${value}"><input id="${id}Hex" class="ky-input" value="${value}" maxlength="7"></div></div>`}
-function renderPremiumEditor(force=false){
- if(!CUSTOM_IDS.has(currentTemplateId))return;
- const host=q('#v3TemplateEditor');if(!host)return;
- if(!force&&host.dataset.kyPremiumEditorId===currentTemplateId&&q('.ky-premium-editor-v3',host))return;
- host.dataset.kyPremiumEditorId=currentTemplateId;
- host.innerHTML=editorHtml(currentTemplateId);
- for(const [key,field] of [['Bg','bg'],['Text','text'],['Accent','accent']]){
-  const p=q('#tpl'+key+'Picker'),h=q('#tpl'+key+'Hex');
-  const apply=v=>{if(!/^#[0-9a-f]{6}$/i.test(v))return;palettes[currentTemplateId][field]=v;const c=palettes[currentTemplateId];window.handleInput?.(`templateColors.${currentTemplateId}`,{...c});updatePremiumCard(currentTemplateId);schedulePreview()};
-  p.oninput=()=>{h.value=p.value;apply(p.value)};
-  h.oninput=()=>{if(/^#[0-9a-f]{6}$/i.test(h.value)){p.value=h.value;apply(h.value)}};
- }
+function linkCss(){
+  if(!q('link[data-ky-premium-v6]')){const e=document.createElement('link');e.rel='stylesheet';e.href='/premium-v6-elegant.css?v=20260916-1';e.dataset.kyPremiumV6='1';document.head.appendChild(e)}
 }
-function updatePremiumCard(id){const card=q(`#v3Templates [data-template="${id}"]`),badge=q('.ky-v3-badge',card),c=palettes[id];applyPremiumIdentity(badge,id,c,false)}
-function applyPremiumIdentity(el,id,c,storefront=false){
- if(!el)return;
- const prefix=storefront?'ky-tpl-':'tpl-',target=prefix+id;
- for(const cls of [...el.classList]){
-  if(cls.startsWith(prefix+'premium-')&&cls!==target)el.classList.remove(cls);
-  if(!storefront&&LEGACY_VARIANTS.includes(cls))el.classList.remove(cls);
- }
- el.classList.add(target);
- for(const [name,value] of [['--badge-bg',c.bg],['--badge-text',c.text],['--badge-accent',c.accent],['--p-bg',c.bg],['--p-text',c.text],['--p-accent',c.accent]]){
-  if(el.style.getPropertyValue(name)!==value)el.style.setProperty(name,value);
- }
+
+function applyPremiumIdentity(el,id,c){
+  if(!el)return;
+  const target='tpl-'+id;
+  for(const cls of [...el.classList]){if(cls.startsWith('tpl-premium-')&&cls!==target)el.classList.remove(cls);}
+  el.classList.add(target);
+  for(const [name,value] of [['--v6-bg',c.bg],['--v6-text',c.text],['--v6-accent',c.accent]]){el.style.setProperty(name,value);}
 }
+
 function selectPremium(id){
- if(!CUSTOM_IDS.has(id))return;
- currentTemplateId=id;templateTab=PREMIUM_IDS.has(id)?'premium':'basic';sessionStorage.setItem('ky-premium-template-tab',templateTab);
- applyTemplateTab();renderPremiumEditor(true);
- window.handleInput?.('templateId',id);
- const path=`templateColors.${id}`,value={...palettes[id]};
- if(typeof window.__KY_QUEUE_CONFIG_WRITE__==='function')window.__KY_QUEUE_CONFIG_WRITE__(path,value);else window.handleInput?.(path,value);
- schedulePreview();
+  if(!CUSTOM_IDS.has(id))return;
+  currentTemplateId=id;
+  window.handleInput?.('templateId',id);
+  schedulePreview();
 }
 
 function applyPreviewPremium(){
- if(processing||!CUSTOM_IDS.has(currentTemplateId))return;
- processing=true;
- try{
-  const c=palettes[currentTemplateId];
-  const source=q(`#v3Templates [data-template="${CSS.escape(currentTemplateId)}"] .ky-v3-badge`);
-  applyPremiumIdentity(source,currentTemplateId,c,false);
-  qa('#stageCanvas .ky-v3-badge').forEach(b=>{
-   applyPremiumIdentity(b,currentTemplateId,c,false);
-   const t=CUSTOM.find(x=>x.id===currentTemplateId);
-   if(t?.mark){
-    let emblem=q('.ky-premium-emblem',b);
-    if(!emblem){
-     [...b.children].filter(x=>!x.classList.contains('ky-badge-text')).forEach(x=>x.remove());
-     emblem=document.createElement('span');emblem.className='ky-premium-emblem';emblem.setAttribute('aria-hidden','true');b.prepend(emblem);
-    }
-    if(emblem.textContent!==t.mark)emblem.textContent=t.mark;
-   }
-   if(b.style.color!==c.text)b.style.setProperty('color',c.text);
-  });
-  qa('#stageCanvas .ky-badge-root').forEach(b=>applyPremiumIdentity(b,currentTemplateId,c,true));
-  const live=q('#stageCanvas .ky-v3-badge');
-  if(live)document.dispatchEvent(new CustomEvent('ky:premium-template-applied',{detail:{id:currentTemplateId,html:live.outerHTML}}));
- }finally{processing=false}
+  if(processing||!CUSTOM_IDS.has(currentTemplateId))return;
+  processing=true;
+  try{const c=palettes[currentTemplateId];qa('#stageCanvas .ky-v3-badge').forEach(b=>applyPremiumIdentity(b,currentTemplateId,c));}finally{processing=false}
 }
-function schedulePreview(){if(previewScheduled)return;previewScheduled=true;requestAnimationFrame(()=>{previewScheduled=false;applyPreviewPremium()})}
-function observeStage(){const stage=q('#stageCanvas');if(!stage)return;stageObserver?.disconnect();stageObserver=new MutationObserver(records=>{if(processing||!CUSTOM_IDS.has(currentTemplateId))return;if(records.some(r=>r.addedNodes?.length||r.removedNodes?.length))schedulePreview()});stageObserver.observe(stage,{childList:true,subtree:true})}
 
-function isPreviousElitePalette(id,c){const key=PREVIOUS_ELITE_PALETTES[id];return !!key&&[c?.bg,c?.text,c?.accent].map(v=>String(v||'').toLowerCase()).join('|')===key}
-function mergePaletteMap(map){if(!map||typeof map!=='object')return;CUSTOM.forEach(t=>{const c=map[t.id];if(c&&typeof c==='object'&&!isPreviousElitePalette(t.id,c))palettes[t.id]={...palettes[t.id],...c}})}
+function schedulePreview(){if(previewScheduled)return;previewScheduled=true;requestAnimationFrame(()=>{previewScheduled=false;applyPreviewPremium()});}
+
+function observeStage(){const stage=q('#stageCanvas');if(!stage)return;stageObserver?.disconnect();stageObserver=new MutationObserver(records=>{if(processing||!CUSTOM_IDS.has(currentTemplateId))return;if(records.some(r=>r.addedNodes?.length||r.removedNodes?.length))schedulePreview()});stageObserver.observe(stage,{childList:true,subtree:true});}
+
 function wrapHandleInput(){
- if(wrapped||typeof window.handleInput!=='function')return;
- const original=window.handleInput;
- window.handleInput=function(path,val){
-  if(path==='templateId'){
-   currentTemplateId=String(val||'');
-   if(PREMIUM_IDS.has(currentTemplateId)){templateTab='premium';sessionStorage.setItem('ky-premium-template-tab','premium')}else if(currentTemplateId)templateTab='basic';
-  }else if(path==='templateColors')mergePaletteMap(val);
-  else if(/^templateColors\./.test(path)){const id=path.slice('templateColors.'.length);if(CUSTOM_IDS.has(id)&&val&&typeof val==='object'&&!isPreviousElitePalette(id,val))palettes[id]={...palettes[id],...val}}
-  const out=original.apply(this,arguments);
-  queueUi();
-  if(CUSTOM_IDS.has(currentTemplateId)){renderPremiumEditor();schedulePreview()}
-  return out;
- };
- wrapped=true;
+  if(wrapped||typeof window.handleInput!=='function')return;
+  const original=window.handleInput;
+  window.handleInput=function(path,val){
+    if(path==='templateId'){currentTemplateId=String(val||'');}
+    else if(/^templateColors\./.test(path)){const id=path.slice('templateColors.'.length);if(PREMIUM_IDS.has(id)&&val&&typeof val==='object')palettes[id]={...palettes[id],...val};}
+    const out=original.apply(this,arguments);
+    queueUi();
+    if(CUSTOM_IDS.has(currentTemplateId)){schedulePreview();}
+    return out;
+  };
+  wrapped=true;
 }
-function captureStandardClick(e){const card=e.target.closest('#v3Templates .ky-template-card-v3[data-template]');if(!card)return;const id=card.dataset.template;if(PREMIUM_IDS.has(id))return;currentTemplateId=id;templateTab='basic';sessionStorage.setItem('ky-premium-template-tab','basic');requestAnimationFrame(applyTemplateTab)}
 
-function queueUi(){if(uiScheduled)return;uiScheduled=true;requestAnimationFrame(()=>{uiScheduled=false;linkCss();wrapHandleInput();ensureIconTabs();ensureTemplateTabs();observeStage();if(CUSTOM_IDS.has(currentTemplateId)){renderPremiumEditor();schedulePreview()}})}
-function observeTemplates(){const host=q('#v3Templates');if(!host)return;templateObserver?.disconnect();templateObserver=new MutationObserver(()=>queueUi());templateObserver.observe(host,{childList:true})}
+function queueUi(){if(uiScheduled)return;uiScheduled=true;requestAnimationFrame(()=>{uiScheduled=false;linkCss();wrapHandleInput();observeStage();if(CUSTOM_IDS.has(currentTemplateId)){schedulePreview();}});}
 
-const style=document.createElement('style');style.id='kyPremiumExperienceV3';style.textContent=`
-@keyframes kyGoldBorderFlow{0%{background-position:0 50%,0 50%}100%{background-position:0 50%,220% 50%}}
-.ky-premium-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 10px;padding:3px;border:1px solid rgba(36,58,139,.10);border-radius:11px;background:#f7f8fc}
-.ky-premium-tabs button{min-height:38px;border:1px solid transparent;border-radius:8px;background:transparent;color:#243a8b;font:800 12px/1.15 inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:.16s ease}
-.ky-premium-tabs button.active:not(.premium){background:#fff;border-color:rgba(36,58,139,.12);box-shadow:0 1px 5px rgba(36,58,139,.07)}
-.ky-premium-tabs button.premium{color:#a56b00;border:1px solid transparent;background:linear-gradient(#fffaf0,#fffaf0) padding-box,linear-gradient(90deg,#9c6500,#ffd86f,#fff1a8,#b77800,#ffd86f) border-box;background-size:100% 100%,220% 100%;animation:kyGoldBorderFlow 3.2s linear infinite}
-.ky-premium-tabs button.premium.active{background:linear-gradient(#fff6dc,#fff8e9) padding-box,linear-gradient(90deg,#9c6500,#ffe08a,#fff8c9,#b77800,#ffe08a) border-box;box-shadow:0 4px 14px rgba(199,145,30,.12)}
-.ky-premium-tab-crown{color:#e2a61e!important;font-size:15px!important;line-height:1!important;margin:0!important}.ky-icon-section[hidden],.ky-template-card-v3[hidden]{display:none!important}
-.ky-premium-editor-v3{border:1px solid rgba(124,58,237,.14)!important;background:linear-gradient(145deg,#fff,#f8f7ff)!important}
-@media(prefers-reduced-motion:reduce){.ky-premium-tabs button.premium{animation:none!important}}
-`;document.head.appendChild(style);
+function start(){linkCss();wrapHandleInput();queueUi();observeStage();setTimeout(queueUi,250);setTimeout(queueUi,900);}
 
-function start(){linkCss();document.addEventListener('click',captureStandardClick,true);queueUi();observeTemplates();setTimeout(()=>{queueUi();observeTemplates()},250);setTimeout(queueUi,900)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

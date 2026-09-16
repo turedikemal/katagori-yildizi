@@ -1,0 +1,373 @@
+/* Kategori Yıldızı — Premium V6 Elegant / Luxury Collection
+   20 brand-new elegant, editorial, glass, and heritage designs.
+   Each with distinct silhouette, material, and edge language.
+   No hue-rotate, rainbow, random jitter, scale pulse, or flicker. */
+
+@keyframes kyV6SatinSheen{0%,40%{transform:translateX(-200%) skewX(-20deg);opacity:0}50%{opacity:.7}70%,100%{transform:translateX(220%) skewX(-20deg);opacity:0}}
+@keyframes kyV6EdgeGlint{0%,15%{opacity:0;transform:translateX(-100%)}20%{opacity:.8}80%{opacity:.4}100%{opacity:0;transform:translateX(100%)}}
+@keyframes kyV6SlowPulse{0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.08)}50%{box-shadow:0 3px 9px rgba(0,0,0,.12)}}
+@keyframes kyV6CausticWave{0%{background-position:0 0}100%{background-position:100% 0}}
+@keyframes kyV6EmbossGlow{0%,100%{text-shadow:0 1px 2px rgba(255,255,255,.6)}50%{text-shadow:0 2px 4px rgba(255,255,255,.8)}}
+@keyframes kyV6FoilSweep{0%,30%{transform:translateY(-110%) skewY(-15deg);opacity:0}50%{opacity:.65}75%,100%{transform:translateY(110%) skewY(-15deg);opacity:0}}
+
+/* Base premium v6 badge styles — generic rule for all v6 premium templates */
+.ky-v3-badge[class*="tpl-premium-v6-"],
+.ky-badge-root[class*="ky-tpl-premium-v6-"]{
+  --v6-bg:var(--badge-bg,#243a8b);
+  --v6-text:var(--badge-text,#ffffff);
+  --v6-accent:var(--badge-accent,#ce3f44);
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  color:var(--v6-text)!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.12)!important;
+}
+.ky-v3-badge[class*="tpl-premium-v6-"]>*,
+.ky-badge-root[class*="ky-tpl-premium-v6-"]>*{
+  position:relative;
+  z-index:2;
+}
+
+/* ===== A. ELEGANT / EDITORIAL ===== */
+
+/* 1. Maison Ribbon */
+.ky-v3-badge.tpl-premium-v6-maison-ribbon,
+.ky-badge-root.ky-tpl-premium-v6-maison-ribbon{
+  border:1px solid rgba(36,58,139,.35)!important;
+  border-radius:3px 12px 12px 3px!important;
+  background:linear-gradient(135deg,#1a2a5a,#243a8b)!important;
+  box-shadow:0 3px 10px rgba(36,58,139,.22),inset -1px 0 0 rgba(200,169,107,.25)!important;
+}
+.ky-v3-badge.tpl-premium-v6-maison-ribbon::before,
+.ky-badge-root.ky-tpl-premium-v6-maison-ribbon::before{
+  content:"";position:absolute;z-index:1;left:-60%;top:50%;width:40%;height:100%;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(200,169,107,.4),transparent);
+  animation:kyV6SatinSheen 5.2s ease-in-out infinite;
+}
+
+/* 2. Ivory Editorial */
+.ky-v3-badge.tpl-premium-v6-ivory-editorial,
+.ky-badge-root.ky-tpl-premium-v6-ivory-editorial{
+  border:1px solid rgba(17,24,39,.4)!important;
+  border-radius:2px 2px 8px 8px!important;
+  background:linear-gradient(180deg,#fffbf7,#fdf6f0)!important;
+  color:#2d3748!important;
+  box-shadow:0 2px 6px rgba(17,24,39,.08),inset 0 -1px 2px rgba(17,24,39,.04)!important;
+}
+.ky-v3-badge.tpl-premium-v6-ivory-editorial .ky-badge-text,
+.ky-badge-root.ky-tpl-premium-v6-ivory-editorial .ky-badge-text{
+  font-style:italic;
+  letter-spacing:.3px;
+}
+
+/* 3. Signature Plate */
+.ky-v3-badge.tpl-premium-v6-signature-plate,
+.ky-badge-root.ky-tpl-premium-v6-signature-plate{
+  border:1px solid rgba(200,200,200,.5)!important;
+  border-radius:2px!important;
+  background:linear-gradient(135deg,#1a1a1a,#2d2d2d)!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.3),inset 1px 1px 0 rgba(200,200,200,.25)!important;
+  font-weight:600;
+}
+.ky-v3-badge.tpl-premium-v6-signature-plate::after,
+.ky-badge-root.ky-tpl-premium-v6-signature-plate::after{
+  content:"";position:absolute;z-index:1;
+  top:2px;left:2px;right:2px;bottom:2px;
+  border:1px solid rgba(200,200,200,.15);
+  pointer-events:none;
+}
+
+/* 4. Atelier Seal */
+.ky-v3-badge.tpl-premium-v6-atelier-seal,
+.ky-badge-root.ky-tpl-premium-v6-atelier-seal{
+  border:2px solid #c9a55d!important;
+  border-radius:50%!important;
+  width:var(--badge-px,10px) !important;
+  aspect-ratio:1!important;
+  background:radial-gradient(circle at 30% 30%,#fffdf7,#faf5f0)!important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 3px 8px rgba(0,0,0,.15),inset -1px -1px 3px rgba(201,165,93,.12)!important;
+}
+.ky-v3-badge.tpl-premium-v6-atelier-seal::before,
+.ky-badge-root.ky-tpl-premium-v6-atelier-seal::before{
+  animation:kyV6EmbossGlow 4.1s ease-in-out infinite;
+}
+
+/* 5. Couture Label */
+.ky-v3-badge.tpl-premium-v6-couture-label,
+.ky-badge-root.ky-tpl-premium-v6-couture-label{
+  border:none!important;
+  border-radius:0 0 10px 10px!important;
+  background:linear-gradient(to bottom,#3a3a3a,#2a2a2a)!important;
+  box-shadow:0 4px 12px rgba(0,0,0,.25),inset 0 1px 0 rgba(200,200,200,.15)!important;
+  clip-path:polygon(0 0,100% 0,95% 100%,5% 100%);
+  transform:perspective(600px) rotateX(2deg);
+}
+
+/* ===== B. LUXURY DARK ===== */
+
+/* 6. Noir Prestige */
+.ky-v3-badge.tpl-premium-v6-noir-prestige,
+.ky-badge-root.ky-tpl-premium-v6-noir-prestige{
+  border:1px solid rgba(200,200,200,.4)!important;
+  border-radius:4px!important;
+  background:linear-gradient(135deg,#1a1a1a 0%,#2f2f2f 100%)!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.35),inset 0 1px 2px rgba(200,200,200,.2)!important;
+}
+.ky-v3-badge.tpl-premium-v6-noir-prestige::before,
+.ky-badge-root.ky-tpl-premium-v6-noir-prestige::before{
+  animation:kyV6EdgeGlint 6s ease-in-out infinite;
+}
+
+/* 7. Velvet Crest */
+.ky-v3-badge.tpl-premium-v6-velvet-crest,
+.ky-badge-root.ky-tpl-premium-v6-velvet-crest{
+  border:1px solid rgba(208,120,145,.4)!important;
+  border-radius:6px!important;
+  background:linear-gradient(135deg,#3d1f2a,#5a2f3f)!important;
+  box-shadow:0 4px 12px rgba(139,69,100,.25),inset 0 1px 3px rgba(255,200,220,.15)!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+/* 8. Emerald Signet */
+.ky-v3-badge.tpl-premium-v6-emerald-signet,
+.ky-badge-root.ky-tpl-premium-v6-emerald-signet{
+  border:1px solid rgba(105,180,120,.5)!important;
+  border-radius:3px!important;
+  background:linear-gradient(135deg,#0d3a2a,#1a5a3d)!important;
+  box-shadow:0 3px 9px rgba(0,0,0,.3),inset 1px 0 0 rgba(180,220,190,.25)!important;
+}
+.ky-v3-badge.tpl-premium-v6-emerald-signet::after,
+.ky-badge-root.ky-tpl-premium-v6-emerald-signet::after{
+  content:"";position:absolute;z-index:1;
+  right:1px;top:10%;height:80%;width:1px;
+  background:linear-gradient(180deg,rgba(180,220,190,.5) 0%,transparent 50%,rgba(180,220,190,.3) 100%);
+}
+
+/* 9. Sapphire Royal */
+.ky-v3-badge.tpl-premium-v6-sapphire-royal,
+.ky-badge-root.ky-tpl-premium-v6-sapphire-royal{
+  border:1.5px solid rgba(150,180,210,.45)!important;
+  border-radius:5px!important;
+  background:linear-gradient(135deg,#0f2a5a,#1a3a7a)!important;
+  box-shadow:0 4px 14px rgba(26,58,122,.3),inset -1px -1px 3px rgba(180,210,240,.2)!important;
+}
+.ky-v3-badge.tpl-premium-v6-sapphire-royal::before,
+.ky-badge-root.ky-tpl-premium-v6-sapphire-royal::before{
+  animation:kyV6SlowPulse 5.5s ease-in-out infinite;
+}
+
+/* 10. Obsidian Mark */
+.ky-v3-badge.tpl-premium-v6-obsidian-mark,
+.ky-badge-root.ky-tpl-premium-v6-obsidian-mark{
+  border:1px solid rgba(120,120,120,.3)!important;
+  border-radius:3px!important;
+  background:linear-gradient(135deg,#0a0a0a,#1f1f1f)!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.5),inset 0 1px 2px rgba(120,120,120,.15)!important;
+  clip-path:polygon(0 0,100% 0,100% 85%,95% 100%,0 100%);
+}
+
+/* ===== C. GLASS / CRYSTAL ===== */
+
+/* 11. Crystal Arc */
+.ky-v3-badge.tpl-premium-v6-crystal-arc,
+.ky-badge-root.ky-tpl-premium-v6-crystal-arc{
+  border:1px solid rgba(180,190,210,.35)!important;
+  border-radius:0 0 20px 20px!important;
+  background:linear-gradient(180deg,rgba(120,140,180,.15),rgba(100,120,160,.2))!important;
+  backdrop-filter:blur(8px);
+  box-shadow:0 3px 10px rgba(100,120,160,.15),inset -1px 0 2px rgba(200,220,240,.3)!important;
+}
+.ky-v3-badge.tpl-premium-v6-crystal-arc::after,
+.ky-badge-root.ky-tpl-premium-v6-crystal-arc::after{
+  content:"";position:absolute;z-index:1;
+  bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(200,220,240,.4),transparent);
+  animation:kyV6CausticWave 7s linear infinite;
+}
+
+/* 12. Frosted Luxe */
+.ky-v3-badge.tpl-premium-v6-frosted-luxe,
+.ky-badge-root.ky-tpl-premium-v6-frosted-luxe{
+  border:1px solid rgba(150,150,150,.3)!important;
+  border-radius:6px!important;
+  background:linear-gradient(135deg,rgba(240,240,245,.5),rgba(225,225,235,.6))!important;
+  backdrop-filter:blur(10px) saturate(120%);
+  box-shadow:0 3px 9px rgba(0,0,0,.08),inset 0 1px 3px rgba(255,255,255,.6)!important;
+}
+
+/* 13. Prism Luxe */
+.ky-v3-badge.tpl-premium-v6-prism-luxe,
+.ky-badge-root.ky-tpl-premium-v6-prism-luxe{
+  border:1.5px solid rgba(150,140,180,.4)!important;
+  border-radius:8px!important;
+  background:linear-gradient(135deg,rgba(90,70,140,.12),rgba(70,50,120,.18))!important;
+  backdrop-filter:blur(9px);
+  box-shadow:0 3px 11px rgba(60,40,100,.12),inset -1px -1px 2px rgba(200,180,240,.25)!important;
+}
+.ky-v3-badge.tpl-premium-v6-prism-luxe::before,
+.ky-badge-root.ky-tpl-premium-v6-prism-luxe::before{
+  content:"";position:absolute;z-index:1;top:-50%;right:-10%;width:60%;height:120%;
+  background:linear-gradient(45deg,transparent 40%,rgba(180,150,240,.3) 50%,transparent 60%);
+  animation:kyV6EdgeGlint 8s ease-in-out infinite;
+}
+
+/* 14. Pearl Halo */
+.ky-v3-badge.tpl-premium-v6-pearl-halo,
+.ky-badge-root.ky-tpl-premium-v6-pearl-halo{
+  border:1px solid rgba(200,180,190,.3)!important;
+  border-radius:50%!important;
+  width:var(--badge-px,10px) !important;
+  aspect-ratio:1!important;
+  background:radial-gradient(circle at 35% 35%,#fef5f0,#fce8e0)!important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 12px rgba(180,100,150,.18),inset -2px -2px 4px rgba(200,150,170,.12)!important;
+}
+
+/* 15. Smoke Glass */
+.ky-v3-badge.tpl-premium-v6-smoke-glass,
+.ky-badge-root.ky-tpl-premium-v6-smoke-glass{
+  border:1px solid rgba(160,180,200,.4)!important;
+  border-radius:7px!important;
+  background:linear-gradient(135deg,rgba(60,70,90,.2),rgba(50,60,80,.15))!important;
+  backdrop-filter:blur(12px);
+  box-shadow:0 3px 10px rgba(50,60,80,.12),inset 0 1px 2px rgba(180,200,220,.35),inset -1px -1px 2px rgba(20,30,50,.15)!important;
+}
+
+/* ===== D. HERITAGE / SIGNATURE ===== */
+
+/* 16. Heritage Emblem */
+.ky-v3-badge.tpl-premium-v6-heritage-emblem,
+.ky-badge-root.ky-tpl-premium-v6-heritage-emblem{
+  border:1px solid rgba(200,160,60,.4)!important;
+  border-radius:2px!important;
+  background:linear-gradient(135deg,#1a2a5a,#2a3a6a)!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.25),inset 1px 1px 0 rgba(200,160,60,.2)!important;
+  clip-path:polygon(5% 0%,95% 0%,100% 5%,100% 95%,95% 100%,5% 100%,0% 95%,0% 5%);
+}
+.ky-v3-badge.tpl-premium-v6-heritage-emblem::before,
+.ky-badge-root.ky-tpl-premium-v6-heritage-emblem::before{
+  animation:kyV6EdgeGlint 7s ease-in-out infinite;
+}
+
+/* 17. Imperial Coin */
+.ky-v3-badge.tpl-premium-v6-imperial-coin,
+.ky-badge-root.ky-tpl-premium-v6-imperial-coin{
+  border:2px solid rgba(180,140,80,.45)!important;
+  border-radius:50%!important;
+  width:var(--badge-px,10px) !important;
+  aspect-ratio:1!important;
+  background:radial-gradient(circle at 40% 40%,#5a3d1f,#3a2810)!important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 10px rgba(60,30,0,.3),inset -2px -2px 3px rgba(200,160,80,.2),inset 1px 1px 2px rgba(200,160,80,.15)!important;
+}
+
+/* 18. Monogram Tag */
+.ky-v3-badge.tpl-premium-v6-monogram-tag,
+.ky-badge-root.ky-tpl-premium-v6-monogram-tag{
+  border:1px solid rgba(200,180,100,.35)!important;
+  border-radius:2px 10px 2px 10px!important;
+  background:linear-gradient(135deg,#4a1f5a,#6a3f7a)!important;
+  box-shadow:0 3px 9px rgba(60,30,80,.2),inset 0 1px 2px rgba(200,180,100,.15)!important;
+}
+.ky-v3-badge.tpl-premium-v6-monogram-tag::before,
+.ky-badge-root.ky-tpl-premium-v6-monogram-tag::before{
+  animation:kyV6FoilSweep 6s ease-in-out infinite;
+}
+
+/* 19. Noble Frame */
+.ky-v3-badge.tpl-premium-v6-noble-frame,
+.ky-badge-root.ky-tpl-premium-v6-noble-frame{
+  border:1px solid rgba(100,180,200,.35)!important;
+  border-radius:6px!important;
+  background:linear-gradient(135deg,#0d3a4a,#1a5a6a)!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.2),inset 1px 1px 0 rgba(150,200,220,.15)!important;
+  clip-path:polygon(0 0,15px 0,100% 0,100% 15px,100% 100%,calc(100% - 15px) 100%,0 100%,0 calc(100% - 15px));
+}
+.ky-v3-badge.tpl-premium-v6-noble-frame::after,
+.ky-badge-root.ky-tpl-premium-v6-noble-frame::after{
+  content:"";position:absolute;z-index:1;
+  top:3px;right:3px;width:8px;height:8px;
+  background:linear-gradient(135deg,rgba(150,200,220,.5),transparent);
+  border-radius:1px;
+}
+
+/* 20. Porcelain Signature */
+.ky-v3-badge.tpl-premium-v6-porcelain-signature,
+.ky-badge-root.ky-tpl-premium-v6-porcelain-signature{
+  border:1px solid rgba(120,150,220,.4)!important;
+  border-radius:3px!important;
+  background:linear-gradient(180deg,#fefcff,#f5f8ff)!important;
+  color:#0d2a6a!important;
+  box-shadow:0 2px 7px rgba(0,0,0,.06),inset 0 -1px 2px rgba(0,0,0,.04)!important;
+}
+.ky-v3-badge.tpl-premium-v6-porcelain-signature .ky-badge-text,
+.ky-badge-root.ky-tpl-premium-v6-porcelain-signature .ky-badge-text{
+  font-weight:700;
+  letter-spacing:.2px;
+}
+
+/* ===== Editor premium card chrome ===== */
+.ky-template-card-v3[data-template*="premium-v6-"]{
+  position:relative!important;
+  border:2px solid transparent!important;
+  background:#fff!important;
+  overflow:hidden!important;
+}
+.ky-template-card-v3[data-template*="premium-v6-"] .preview{
+  height:78px!important;
+  background:linear-gradient(135deg,#f8f8f8,#f0f0f0)!important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.ky-template-card-v3[data-template*="premium-v6-"].active{
+  border-color:rgba(124,58,237,.4)!important;
+  box-shadow:0 0 0 3px rgba(124,58,237,.08),0 2px 8px rgba(124,58,237,.12)!important;
+}
+.ky-template-card-v3[data-template*="premium-v6-"] .name{
+  padding-right:46px!important;
+}
+.ky-template-card-v3[data-template*="premium-v6-"]::after{
+  content:"✦ V6";
+  position:absolute;
+  right:6px;
+  bottom:6px;
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  padding:3px 6px;
+  border-radius:999px;
+  background:rgba(124,58,237,.12);
+  color:#7c3aed;
+  font-size:6.8px;
+  font-weight:900;
+  border:1px solid rgba(124,58,237,.25);
+  pointer-events:none;
+}
+
+/* Reduce animation intensity on mobile */
+@media(max-width:768px){
+  .ky-v3-badge[class*="tpl-premium-v6-"]::before,
+  .ky-badge-root[class*="ky-tpl-premium-v6-"]::before{
+    animation-duration:7s!important;
+  }
+}
+
+/* Respect prefers-reduced-motion */
+@media(prefers-reduced-motion:reduce){
+  .ky-v3-badge[class*="tpl-premium-v6-"]::before,
+  .ky-v3-badge[class*="tpl-premium-v6-"]::after,
+  .ky-badge-root[class*="ky-tpl-premium-v6-"]::before,
+  .ky-badge-root[class*="ky-tpl-premium-v6-"]::after,
+  .ky-template-card-v3[data-template*="premium-v6-"]::after{
+    animation:none!important;
+  }
+}
+
