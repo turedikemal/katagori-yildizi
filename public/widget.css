@@ -70,6 +70,9 @@
 .ky-pos-under-full .ky-badge-root {
   justify-content: center;
   border-radius: 0;
+  min-width: 100%;
+  max-width: none;
+  transform: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -326,6 +329,8 @@
 .ky-pos-bottom-center { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); }
 .ky-pos-bottom-right  { position: absolute; bottom: 8px; right: 8px; }
 .ky-pos-bottom-full   { position: absolute; bottom: 0; left: 0; right: 0; width: 100%; border-radius: 0 0 4px 4px; justify-content: center; }
+.ky-pos-bottom-full > .ky-offset-shell { display: flex; width: 100%; max-width: none; }
+.ky-pos-bottom-full .ky-badge-root { width: 100%; min-width: 100%; max-width: none; justify-content: center; border-radius: 0; transform: none; }
 
 /* --------------------------------------------------------------------------
    11 ANIMATIONS & HOVER EFFECTS
