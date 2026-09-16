@@ -45,6 +45,23 @@ const PREMIUM=[
  {id:'premium-elite-lavender',name:'Lavanta Cam',bg:'#f2e9ff',text:'#4b1687',accent:'#9b4dff',mark:'○'},
  {id:'premium-elite-porcelain-seal',name:'Porselen Mühür',bg:'#edf9ff',text:'#064b78',accent:'#00aeef',mark:'❋'}
 ];
+/* Migrate only the former built-in palette; never overwrite a merchant's custom colours. */
+const PREVIOUS_ELITE_PALETTES={
+ 'premium-elite-lumen':'#17213d|#ffffff|#c8a96b','premium-elite-cosmos':'#3b1f32|#ffffff|#d5b06e',
+ 'premium-elite-opal':'#fbf7f2|#243a8b|#b77a92','premium-elite-vortex':'#161a24|#ffffff|#bfa86d',
+ 'premium-elite-sapphire':'#203b5c|#ffffff|#9ebbd3','premium-elite-solar':'#6b3d22|#fff8df|#d9b36a',
+ 'premium-elite-crystal':'#303a59|#ffffff|#b9c7d9','premium-elite-midnight':'#10131b|#ffffff|#9ba3b7',
+ 'premium-elite-silk':'#2f4a45|#ffffff|#a8c1b5','premium-elite-plasma':'#493049|#ffffff|#c3a0b8',
+ 'premium-elite-galaxy':'#29294a|#ffffff|#a8a3c4','premium-elite-chrome':'#4b5563|#ffffff|#d8dde3',
+ 'premium-elite-zenith':'#314b5b|#ffffff|#9eb9c2','premium-elite-diamond':'#2e2938|#ffffff|#d1b46d',
+ 'premium-elite-firefly':'#344536|#ffffff|#bac5a0','premium-elite-polar':'#36565a|#ffffff|#a9ceca',
+ 'premium-elite-digital':'#252c3d|#ffffff|#adb7c9','premium-elite-pearl':'#fffafc|#243a8b|#d895e8',
+ 'premium-elite-meteor':'#4d3038|#ffffff|#c88c88','premium-elite-infinity':'#365262|#ffffff|#b6d2da',
+ 'premium-elite-ivory':'#fffdf7|#243a8b|#c9a55d','premium-elite-champagne':'#fff7df|#5a4520|#d8ad4f',
+ 'premium-elite-rose':'#fbf1f3|#663f4e|#c78d9f','premium-elite-porcelain':'#f5f9ff|#243a8b|#78a9e8',
+ 'premium-elite-mint':'#effbf7|#205348|#70c9ad','premium-elite-paper':'#fffefb|#262f4d|#d56b61',
+ 'premium-elite-lavender':'#f7f4fa|#51465f|#ad9bbd','premium-elite-porcelain-seal':'#fffefe|#264b72|#79b8d8'
+};
 const PREMIUM_IDS=new Set(PREMIUM.map(x=>x.id));
 const CUSTOM=[...LEGACY,...PREMIUM];
 const CUSTOM_IDS=new Set(CUSTOM.map(x=>x.id));
@@ -134,7 +151,8 @@ function applyPreviewPremium(){
 function schedulePreview(){if(previewScheduled)return;previewScheduled=true;requestAnimationFrame(()=>{previewScheduled=false;applyPreviewPremium()})}
 function observeStage(){const stage=q('#stageCanvas');if(!stage)return;stageObserver?.disconnect();stageObserver=new MutationObserver(records=>{if(processing||!CUSTOM_IDS.has(currentTemplateId))return;if(records.some(r=>r.addedNodes?.length||r.removedNodes?.length))schedulePreview()});stageObserver.observe(stage,{childList:true,subtree:true})}
 
-function mergePaletteMap(map){if(!map||typeof map!=='object')return;CUSTOM.forEach(t=>{const c=map[t.id];if(c&&typeof c==='object')palettes[t.id]={...palettes[t.id],...c}})}
+function isPreviousElitePalette(id,c){const key=PREVIOUS_ELITE_PALETTES[id];return !!key&&[c?.bg,c?.text,c?.accent].map(v=>String(v||'').toLowerCase()).join('|')===key}
+function mergePaletteMap(map){if(!map||typeof map!=='object')return;CUSTOM.forEach(t=>{const c=map[t.id];if(c&&typeof c==='object'&&!isPreviousElitePalette(t.id,c))palettes[t.id]={...palettes[t.id],...c}})}
 function wrapHandleInput(){
  if(wrapped||typeof window.handleInput!=='function')return;
  const original=window.handleInput;
@@ -143,7 +161,7 @@ function wrapHandleInput(){
    currentTemplateId=String(val||'');
    if(PREMIUM_IDS.has(currentTemplateId)){templateTab='premium';sessionStorage.setItem('ky-premium-template-tab','premium')}else if(currentTemplateId)templateTab='basic';
   }else if(path==='templateColors')mergePaletteMap(val);
-  else if(/^templateColors\./.test(path)){const id=path.slice('templateColors.'.length);if(CUSTOM_IDS.has(id)&&val&&typeof val==='object')palettes[id]={...palettes[id],...val}}
+  else if(/^templateColors\./.test(path)){const id=path.slice('templateColors.'.length);if(CUSTOM_IDS.has(id)&&val&&typeof val==='object'&&!isPreviousElitePalette(id,val))palettes[id]={...palettes[id],...val}}
   const out=original.apply(this,arguments);
   queueUi();
   if(CUSTOM_IDS.has(currentTemplateId)){renderPremiumEditor();schedulePreview()}
