@@ -56,7 +56,7 @@ function style(){
 }
 function loadGuard(){
  if(document.querySelector('script[data-ky-premium-preview-guard]'))return;
- const s=document.createElement('script');s.src='/premium-preview-guard.js?v=20260914-1';s.async=false;s.dataset.kyPremiumPreviewGuard='1';document.body.appendChild(s);
+ const s=document.createElement('script');s.src='/premium-preview-guard.js?v=20260916-1';s.async=false;s.dataset.kyPremiumPreviewGuard='1';document.body.appendChild(s);
 }
 document.addEventListener('input',e=>{if(commit(e.target)){e.stopImmediatePropagation();e.preventDefault()}},true);
 document.addEventListener('change',e=>{if(commit(e.target)){e.stopImmediatePropagation();e.preventDefault()}},true);
