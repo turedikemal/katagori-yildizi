@@ -29,7 +29,7 @@ function injectStyle(){
   .ky-category-picker-chevron{width:24px;height:24px;display:grid;place-items:center;flex:0 0 24px;border-radius:7px;background:#f1f4fb;color:#243a8b;transition:transform .16s ease,background .16s ease;color .16s ease}
   .ky-category-picker-chevron svg{width:12px;height:12px;display:block}
   .ky-category-picker.open .ky-category-picker-chevron{transform:rotate(180deg);background:#243a8b;color:#fff}
-  .ky-category-picker-menu{position:absolute;left:10px;right:10px;top:calc(100% - 2px);z-index:120;display:none;padding:6px;border:1px solid rgba(36,58,139,.14);border-radius:12px;background:rgba(255,255,255,.985);box-shadow:0 18px 42px rgba(25,42,100,.16);max-height:310px;overflow:auto;overscroll-behavior:contain}
+  .ky-category-picker-menu{position:fixed;left:auto;right:auto;top:auto;z-index:9999;display:none;padding:6px;border:1px solid rgba(36,58,139,.14);border-radius:12px;background:rgba(255,255,255,.995);box-shadow:0 18px 42px rgba(25,42,100,.20);max-height:310px;overflow:auto;overscroll-behavior:contain;box-sizing:border-box}
   .ky-category-picker.open .ky-category-picker-menu{display:block;animation:kyCategoryMenuIn .13s ease-out both}
   @keyframes kyCategoryMenuIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
   .ky-category-picker-option{width:100%;min-height:37px;border:0;border-radius:8px;background:transparent;display:flex;align-items:center;gap:8px;padding:6px 7px 6px 9px;color:#243a8b;cursor:pointer;text-align:left;transition:background .12s ease,color .12s ease}
@@ -64,8 +64,16 @@ function cardMeta(card,index){
 }
 function signature(list){return list.map((c,i)=>{const m=cardMeta(c,i);return `${m.id}:${m.name}:${m.count}`}).join('|')}
 
+function placeMenu(wrap){
+ if(!wrap?.classList.contains('open'))return;
+ const btn=q('.ky-category-picker-button',wrap),menu=q('.ky-category-picker-menu',wrap);if(!btn||!menu)return;
+ const rect=btn.getBoundingClientRect(),gap=5,below=window.innerHeight-rect.bottom-gap-8,above=rect.top-gap-8,openUp=below<180&&above>below;
+ const room=Math.max(120,Math.min(310,openUp?above:below));
+ menu.style.left=`${Math.round(rect.left)}px`;menu.style.width=`${Math.round(rect.width)}px`;menu.style.maxHeight=`${Math.round(room)}px`;menu.style.right='auto';
+ if(openUp){menu.style.top='auto';menu.style.bottom=`${Math.round(window.innerHeight-rect.top+gap)}px`;}else{menu.style.top=`${Math.round(rect.bottom+gap)}px`;menu.style.bottom='auto';}
+}
 function closePicker(wrap,returnFocus=false){if(!wrap)return;wrap.classList.remove('open');q('.ky-category-picker-button',wrap)?.setAttribute('aria-expanded','false');if(returnFocus)q('.ky-category-picker-button',wrap)?.focus()}
-function openPicker(wrap){if(!wrap)return;wrap.classList.add('open');const btn=q('.ky-category-picker-button',wrap);btn?.setAttribute('aria-expanded','true');requestAnimationFrame(()=>q('.ky-category-picker-option[aria-selected="true"]',wrap)?.scrollIntoView({block:'nearest'}))}
+function openPicker(wrap){if(!wrap)return;wrap.classList.add('open');const btn=q('.ky-category-picker-button',wrap);btn?.setAttribute('aria-expanded','true');placeMenu(wrap);requestAnimationFrame(()=>{placeMenu(wrap);q('.ky-category-picker-option[aria-selected="true"]',wrap)?.scrollIntoView({block:'nearest'})})}
 
 function ensurePicker(host){
  let wrap=q(':scope > .ky-category-picker',host);
@@ -163,6 +171,8 @@ function start(){
  sync();const host=q('#v3Categories');if(host&&!observer){observer=new MutationObserver(schedule);observer.observe(host,{childList:true,subtree:false});}
  document.addEventListener('click',e=>{const wrap=q('#v3Categories>.ky-category-picker');if(wrap&&wrap.classList.contains('open')&&!wrap.contains(e.target))closePicker(wrap)},true);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'){const wrap=q('#v3Categories>.ky-category-picker');if(wrap?.classList.contains('open'))closePicker(wrap,true)}},true);
+ window.addEventListener('resize',()=>placeMenu(q('#v3Categories>.ky-category-picker')),{passive:true});
+ document.addEventListener('scroll',()=>placeMenu(q('#v3Categories>.ky-category-picker')),{capture:true,passive:true});
  setTimeout(sync,300);setTimeout(sync,900);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
