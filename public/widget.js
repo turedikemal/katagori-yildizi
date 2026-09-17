@@ -32,6 +32,15 @@ function injectRuntimeStyles(){
  if(!document.querySelector('link[data-ky-color-integrity]')){
    const l=document.createElement('link');l.rel='stylesheet';l.href=`${API_HOST}/template-color-integrity.css?v=20260917-5`;l.dataset.kyColorIntegrity='1';document.head.appendChild(l);
  }
+ if(!document.querySelector('link[data-ky-premium-templates-v3]')){
+   const pv3=document.createElement('link');pv3.rel='stylesheet';pv3.href=`${API_HOST}/premium-templates-v3.css?v=20260917-1`;pv3.dataset.kyPremiumTemplatesV3='1';document.head.appendChild(pv3);
+ }
+ if(!document.querySelector('link[data-ky-premium-elite]')){
+   const pe=document.createElement('link');pe.rel='stylesheet';pe.href=`${API_HOST}/premium-templates-elite.css?v=20260917-5`;pe.dataset.kyPremiumElite='1';document.head.appendChild(pe);
+ }
+ if(!document.querySelector('link[data-ky-legacy-static]')){
+   const ls=document.createElement('link');ls.rel='stylesheet';ls.href=`${API_HOST}/legacy-templates-static.css?v=20260917-1`;ls.dataset.kyLegacyStatic='1';document.head.appendChild(ls);
+ }
  if(document.getElementById('ky-runtime-v2'))return;
  const s=document.createElement('style');s.id='ky-runtime-v2';s.textContent=`
  @keyframes ky-slide-right{from{transform:translateX(-14px);opacity:0}to{transform:translateX(0);opacity:1}}
