@@ -35,11 +35,7 @@ function injectRuntimeStyles(){
  if(document.getElementById('ky-runtime-v2'))return;
  const s=document.createElement('style');s.id='ky-runtime-v2';s.textContent=`
  @keyframes ky-slide-right{from{transform:translateX(-14px);opacity:0}to{transform:translateX(0);opacity:1}}
- @keyframes ky-flip{from{transform:perspective(480px) rotateY(-88deg);opacity:0}to{transform:perspective(480px) rotateY(0);opacity:1}}
- .ky-anim-slide-right{animation:ky-slide-right var(--ky-anim-dur,.3s) cubic-bezier(.16,1,.3,1) forwards}
  .ky-anim-flip{animation:ky-flip var(--ky-anim-dur,.42s) cubic-bezier(.2,.75,.25,1) forwards;backface-visibility:hidden}
- .ky-hover-tilt:hover{rotate:-3deg;scale:1.02}.ky-hover-pulse:hover{animation:ky-pulse .7s ease-in-out infinite alternate}
- .ky-hover-slide-left:hover{translate:-5px 0}.ky-hover-slide-right:hover{translate:5px 0}
  .ky-offset-shell{display:inline-flex;max-width:100%}
  .ky-pos-bottom-full>.ky-offset-shell,.ky-pos-under-full>.ky-offset-shell{display:flex;width:100%;max-width:none;justify-content:center}.ky-pos-bottom-full .ky-badge-root:not([class*="ky-tpl-premium-elite-"]),.ky-pos-under-full .ky-badge-root:not([class*="ky-tpl-premium-elite-"]){width:100%;min-width:100%;max-width:none;justify-content:center;border-radius:0!important;transform:none!important}
  .ky-pos-under-full{position:relative;display:flex;width:100%;inset:auto!important;z-index:10;box-sizing:border-box}

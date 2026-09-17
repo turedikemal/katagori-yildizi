@@ -19,8 +19,8 @@ function threshold(){
 
 function salesFromRow(row){
  const text=row?.querySelector('.ky-rank-product small')?.textContent||'';
- const m=text.match(/([\\d.]+)\\s*satış/i);
- return m?Number(m[1].replace(/\\./g,'')):0;
+ const m=text.match(/([\d.]+)\s*satış/i);
+ return m?Number(m[1].replace(/\./g,'')):0;
 }
 
 function applyMinimumSalesFilter(){
@@ -111,4 +111,5 @@ function boot(){
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
+
 

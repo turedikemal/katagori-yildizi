@@ -34,13 +34,3 @@
 .ky-entry-pop{animation:kyv3PopFixed var(--anim-dur,.36s) cubic-bezier(.34,1.56,.64,1) both!important}
 .ky-entry-flip{animation:kyv3FlipFixed var(--anim-dur,.42s) cubic-bezier(.2,.75,.25,1) both!important;backface-visibility:hidden}
 .ky-entry-bounce{animation:kyv3BounceFixed var(--anim-dur,.5s) ease both!important}
-
-.ky-hover-lift:hover{translate:0 -4px!important;box-shadow:0 11px 25px rgba(16,24,40,.17)!important}
-.ky-hover-scale:hover{scale:1.07!important}
-.ky-hover-glow:hover{filter:drop-shadow(0 0 8px color-mix(in srgb,var(--badge-accent) 65%,transparent))!important}
-.ky-hover-shadow:hover{box-shadow:0 14px 30px rgba(16,24,40,.24)!important}
-.ky-hover-tilt:hover{rotate:-3deg!important;scale:1.02!important}
-.ky-hover-pulse:hover{animation:kyv3HoverPulse .7s ease-in-out infinite alternate!important}
-.ky-hover-slide-left:hover{translate:-5px 0!important}
-.ky-hover-slide-right:hover{translate:5px 0!important}
-@keyframes kyv3HoverPulse{from{scale:1}to{scale:1.055}}
