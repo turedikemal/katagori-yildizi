@@ -1,0 +1,50 @@
+/* Kategori Yildizi — premium icon/template compatibility.
+   Keeps animated premium icons moving inside premium template shells without
+   changing template geometry, colors, sizing, placement or shell animations. */
+
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) > .ky-premium-icon{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  place-items:center!important;
+  overflow:visible!important;
+  font:inherit!important;
+  line-height:1!important;
+  transform-origin:center!important;
+  will-change:transform!important;
+}
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) > .ky-premium-icon svg{
+  display:block!important;
+  overflow:visible!important;
+  transform-origin:center!important;
+}
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-icon :is(.p-float,.p-pulse,.p-spin,.p-star,.p-spark,.p-ray,.p-ribbon-left,.p-ribbon-right,.p-sway,.p-flame,.p-flame-core,.p-shine,.p-rocket,.p-flare){
+  transform-box:fill-box!important;
+  transform-origin:center!important;
+  animation-play-state:running!important;
+  will-change:transform,opacity!important;
+}
+
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-crown-orbit .p-float,
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-gift-pop .p-float,
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-heart-crown .p-float{animation:kyPremFloat 1.8s ease-in-out infinite!important}
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-crown-orbit .p-spark{animation:kyPremSpark 1.1s ease-in-out infinite!important}
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-crown-orbit .p-s2{animation-delay:.55s!important}
+
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) :is(.ky-premium-trophy-glow,.ky-premium-shield-spark,.ky-premium-laurel-star,.ky-premium-bolt-ring,.ky-premium-heart-crown,.ky-premium-check-burst) .p-pulse{animation:kyPremPulse 1.5s ease-in-out infinite!important}
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-trophy-glow .p-ray,
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-shield-spark .p-spark{animation:kyPremSpark 1.3s ease-in-out infinite!important}
+
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-medal-spin .p-star,
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-bolt-ring .p-spin,
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-check-burst .p-spin{animation:kyPremSpin 4s linear infinite!important}
+
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-medal-spin :is(.p-ribbon-left,.p-ribbon-right),
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-laurel-star :is(.p-ribbon-left,.p-ribbon-right),
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-gift-pop .p-sway{animation:kyPremSway 1.4s ease-in-out infinite alternate!important}
+
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-flame-winner :is(.p-flame,.p-flame-core){transform-origin:center bottom!important;animation:kyPremFlame .9s ease-in-out infinite!important}
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-flame-winner .p-flame-core{animation-delay:.2s!important}
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-diamond-shine .p-shine{animation:kyPremShine 2.4s ease-in-out infinite!important}
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-rocket-rank .p-rocket{animation:kyPremRocket 1.25s ease-in-out infinite!important}
+:is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-rocket-rank .p-flare{animation:kyPremPulse .75s ease-in-out infinite!important}
