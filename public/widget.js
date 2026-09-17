@@ -22,6 +22,8 @@ const ICONS={
 };
 const LEGACY_PREMIUM={premium1:'premium-crown-orbit',premium2:'premium-trophy-glow',premium3:'premium-medal-spin',premium4:'premium-flame-winner',premium5:'premium-diamond-shine',premium6:'premium-rocket-rank',premium7:'premium-crown-orbit',premium8:'premium-trophy-glow',premium9:'premium-diamond-shine'};
 const API_HOST=window.__KY_API_HOST||'https://katagori-yildizi-production.up.railway.app';
+const SCRIPT_SHOP=document.currentScript?.dataset?.shop||'';
+const STOREFRONT_SHOP=String(window.__KY_SHOP__||SCRIPT_SHOP||location.hostname.match(/^([a-z0-9-]+)\.myikas\.com$/i)?.[1]||'thegoatz').replace(/\.myikas\.com$/i,'').trim().toLowerCase();
 const SIMPLE_GRADIENT_TEMPLATES=new Set(['navy-pill','split-pill','eco-clean','arc-pill','rank-tab','color-block','understated']);
 const RADIUS_TEMPLATES=new Set(['navy-pill','gradient-pill','split-pill','eco-clean','modern-outline','glass-pill','luxury-label','soft-stamp','arc-pill','rank-tab','signature-pill','understated','ticket-line']);
 const BORDER_TEMPLATES=new Set(['navy-pill','gradient-pill','modern-outline','glass-pill','luxury-label','soft-stamp','understated','ticket-line']);
@@ -29,6 +31,14 @@ let appConfig=null,productsMap={};
 let lastMobile=matchMedia('(max-width:768px)').matches;
 
 function injectRuntimeStyles(){
+ for(const [key,file] of [
+   ['ky-widget-base','widget.css?v=20260917-2'],
+   ['ky-premium-v3','premium-templates-v3.css?v=20260916-1'],
+   ['ky-premium-intensity','premium-intensity.css?v=20260917-2'],
+   ['ky-premium-elite','premium-templates-elite.css?v=20260917-6']
+ ])if(!document.querySelector(`link[data-${key}]`)){
+   const l=document.createElement('link');l.rel='stylesheet';l.href=`${API_HOST}/${file}`;l.dataset[key.replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]='1';document.head.appendChild(l);
+ }
  if(!document.querySelector('link[data-ky-color-integrity]')){
    const l=document.createElement('link');l.rel='stylesheet';l.href=`${API_HOST}/template-color-integrity.css?v=20260917-5`;l.dataset.kyColorIntegrity='1';document.head.appendChild(l);
  }
@@ -38,8 +48,6 @@ function injectRuntimeStyles(){
  @keyframes ky-flip{from{transform:perspective(480px) rotateY(-88deg);opacity:0}to{transform:perspective(480px) rotateY(0);opacity:1}}
  .ky-anim-slide-right{animation:ky-slide-right var(--ky-anim-dur,.3s) cubic-bezier(.16,1,.3,1) forwards}
  .ky-anim-flip{animation:ky-flip var(--ky-anim-dur,.42s) cubic-bezier(.2,.75,.25,1) forwards;backface-visibility:hidden}
- .ky-hover-tilt:hover{rotate:-3deg;scale:1.02}.ky-hover-pulse:hover{animation:ky-pulse .7s ease-in-out infinite alternate}
- .ky-hover-slide-left:hover{translate:-5px 0}.ky-hover-slide-right:hover{translate:5px 0}
  .ky-offset-shell{display:inline-flex;max-width:100%}
  .ky-pos-bottom-full>.ky-offset-shell,.ky-pos-under-full>.ky-offset-shell{display:flex;width:100%;max-width:none;justify-content:center}.ky-pos-bottom-full .ky-badge-root:not([class*="ky-tpl-premium-elite-"]),.ky-pos-under-full .ky-badge-root:not([class*="ky-tpl-premium-elite-"]){width:100%;min-width:100%;max-width:none;justify-content:center;border-radius:0!important;transform:none!important}
  .ky-pos-under-full{position:relative;display:flex;width:100%;inset:auto!important;z-index:10;box-sizing:border-box}
@@ -48,7 +56,6 @@ function injectRuntimeStyles(){
  .ky-premium-bolt-ring .p-spin{fill:none;stroke:var(--ky-icon-accent,var(--p-accent))}
  @keyframes kyPremFloat{50%{transform:translateY(-3px)}}@keyframes kyPremSpark{50%{opacity:.2;transform:scale(.45)}}@keyframes kyPremPulse{50%{transform:scale(1.08)}}@keyframes kyPremSpin{to{transform:rotate(360deg)}}@keyframes kyPremSway{50%{transform:rotate(5deg)}}@keyframes kyPremFlame{50%{transform:scale(.92,1.08) translateY(-1px)}}@keyframes kyPremShine{0%,35%{transform:translateX(-25px);opacity:0}55%{opacity:.9}75%,100%{transform:translateX(25px);opacity:0}}@keyframes kyPremRocket{50%{transform:translate(2px,-3px)}}
  .ky-premium-crown-orbit .p-float,.ky-premium-gift-pop .p-float,.ky-premium-heart-crown .p-float{transform-origin:center;animation:kyPremFloat 1.8s ease-in-out infinite}.ky-premium-crown-orbit .p-spark{transform-box:fill-box;transform-origin:center;animation:kyPremSpark 1.1s ease-in-out infinite}.ky-premium-crown-orbit .p-s2{animation-delay:.55s}.ky-premium-trophy-glow .p-pulse,.ky-premium-shield-spark .p-pulse,.ky-premium-laurel-star .p-pulse,.ky-premium-bolt-ring .p-pulse,.ky-premium-heart-crown .p-pulse,.ky-premium-check-burst .p-pulse{transform-origin:center;animation:kyPremPulse 1.5s ease-in-out infinite}.ky-premium-trophy-glow .p-ray,.ky-premium-shield-spark .p-spark{animation:kyPremSpark 1.3s ease-in-out infinite}.ky-premium-medal-spin .p-star,.ky-premium-bolt-ring .p-spin,.ky-premium-check-burst .p-spin{transform-box:fill-box;transform-origin:center;animation:kyPremSpin 4s linear infinite}.ky-premium-medal-spin .p-ribbon-left,.ky-premium-medal-spin .p-ribbon-right,.ky-premium-laurel-star .p-ribbon-left,.ky-premium-laurel-star .p-ribbon-right,.ky-premium-gift-pop .p-sway{transform-origin:top center;animation:kyPremSway 1.4s ease-in-out infinite alternate}.ky-premium-flame-winner .p-flame,.ky-premium-flame-winner .p-flame-core{transform-origin:center bottom;animation:kyPremFlame .9s ease-in-out infinite}.ky-premium-flame-winner .p-flame-core{animation-delay:.2s}.ky-premium-diamond-shine svg{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}.ky-premium-diamond-shine .p-shine{fill:#fff;opacity:0;animation:kyPremShine 2.4s ease-in-out infinite}.ky-premium-rocket-rank .p-rocket{animation:kyPremRocket 1.25s ease-in-out infinite}.ky-premium-rocket-rank .p-flare{transform-origin:center;animation:kyPremPulse .75s ease-in-out infinite}
- @media(prefers-reduced-motion:reduce){.ky-premium-icon *{animation:none!important}}
  @media(max-width:768px){.ky-badge-root{font-size:var(--ky-font-size)!important;padding:var(--ky-padding-y) var(--ky-padding-x)!important}}
  `;document.head.appendChild(s);
 }
@@ -73,7 +80,7 @@ function templateColors(c,tpl){return (c.templateColors&&c.templateColors[tpl])|
 function normalizeIconType(type){return LEGACY_PREMIUM[type]||String(type||'award');}
 function premiumIconSvg(type,icon){const key=normalizeIconType(type).replace('premium-',''),main=cleanCss(icon.color||'#243a8b'),accent=cleanCss(icon.accentColor||'#f2b84b'),size=Math.max(8,Math.min(48,Number(icon.size||14))),common='viewBox="0 0 48 48" aria-hidden="true"';let svg='';if(key==='crown-orbit')svg=`<path class="p-main p-float" d="m7 15 9 9 8-14 8 14 9-9-4 22H11Z"/><path class="p-accent" d="M12 39h24v4H12z"/><circle class="p-spark p-s1" cx="8" cy="8" r="2"/><circle class="p-spark p-s2" cx="40" cy="8" r="2"/>`;else if(key==='trophy-glow')svg=`<path class="p-accent p-ray" d="M23 2h3v7h-3zM5 11l2-2 5 5-2 2zm31 3 5-5 2 2-5 5z"/><path class="p-main p-pulse" d="M13 9h22v9c0 8-4 13-9 14v5h8v5H14v-5h8v-5c-5-1-9-6-9-14Zm-2 4H5v6c0 6 4 10 10 10v-5c-3 0-5-2-5-5v-2h3Zm26 0v4h3v2c0 3-2 5-5 5v5c6 0 10-4 10-10v-6Z"/>`;else if(key==='medal-spin')svg=`<path class="p-accent p-ribbon-left" d="m13 27-4 18 10-6 5 7 3-17Z"/><path class="p-accent p-ribbon-right" d="m35 27 4 18-10-6-5 7-3-17Z"/><circle class="p-main" cx="24" cy="19" r="15"/><path class="p-star" d="m24 8 3.4 6.9 7.6 1.1-5.5 5.3 1.3 7.6-6.8-3.6-6.8 3.6 1.3-7.6L13 16l7.6-1.1Z"/>`;else if(key==='flame-winner')svg=`<path class="p-main p-flame" d="M27 3c2 10 12 13 12 26 0 9-7 16-16 16S7 38 7 29c0-7 4-13 10-18-1 8 3 11 6 12-2-8 0-15 4-20Z"/><path class="p-accent p-flame-core" d="M25 22c1 6 7 7 7 14 0 5-4 9-9 9s-9-4-9-9c0-4 2-7 6-10 0 4 2 6 4 7-1-4-1-8 1-11Z"/>`;else if(key==='diamond-shine')svg=`<path class="p-main" d="m8 16 8-11h16l8 11-16 28Z"/><path class="p-accent" d="M8 16h32L24 44Z" opacity=".55"/><path class="p-shine" d="m12 11 4-5 20 29-3 5Z"/>`;else if(key==='rocket-rank')svg=`<path class="p-trail" d="M14 35 8 43m12-6-5 8"/><path class="p-main p-rocket" d="M18 31 11 30l5-6C17 12 25 5 38 3c-2 13-9 21-21 22l-6 5Zm8-15a5 5 0 1 0 10 0 5 5 0 0 0-10 0Z"/><path class="p-accent p-flare" d="M15 33c-6 1-9 4-10 10 6-1 9-4 10-10Z"/>`;else if(key==='shield-spark')svg=`<path class="p-main p-pulse" d="M24 3 41 9v13c0 11-7 19-17 23C14 41 7 33 7 22V9Z"/><path class="p-accent" d="m16 23 5 5 11-12 4 4-15 15-9-8Z"/><circle class="p-spark" cx="39" cy="8" r="3"/>`;else if(key==='laurel-star')svg=`<path class="p-accent p-ribbon-left" d="M17 42C8 38 4 29 7 18l5 2c-2 8 1 14 8 18Zm14 0c9-4 13-13 10-24l-5 2c2 8-1 14-8 18Z"/><path class="p-main p-pulse" d="m24 5 5 10 11 2-8 8 2 12-10-6-10 6 2-12-8-8 11-2Z"/>`;else if(key==='bolt-ring')svg=`<circle class="p-accent p-spin" cx="24" cy="24" r="19" fill="none" stroke="currentColor" stroke-width="4" stroke-dasharray="22 8"/><path class="p-main p-pulse" d="M27 3 10 27h12l-2 18 18-27H26Z"/>`;else if(key==='gift-pop')svg=`<path class="p-main p-float" d="M6 20h36v23H6z"/><path class="p-accent" d="M21 18h6v25h-6zM4 13h40v9H4z"/><path class="p-main p-sway" d="M23 13C13 13 9 10 9 5c0-4 5-5 8-3 4 2 6 7 6 11Zm2 0c10 0 14-3 14-8 0-4-5-5-8-3-4 2-6 7-6 11Z"/>`;else if(key==='heart-crown')svg=`<path class="p-main p-pulse" d="M24 44 6 27C-2 18 4 7 14 7c5 0 8 3 10 6 2-3 5-6 10-6 10 0 16 11 8 20Z"/><path class="p-accent p-float" d="m11 11 4-8 9 7 9-7 4 8-4 7H15Z"/>`;else svg=`<path class="p-accent p-spin" d="m24 2 5 7 9-1 1 9 7 5-5 7 1 9-9 1-5 7-7-5-9 1-1-9-7-5 5-7-1-9 9-1Z"/><circle class="p-main p-pulse" cx="24" cy="24" r="14"/><path d="m16 24 5 5 11-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;return `<span class="ky-premium-icon ky-premium-${key}" style="font-size:${size}px;--ky-icon-main:${main};--ky-icon-accent:${accent}"><svg ${common}>${svg}</svg></span>`;}
 function iconSvg(c){const icon=c.icon||{};if(!icon.enabled||icon.type==='none')return '';if(icon.type==='custom_svg'&&icon.customSvg)return icon.customSvg;const type=normalizeIconType(icon.type);return type.startsWith('premium-')?premiumIconSvg(type,icon):(ICONS[type]||'');}
-function animationClasses(c){const a=c.animation||{};return `${a.entry&&a.entry!=='none'?'ky-anim-'+a.entry:''} ${a.hover&&a.hover!=='none'?'ky-hover-'+a.hover:''}`.trim();}
+function animationClasses(c){const a=c.animation||{};return a.entry&&a.entry!=='none'?'ky-anim-'+a.entry:'';}
 function shadowValue(v,accent){return v==='soft'?'0 5px 12px rgba(16,24,40,.12)':v==='medium'?'0 9px 20px rgba(16,24,40,.18)':v==='strong'?'0 12px 28px rgba(16,24,40,.26)':v==='glow'?`0 0 18px ${accent}77`:'none';}
 function outlineTextColor(text,bg){const contrast=v=>{const m=/^#([0-9a-f]{6})$/i.exec(String(v||''));if(!m)return 0;const rgb=[0,2,4].map(i=>parseInt(m[1].slice(i,i+2),16)/255).map(x=>x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4));const l=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];return 1.05/(l+.05)};return contrast(text)>=3?text:contrast(bg)>=3?bg:'#17213a';}
 function badgeMarkup(data,c,text){
@@ -98,7 +105,7 @@ function detailPrefix(d,c){const t=c.texts||{};return fill(d.pdpPrefix||t.pdpPre
 async function loadData(){
  try{
    const cached=sessionStorage.getItem('__ky_cache_v2');if(cached){const p=JSON.parse(cached);if(Date.now()-p.ts<120000){appConfig=p.config;productsMap=p.products||{};renderAll();return;}}
-   const r=await fetch(`${API_HOST}/api/storefront/badges`,{cache:'no-store'}),d=await r.json();
+   const r=await fetch(`${API_HOST}/api/storefront/badges?shop=${encodeURIComponent(STOREFRONT_SHOP)}`,{cache:'no-store'}),d=await r.json();
    if(d.success){appConfig=d.config||{};productsMap=d.products||{};sessionStorage.setItem('__ky_cache_v2',JSON.stringify({ts:Date.now(),config:appConfig,products:productsMap}));renderAll();}
  }catch(e){console.warn('[Kategori Yıldızı] Load error:',e);}
 }
