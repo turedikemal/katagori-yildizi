@@ -142,3 +142,15 @@ window.addEventListener('resize',()=>{const m=isMobile();if(m!==lastMobile){last
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{injectRuntimeStyles();loadData();startObserver();});else{injectRuntimeStyles();loadData();startObserver();}
 window.KategoriYildizi={renderWithConfig(newConfig){appConfig=newConfig||{};renderAll();}};
 })();
+
+// Load premium-icon-motion-runtime once in storefront (dynamic load with duplicate prevention)
+(function loadPremiumIconMotion() {
+  const marker = '__ky-premium-motion-loaded';
+  if (window[marker]) return;
+  window[marker] = true;
+
+  const script = document.createElement('script');
+  script.src = `${window.__KY_API_HOST || 'https://katagori-yildizi-production.up.railway.app'}/premium-icon-motion-runtime.js?v=20260917-1`;
+  script.async = true;
+  document.head.appendChild(script);
+})();
