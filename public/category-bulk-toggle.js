@@ -37,7 +37,7 @@ function guardLegacyHoverWrites(){
  window.handleInput=guarded;
 }
 function esc(v){
- return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 }
 function repairCategoryPicker(){
  const host=document.querySelector('#v3Categories');
@@ -72,27 +72,74 @@ function repairCategoryPicker(){
  document.body.querySelectorAll('.ky-category-picker-menu').forEach(other=>{if(other!==menu&&!other.closest('#v3Categories'))other.remove();});
 }
 
-/* Focused preview clones badge HTML. CSS animation state does not survive a clone reliably,
-   so bind a real infinite Web Animation to every premium icon instance in the right preview. */
+/* Premium moving badges must keep moving inside every premium template.
+   The focused preview repeatedly clones badge markup, therefore SVG parts are animated
+   with Web Animations after every clone/render. This intentionally does not animate
+   the 10 retired legacy template shells; it animates only the selected premium icon. */
 const premiumPreviewAnimated=new WeakSet();
-function premiumMotionFrames(icon){
- const cls=[...icon.classList].join(' ');
- if(/rocket/.test(cls))return [{transform:'translate(0,0) rotate(0deg)'},{transform:'translate(3px,-4px) rotate(3deg)'},{transform:'translate(0,0) rotate(0deg)'}];
- if(/flame/.test(cls))return [{transform:'translateY(0) scale(1)'},{transform:'translateY(-2px) scale(.96,1.08)'},{transform:'translateY(0) scale(1)'}];
- if(/medal|bolt|check/.test(cls))return [{transform:'translateY(0) rotate(-2deg)'},{transform:'translateY(-3px) rotate(3deg)'},{transform:'translateY(0) rotate(-2deg)'}];
- if(/diamond/.test(cls))return [{transform:'translateY(0) scale(1)'},{transform:'translateY(-2px) scale(1.08)'},{transform:'translateY(0) scale(1)'}];
- return [{transform:'translateY(0) rotate(0deg)'},{transform:'translateY(-3px) rotate(-2deg)'},{transform:'translateY(0) rotate(0deg)'}];
+function animatePart(el,frames,options){
+ if(!el||premiumPreviewAnimated.has(el))return;
+ try{
+  const a=el.animate(frames,{iterations:Infinity,fill:'both',...options});
+  a.play();
+  el._kyPremiumMotion=a;
+  premiumPreviewAnimated.add(el);
+ }catch{}
+}
+function bindPremiumIconMotion(icon){
+ if(!icon)return;
+ const has=(s)=>icon.classList.contains(s);
+ const all=s=>[...icon.querySelectorAll(s)];
+ if(has('ky-premium-crown-orbit')){
+  all('.p-float').forEach(x=>animatePart(x,[{transform:'translateY(0)'},{transform:'translateY(-3px)'},{transform:'translateY(0)'}],{duration:1800,easing:'ease-in-out'}));
+  all('.p-spark').forEach((x,i)=>animatePart(x,[{opacity:1,transform:'scale(1)'},{opacity:.2,transform:'scale(.45)'},{opacity:1,transform:'scale(1)'}],{duration:1100,delay:i*260,easing:'ease-in-out'}));
+ }else if(has('ky-premium-trophy-glow')){
+  all('.p-pulse').forEach(x=>animatePart(x,[{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:1500,easing:'ease-in-out'}));
+  all('.p-ray').forEach(x=>animatePart(x,[{opacity:.35},{opacity:1},{opacity:.35}],{duration:1200,easing:'ease-in-out'}));
+ }else if(has('ky-premium-medal-spin')){
+  all('.p-star').forEach(x=>animatePart(x,[{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}],{duration:3200,easing:'linear'}));
+  all('.p-ribbon-left').forEach(x=>animatePart(x,[{transform:'rotate(-3deg)'},{transform:'rotate(4deg)'},{transform:'rotate(-3deg)'}],{duration:1300,easing:'ease-in-out'}));
+  all('.p-ribbon-right').forEach(x=>animatePart(x,[{transform:'rotate(3deg)'},{transform:'rotate(-4deg)'},{transform:'rotate(3deg)'}],{duration:1300,easing:'ease-in-out'}));
+ }else if(has('ky-premium-flame-winner')){
+  all('.p-flame').forEach(x=>animatePart(x,[{transform:'scale(1) translateY(0)'},{transform:'scale(.94,1.09) translateY(-2px)'},{transform:'scale(1) translateY(0)'}],{duration:820,easing:'ease-in-out'}));
+  all('.p-flame-core').forEach(x=>animatePart(x,[{transform:'scale(1)'},{transform:'scale(1.05,.9) translateY(1px)'},{transform:'scale(1)'}],{duration:650,easing:'ease-in-out'}));
+ }else if(has('ky-premium-diamond-shine')){
+  all('.p-shine').forEach(x=>animatePart(x,[{transform:'translateX(-28px)',opacity:0},{offset:.45,opacity:.95},{transform:'translateX(28px)',opacity:0}],{duration:2000,easing:'ease-in-out'}));
+  animatePart(icon,[{transform:'translateY(0)'},{transform:'translateY(-2px)'},{transform:'translateY(0)'}],{duration:1700,easing:'ease-in-out'});
+ }else if(has('ky-premium-rocket-rank')){
+  all('.p-rocket').forEach(x=>animatePart(x,[{transform:'translate(0,0) rotate(0deg)'},{transform:'translate(3px,-4px) rotate(3deg)'},{transform:'translate(0,0) rotate(0deg)'}],{duration:1150,easing:'ease-in-out'}));
+  all('.p-flare').forEach(x=>animatePart(x,[{transform:'scale(.8)',opacity:.55},{transform:'scale(1.18)',opacity:1},{transform:'scale(.8)',opacity:.55}],{duration:650,easing:'ease-in-out'}));
+ }else if(has('ky-premium-shield-spark')){
+  all('.p-pulse').forEach(x=>animatePart(x,[{transform:'scale(1)'},{transform:'scale(1.07)'},{transform:'scale(1)'}],{duration:1450,easing:'ease-in-out'}));
+  all('.p-spark').forEach(x=>animatePart(x,[{opacity:.3,transform:'scale(.5)'},{opacity:1,transform:'scale(1.25)'},{opacity:.3,transform:'scale(.5)'}],{duration:1050,easing:'ease-in-out'}));
+ }else if(has('ky-premium-laurel-star')){
+  all('.p-pulse').forEach(x=>animatePart(x,[{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:1500,easing:'ease-in-out'}));
+  all('.p-ribbon-left,.p-ribbon-right').forEach((x,i)=>animatePart(x,[{transform:`rotate(${i?-3:3}deg)`},{transform:`rotate(${i?3:-3}deg)`},{transform:`rotate(${i?-3:3}deg)`}],{duration:1450,easing:'ease-in-out'}));
+ }else if(has('ky-premium-bolt-ring')){
+  all('.p-spin').forEach(x=>animatePart(x,[{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}],{duration:3000,easing:'linear'}));
+  all('.p-pulse').forEach(x=>animatePart(x,[{transform:'scale(1)'},{transform:'scale(1.09)'},{transform:'scale(1)'}],{duration:1100,easing:'ease-in-out'}));
+ }else if(has('ky-premium-gift-pop')){
+  all('.p-float').forEach(x=>animatePart(x,[{transform:'translateY(0)'},{transform:'translateY(-3px)'},{transform:'translateY(0)'}],{duration:1600,easing:'ease-in-out'}));
+  all('.p-sway').forEach(x=>animatePart(x,[{transform:'rotate(-4deg)'},{transform:'rotate(4deg)'},{transform:'rotate(-4deg)'}],{duration:1200,easing:'ease-in-out'}));
+ }else if(has('ky-premium-heart-crown')){
+  all('.p-pulse').forEach(x=>animatePart(x,[{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:1250,easing:'ease-in-out'}));
+  all('.p-float').forEach(x=>animatePart(x,[{transform:'translateY(0)'},{transform:'translateY(-3px)'},{transform:'translateY(0)'}],{duration:1500,easing:'ease-in-out'}));
+ }else if(has('ky-premium-check-burst')){
+  all('.p-spin').forEach(x=>animatePart(x,[{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}],{duration:3600,easing:'linear'}));
+  all('.p-pulse').forEach(x=>animatePart(x,[{transform:'scale(1)'},{transform:'scale(1.07)'},{transform:'scale(1)'}],{duration:1150,easing:'ease-in-out'}));
+ }else{
+  animatePart(icon,[{transform:'translateY(0)'},{transform:'translateY(-3px)'},{transform:'translateY(0)'}],{duration:1450,easing:'ease-in-out'});
+ }
 }
 function ensurePremiumPreviewMotion(){
- document.querySelectorAll('#stageCanvas .ky-premium-icon').forEach(icon=>{
-  if(premiumPreviewAnimated.has(icon))return;
-  premiumPreviewAnimated.add(icon);
-  try{
-   const animation=icon.animate(premiumMotionFrames(icon),{duration:1450,iterations:Infinity,easing:'ease-in-out'});
-   animation.play();
-   icon._kyPreviewMotion=animation;
-  }catch{}
- });
+ document.querySelectorAll('#stageCanvas .ky-premium-icon').forEach(bindPremiumIconMotion);
+}
+function injectPremiumMotionSafetyCss(){
+ if(document.getElementById('kyPremiumMotionSafety'))return;
+ const s=document.createElement('style');
+ s.id='kyPremiumMotionSafety';
+ s.textContent=`#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon{transform-origin:center!important;will-change:transform!important}#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon .p-float,#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon .p-pulse,#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon .p-spin,#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon .p-star,#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon .p-spark,#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon .p-flame,#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon .p-flame-core,#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon .p-shine,#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon .p-rocket,#stageCanvas .ky-v3-badge[class*="tpl-premium-"] .ky-premium-icon .p-flare{transform-box:fill-box!important;transform-origin:center!important;will-change:transform,opacity!important}`;
+ document.head.appendChild(s);
 }
 
 load('ky-preview-stability','/preview-stability-fix.js?v=20260914-5');
@@ -100,6 +147,7 @@ load('ky-ui-control-tuning','/ui-control-tuning.js?v=20260915-2');
 retireBadgeHoverUI();
 guardLegacyHoverWrites();
 repairCategoryPicker();
+injectPremiumMotionSafetyCss();
 ensurePremiumPreviewMotion();
 document.addEventListener('click',e=>{
  if(e.target.closest('.ky-category-picker-button'))repairCategoryPicker();
@@ -114,6 +162,7 @@ new MutationObserver(()=>{
   retireBadgeHoverUI();
   guardLegacyHoverWrites();
   repairCategoryPicker();
+  injectPremiumMotionSafetyCss();
   ensurePremiumPreviewMotion();
  });
 }).observe(document.body,{childList:true,subtree:true});
