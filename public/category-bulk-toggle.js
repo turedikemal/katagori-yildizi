@@ -1,4 +1,5 @@
 /* Compatibility entry — load the stable live-preview and focused UI tuning layers. */
+/* Deploy sync: force Railway to fetch the current GitHub branch HEAD. */
 (function(){
 'use strict';
 function load(key,src){
