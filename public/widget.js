@@ -150,7 +150,7 @@ window.KategoriYildizi={renderWithConfig(newConfig){appConfig=newConfig||{};rend
   window[marker] = true;
 
   const script = document.createElement('script');
-  script.src = `${window.__KY_API_HOST || 'https://katagori-yildizi-production.up.railway.app'}/premium-icon-motion-runtime.js?v=20260917-1`;
+  script.src = `${window.__KY_API_HOST || 'https://katagori-yildizi-production.up.railway.app'}/premium-icon-motion-runtime.js?v=20260917-2`;
   script.async = true;
   document.head.appendChild(script);
 })();

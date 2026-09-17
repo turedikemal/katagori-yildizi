@@ -125,7 +125,7 @@
         // Determine motion config from element's classes
         let config = null;
         for (const [iconClass, motionConfig] of Object.entries(MOTION_CONFIGS)) {
-          if (element.classList.contains(iconClass)) {
+          if (element.classList.contains('ky-premium-' + iconClass)) {
             config = motionConfig;
             break;
           }
