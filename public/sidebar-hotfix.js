@@ -17,7 +17,7 @@ function observeMenu(){const menu=qs('#menuList');if(!menu||menu.dataset.kyObser
 function loadScript(key,src){const base=src.split('?')[0];if(document.querySelector(`script[data-${key}],script[src^="${base}"]`))return;const s=document.createElement('script');s.src=src;s.async=false;s.dataset[key.replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]='1';document.body.appendChild(s)}
 function loadStyle(key,href){const base=href.split('?')[0];if(document.querySelector(`link[data-${key}],link[href^="${base}"]`))return;const l=document.createElement('link');l.rel='stylesheet';l.href=href;l.dataset[key.replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]='1';document.head.appendChild(l)}
 function loadExtras(){
- loadScript('ky-editor-stability-v3','/editor-stability-v3.js?v=20260917-15');
+ loadScript('ky-editor-stability-v3','/editor-stability-v3.js?v=20260917-16');
  loadScript('ky-category-selector','/category-selector.js?v=20260917-5');
  loadScript('ky-icon-system','/badge-icon-system.js?v=20260914-4');
  loadScript('ky-surface-settings','/admin-surface-settings.js?v=20260914-3');
@@ -25,7 +25,7 @@ function loadExtras(){
  loadScript('ky-premium-template-fixes','/premium-template-fixes.js?v=20260917-2');
  loadScript('ky-product-detail-icon-layout','/product-detail-icon-layout.js?v=20260914-5');
  loadScript('ky-text-style-controls','/text-style-controls.js?v=20260914-2');
- loadScript('ky-min-sales-hover-fix','/min-sales-hover-fix.js?v=20260915-1');
+ loadScript('ky-min-sales-hover-fix','/min-sales-hover-fix.js?v=20260917-1');
  loadStyle('ky-premium-intensity','/premium-intensity.css?v=20260916-1');
 }
 function boot(){bind();repair();observeMenu();loadExtras()}

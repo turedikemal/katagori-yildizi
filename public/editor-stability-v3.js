@@ -228,11 +228,14 @@ function bindScaleWithoutPreviewRebuild(){
 
 function removeBadgeEffects(badge){
  if(!badge)return;
+ const hasPremiumTemplate=badge&&[...badge.classList].some(c=>c.startsWith('tpl-premium-'));
  for(const cls of [...badge.classList]){
   if(cls.startsWith('ky-entry-'))badge.classList.remove(cls);
  }
- badge.style.setProperty('animation','none','important');
- badge.style.setProperty('transition','none','important');
+ if(!hasPremiumTemplate){
+  badge.style.setProperty('animation','none','important');
+  badge.style.setProperty('transition','none','important');
+ }
 }
 
 function applyStripMotion(){
