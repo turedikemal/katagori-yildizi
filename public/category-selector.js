@@ -30,7 +30,7 @@ function injectStyle(){
   .ky-category-picker-chevron svg{width:12px;height:12px;display:block}
   .ky-category-picker.open .ky-category-picker-chevron{transform:rotate(180deg);background:#243a8b;color:#fff}
   .ky-category-picker-menu{position:fixed;left:auto;right:auto;top:auto;z-index:9999;display:none;padding:6px;border:1px solid rgba(36,58,139,.14);border-radius:12px;background:rgba(255,255,255,.995);box-shadow:0 18px 42px rgba(25,42,100,.20);max-height:310px;overflow:auto;overscroll-behavior:contain;box-sizing:border-box}
-  .ky-category-picker.open .ky-category-picker-menu{display:block;animation:kyCategoryMenuIn .13s ease-out both}
+  .ky-category-picker-menu.is-open{display:block;animation:kyCategoryMenuIn .13s ease-out both}
   @keyframes kyCategoryMenuIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
   .ky-category-picker-option{width:100%;min-height:37px;border:0;border-radius:8px;background:transparent;display:flex;align-items:center;gap:8px;padding:6px 7px 6px 9px;color:#243a8b;cursor:pointer;text-align:left;transition:background .12s ease,color .12s ease}
   .ky-category-picker-option:hover,.ky-category-picker-option:focus-visible{outline:0;background:#eef3ff}
@@ -64,16 +64,17 @@ function cardMeta(card,index){
 }
 function signature(list){return list.map((c,i)=>{const m=cardMeta(c,i);return `${m.id}:${m.name}:${m.count}`}).join('|')}
 
+function pickerMenu(wrap){return wrap?._kyMenu||q('.ky-category-picker-menu',wrap)}
 function placeMenu(wrap){
  if(!wrap?.classList.contains('open'))return;
- const btn=q('.ky-category-picker-button',wrap),menu=q('.ky-category-picker-menu',wrap);if(!btn||!menu)return;
+ const btn=q('.ky-category-picker-button',wrap),menu=pickerMenu(wrap);if(!btn||!menu)return;
  const rect=btn.getBoundingClientRect(),gap=5,below=window.innerHeight-rect.bottom-gap-8,above=rect.top-gap-8,openUp=below<180&&above>below;
  const room=Math.max(120,Math.min(310,openUp?above:below));
  menu.style.left=`${Math.round(rect.left)}px`;menu.style.width=`${Math.round(rect.width)}px`;menu.style.maxHeight=`${Math.round(room)}px`;menu.style.right='auto';
  if(openUp){menu.style.top='auto';menu.style.bottom=`${Math.round(window.innerHeight-rect.top+gap)}px`;}else{menu.style.top=`${Math.round(rect.bottom+gap)}px`;menu.style.bottom='auto';}
 }
-function closePicker(wrap,returnFocus=false){if(!wrap)return;wrap.classList.remove('open');q('.ky-category-picker-button',wrap)?.setAttribute('aria-expanded','false');if(returnFocus)q('.ky-category-picker-button',wrap)?.focus()}
-function openPicker(wrap){if(!wrap)return;wrap.classList.add('open');const btn=q('.ky-category-picker-button',wrap);btn?.setAttribute('aria-expanded','true');placeMenu(wrap);requestAnimationFrame(()=>{placeMenu(wrap);q('.ky-category-picker-option[aria-selected="true"]',wrap)?.scrollIntoView({block:'nearest'})})}
+function closePicker(wrap,returnFocus=false){if(!wrap)return;wrap.classList.remove('open');pickerMenu(wrap)?.classList.remove('is-open');q('.ky-category-picker-button',wrap)?.setAttribute('aria-expanded','false');if(returnFocus)q('.ky-category-picker-button',wrap)?.focus()}
+function openPicker(wrap){if(!wrap)return;const menu=pickerMenu(wrap);if(menu&&menu.parentElement!==document.body)document.body.appendChild(menu);wrap.classList.add('open');menu?.classList.add('is-open');const btn=q('.ky-category-picker-button',wrap);btn?.setAttribute('aria-expanded','true');placeMenu(wrap);requestAnimationFrame(()=>{placeMenu(wrap);q('.ky-category-picker-option[aria-selected="true"]',menu)?.scrollIntoView({block:'nearest'})})}
 
 function ensurePicker(host){
  let wrap=q(':scope > .ky-category-picker',host);
@@ -94,15 +95,16 @@ function ensurePicker(host){
       <button type="button" class="ky-category-picker-action primary" data-category-bulk="open">Tümünü Aç</button>
       <button type="button" class="ky-category-picker-action" data-category-bulk="close">Tümünü Kapat</button>
     </div>`;
+  wrap._kyMenu=q('.ky-category-picker-menu',wrap);
   const intro=q(':scope > .ky-category-intro',host);
   if(intro)intro.insertAdjacentElement('afterend',wrap);else host.prepend(wrap);
   const btn=q('.ky-category-picker-button',wrap);
   btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();wrap.classList.contains('open')?closePicker(wrap):openPicker(wrap)});
   btn.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();openPicker(wrap);requestAnimationFrame(()=>q('.ky-category-picker-option[aria-selected="true"]',wrap)?.focus())}if(e.key==='Escape'){e.preventDefault();closePicker(wrap)}});
   q('select',wrap).addEventListener('change',e=>select(host,e.target.value,true));
-  q('.ky-category-picker-menu',wrap).addEventListener('click',e=>{const opt=e.target.closest('.ky-category-picker-option');if(!opt)return;e.preventDefault();e.stopPropagation();select(host,opt.dataset.categoryId,true);closePicker(wrap,true)});
-  q('.ky-category-picker-menu',wrap).addEventListener('keydown',e=>{
-    const opts=qa('.ky-category-picker-option',wrap);if(!opts.length)return;const i=Math.max(0,opts.indexOf(document.activeElement));
+  pickerMenu(wrap).addEventListener('click',e=>{const opt=e.target.closest('.ky-category-picker-option');if(!opt)return;e.preventDefault();e.stopPropagation();select(host,opt.dataset.categoryId,true);closePicker(wrap,true)});
+  pickerMenu(wrap).addEventListener('keydown',e=>{
+    const opts=qa('.ky-category-picker-option',pickerMenu(wrap));if(!opts.length)return;const i=Math.max(0,opts.indexOf(document.activeElement));
     if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();opts[(i+(e.key==='ArrowDown'?1:-1)+opts.length)%opts.length].focus()}
     if(e.key==='Enter'||e.key===' '){e.preventDefault();document.activeElement?.click()}
     if(e.key==='Escape'){e.preventDefault();closePicker(wrap,true)}
@@ -125,7 +127,7 @@ function updatePickerState(host,id){
  const sel=q('#kyCategoryPickerSelect',wrap);if(sel&&sel.value!==String(id))sel.value=String(id);
  q('.ky-category-picker-name',wrap).textContent=m.name;
  q('.ky-category-picker-count',wrap).textContent=`${m.count} ürün`;
- qa('.ky-category-picker-option',wrap).forEach(opt=>opt.setAttribute('aria-selected',opt.dataset.categoryId===String(id)?'true':'false'));
+ qa('.ky-category-picker-option',pickerMenu(wrap)).forEach(opt=>opt.setAttribute('aria-selected',opt.dataset.categoryId===String(id)?'true':'false'));
 }
 
 function select(host,id,fromUser=false){
@@ -145,7 +147,7 @@ function select(host,id,fromUser=false){
 }
 
 function rebuildPicker(host,list,wrap){
- const sel=q('#kyCategoryPickerSelect',wrap),menu=q('.ky-category-picker-menu',wrap);
+ const sel=q('#kyCategoryPickerSelect',wrap),menu=pickerMenu(wrap);
  const metas=list.map((card,i)=>cardMeta(card,i));
  sel.innerHTML=metas.map(m=>`<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('');
  menu.innerHTML=metas.map(m=>`<button type="button" class="ky-category-picker-option" role="option" data-category-id="${esc(m.id)}" aria-selected="false"><span class="ky-category-picker-check">✓</span><span class="ky-category-picker-option-name">${esc(m.name)}</span><span class="ky-category-picker-option-count">${m.count} ürün</span></button>`).join('');
@@ -169,7 +171,7 @@ function sync(){
 function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;sync()})}
 function start(){
  sync();const host=q('#v3Categories');if(host&&!observer){observer=new MutationObserver(schedule);observer.observe(host,{childList:true,subtree:false});}
- document.addEventListener('click',e=>{const wrap=q('#v3Categories>.ky-category-picker');if(wrap&&wrap.classList.contains('open')&&!wrap.contains(e.target))closePicker(wrap)},true);
+ document.addEventListener('click',e=>{const wrap=q('#v3Categories>.ky-category-picker');if(wrap&&wrap.classList.contains('open')&&!wrap.contains(e.target)&&!pickerMenu(wrap)?.contains(e.target))closePicker(wrap)},true);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'){const wrap=q('#v3Categories>.ky-category-picker');if(wrap?.classList.contains('open'))closePicker(wrap,true)}},true);
  window.addEventListener('resize',()=>placeMenu(q('#v3Categories>.ky-category-picker')),{passive:true});
  document.addEventListener('scroll',()=>placeMenu(q('#v3Categories>.ky-category-picker')),{capture:true,passive:true});
