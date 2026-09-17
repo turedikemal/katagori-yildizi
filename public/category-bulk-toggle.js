@@ -10,17 +10,21 @@ function load(key,src){
  s.dataset[key.replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]='1';
  document.body.appendChild(s);
 }
+function setTextIfChanged(el,text){
+ if(el&&el.textContent!==text)el.textContent=text;
+}
 function retireBadgeHoverUI(){
- document.querySelectorAll('#v3Hover,[data-setting="animation.hover"],[data-path="animation.hover"]').forEach(el=>el.closest('.ky-field,.ky-group,.ky-control-row')?.remove()||el.remove());
+ document.querySelectorAll('#v3Hover,[data-setting="animation.hover"],[data-path="animation.hover"]').forEach(el=>{
+  const target=el.closest('.ky-field,.ky-group,.ky-control-row')||el;
+  if(target&&target.isConnected)target.remove();
+ });
  const card=document.querySelector('.ky-menu-card[data-target="panelAnimation"]');
  if(card){
-  const title=card.querySelector('.ky-menu-title');
-  const sub=card.querySelector('.ky-menu-subtitle');
-  if(title)title.textContent='Animasyonlar & Efektler';
-  if(sub)sub.textContent='Giriş animasyonu ve hareket ayarları';
+  setTextIfChanged(card.querySelector('.ky-menu-title'),'Animasyonlar & Efektler');
+  setTextIfChanged(card.querySelector('.ky-menu-subtitle'),'Giriş animasyonu ve hareket ayarları');
  }
  const head=document.querySelector('#panelAnimation .ky-subpanel-title');
- if(head&&/hover/i.test(head.textContent||''))head.textContent='Animasyonlar & Efektler';
+ if(head&&/hover/i.test(head.textContent||''))setTextIfChanged(head,'Animasyonlar & Efektler');
 }
 function guardLegacyHoverWrites(){
  const original=window.handleInput;
@@ -36,5 +40,14 @@ load('ky-preview-stability','/preview-stability-fix.js?v=20260914-5');
 load('ky-ui-control-tuning','/ui-control-tuning.js?v=20260915-2');
 retireBadgeHoverUI();
 guardLegacyHoverWrites();
-new MutationObserver(()=>{retireBadgeHoverUI();guardLegacyHoverWrites();}).observe(document.body,{childList:true,subtree:true});
+let scheduled=false;
+new MutationObserver(()=>{
+ if(scheduled)return;
+ scheduled=true;
+ requestAnimationFrame(()=>{
+  scheduled=false;
+  retireBadgeHoverUI();
+  guardLegacyHoverWrites();
+ });
+}).observe(document.body,{childList:true,subtree:true});
 })();
