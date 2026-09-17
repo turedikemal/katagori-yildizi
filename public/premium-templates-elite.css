@@ -2,12 +2,16 @@
 @keyframes kyLuxeSheen{0%,36%{background-position:-180% 0}72%,100%{background-position:180% 0}}
 @keyframes kyLuxeEdge{0%,100%{background-position:0 0,0 50%}50%{background-position:0 0,100% 50%}}
 @keyframes kyLuxeAurora{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+@keyframes kyEliteBadgeAlive{0%,100%{translate:0 0;filter:brightness(1) saturate(1)}50%{translate:0 -1.5px;filter:brightness(1.045) saturate(1.07)}}
+@keyframes kyEliteIconAlive{0%,100%{translate:0 0;rotate:-2deg}40%{translate:0 -2px;rotate:2deg}72%{translate:0 1px;rotate:-1deg}}
 
 .ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{--p-bg:var(--badge-bg,#111216);--p-text:var(--badge-text,#fff);--p-accent:var(--badge-accent,#d9b45b);position:relative!important;isolation:isolate!important;display:inline-flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;box-sizing:border-box!important;width:max-content!important;min-width:132px!important;max-width:176px!important;min-height:30px!important;height:30px!important;gap:7px!important;padding:4px 12px 4px 5px!important;white-space:nowrap!important;overflow:hidden!important;color:var(--p-text)!important;border-radius:8px!important;font-weight:800!important;font-size:var(--badge-font-size,10px)!important;line-height:1!important;letter-spacing:.01em!important;text-align:left!important;text-shadow:none!important;transition:none!important;backface-visibility:hidden;contain:layout paint style}
 .ky-v3-badge[class*="tpl-premium-elite-"]>*,.ky-badge-root[class*="ky-tpl-premium-elite-"]>*{position:relative;z-index:4}
 .ky-v3-badge[class*="tpl-premium-elite-"] .ky-badge-text,.ky-badge-root[class*="ky-tpl-premium-elite-"] .ky-badge-text{display:block!important;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap!important;color:inherit!important;line-height:1!important;text-align:left!important;letter-spacing:inherit!important}
 .ky-v3-badge[class*="tpl-premium-elite-"]>:first-child,.ky-badge-root[class*="ky-tpl-premium-elite-"]>:first-child,.ky-badge-root[class*="ky-tpl-premium-elite-"]>:first-child{display:inline-grid!important;place-items:center!important;flex:0 0 21px!important;width:21px!important;height:21px!important;box-sizing:border-box!important;margin:0!important;border-radius:6px;color:var(--p-accent)!important;font:900 11px/1 Georgia,"Times New Roman",serif!important;text-align:center!important}
 .ky-v3-badge[class*="tpl-premium-elite-"]::before,.ky-v3-badge[class*="tpl-premium-elite-"]::after,.ky-badge-root[class*="ky-tpl-premium-elite-"]::before,.ky-badge-root[class*="ky-tpl-premium-elite-"]::after{content:"";position:absolute;pointer-events:none;z-index:1}
+.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{animation:kyEliteBadgeAlive 2.8s ease-in-out infinite!important;will-change:translate,filter}
+.ky-v3-badge[class*="tpl-premium-elite-"]>:first-child,.ky-badge-root[class*="ky-tpl-premium-elite-"]>:first-child{animation:kyEliteIconAlive 2.15s ease-in-out infinite!important;will-change:translate,rotate}
 
 /* 01 — matte black jewellery box with a precise gold hairline. */
 .ky-v3-badge.tpl-premium-elite-obsidian,.ky-badge-root.ky-tpl-premium-elite-obsidian{background:linear-gradient(135deg,color-mix(in srgb,var(--p-bg) 94%,#30323a),var(--p-bg) 58%,#08090b)!important;border:1px solid color-mix(in srgb,var(--p-accent) 78%,#fff)!important;box-shadow:inset 0 1px rgba(255,255,255,.07),0 5px 13px rgba(3,4,7,.25)!important}
@@ -47,7 +51,7 @@
 .ky-v3-badge.tpl-premium-elite-champagne-silk>:first-child,.ky-badge-root.ky-tpl-premium-elite-champagne-silk>:first-child{background:#fff7e5;color:#73562e!important;border:1px solid #b6975e;border-radius:50%}
 
 /* 09 — midnight chrome with one slow polished reflection. */
-.ky-v3-badge.tpl-premium-elite-midnight-chrome,.ky-badge-root.ky-tpl-premium-elite-midnight-chrome{background:linear-gradient(112deg,var(--p-bg) 12%,#31456e 37%,var(--p-bg) 61%,#070d1c)!important;background-size:220% 100%!important;border:1px solid #8098c4!important;box-shadow:inset 0 1px #cfe0ff40,inset 0 -1px #000,0 5px 14px #0b142a38!important;border-radius:5px!important;animation:kyLuxeSheen 7s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-elite-midnight-chrome,.ky-badge-root.ky-tpl-premium-elite-midnight-chrome{background:linear-gradient(112deg,var(--p-bg) 12%,#31456e 37%,var(--p-bg) 61%,#070d1c)!important;background-size:220% 100%!important;border:1px solid #8098c4!important;box-shadow:inset 0 1px #cfe0ff40,inset 0 -1px #000,0 5px 14px #0b142a38!important;border-radius:5px!important;animation:kyLuxeSheen 7s ease-in-out infinite,kyEliteBadgeAlive 2.8s ease-in-out infinite!important}
 .ky-v3-badge.tpl-premium-elite-midnight-chrome>:first-child,.ky-badge-root.ky-tpl-premium-elite-midnight-chrome>:first-child{background:linear-gradient(145deg,#dbe7ff,#7189b6);color:#101a33!important;border-radius:3px}
 
 /* 10 — amethyst velvet, soft depth without visual noise. */
@@ -65,7 +69,7 @@
 .ky-v3-badge.tpl-premium-elite-onyx-rose::before,.ky-badge-root.ky-tpl-premium-elite-onyx-rose::before{inset:3px;border-block:1px solid #d69b9b38;border-radius:12px}
 
 /* 13 — pearl nacre with restrained iridescence. */
-.ky-v3-badge.tpl-premium-elite-pearl-lustre,.ky-badge-root.ky-tpl-premium-elite-pearl-lustre{background:linear-gradient(115deg,#fff 2%,color-mix(in srgb,var(--p-bg) 82%,#dff6ff) 26%,color-mix(in srgb,var(--p-bg) 82%,#f2ddff) 51%,color-mix(in srgb,var(--p-bg) 84%,#fff4df) 74%,#fff)!important;background-size:180% 100%!important;border:1px solid color-mix(in srgb,var(--p-accent) 55%,#fff)!important;color:var(--p-text)!important;box-shadow:inset 0 1px #fff,0 5px 12px #6d557925!important;border-radius:15px!important;animation:kyLuxeSheen 8s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-elite-pearl-lustre,.ky-badge-root.ky-tpl-premium-elite-pearl-lustre{background:linear-gradient(115deg,#fff 2%,color-mix(in srgb,var(--p-bg) 82%,#dff6ff) 26%,color-mix(in srgb,var(--p-bg) 82%,#f2ddff) 51%,color-mix(in srgb,var(--p-bg) 84%,#fff4df) 74%,#fff)!important;background-size:180% 100%!important;border:1px solid color-mix(in srgb,var(--p-accent) 55%,#fff)!important;color:var(--p-text)!important;box-shadow:inset 0 1px #fff,0 5px 12px #6d557925!important;border-radius:15px!important;animation:kyLuxeSheen 8s ease-in-out infinite,kyEliteBadgeAlive 2.8s ease-in-out infinite!important}
 .ky-v3-badge.tpl-premium-elite-pearl-lustre>:first-child,.ky-badge-root.ky-tpl-premium-elite-pearl-lustre>:first-child{background:#fff;border:1px solid var(--p-accent);color:var(--p-text)!important;border-radius:50%;box-shadow:inset 0 0 5px #b598d144}
 
 /* 14 — cobalt enamel, crisp and confident. */
@@ -97,7 +101,7 @@
 .ky-v3-badge.tpl-premium-elite-porcelain-blue::after,.ky-badge-root.ky-tpl-premium-elite-porcelain-blue::after{left:36px;right:8px;bottom:3px;height:1px;background:linear-gradient(90deg,var(--p-accent),transparent)}
 
 /* 20 — black aurora, restrained spectral movement along one edge. */
-.ky-v3-badge.tpl-premium-elite-aurora-black,.ky-badge-root.ky-tpl-premium-elite-aurora-black{background:linear-gradient(135deg,#1d222b,var(--p-bg)) padding-box,linear-gradient(90deg,#7ee7d7,#719cff,#b38cff,#f38bb8,#f0c779,#7ee7d7) border-box!important;background-size:100% 100%,260% 100%!important;border:1px solid transparent!important;box-shadow:inset 0 1px #ffffff12,0 5px 15px #0a0d1247!important;border-radius:15px 5px 15px 5px!important;animation:kyLuxeEdge 7s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-elite-aurora-black,.ky-badge-root.ky-tpl-premium-elite-aurora-black{background:linear-gradient(135deg,#1d222b,var(--p-bg)) padding-box,linear-gradient(90deg,#7ee7d7,#719cff,#b38cff,#f38bb8,#f0c779,#7ee7d7) border-box!important;background-size:100% 100%,260% 100%!important;border:1px solid transparent!important;box-shadow:inset 0 1px #ffffff12,0 5px 15px #0a0d1247!important;border-radius:15px 5px 15px 5px!important;animation:kyLuxeEdge 7s ease-in-out infinite,kyEliteBadgeAlive 2.8s ease-in-out infinite!important}
 .ky-v3-badge.tpl-premium-elite-aurora-black>:first-child,.ky-badge-root.ky-tpl-premium-elite-aurora-black>:first-child{background:linear-gradient(135deg,#7ee7d7,#8c8cff,#f38bb8);color:#101318!important;border-radius:50%;box-shadow:0 0 7px #7ee7d766}
 .ky-v3-badge.tpl-premium-elite-aurora-black::before,.ky-badge-root.ky-tpl-premium-elite-aurora-black::before{left:35px;right:9px;top:3px;height:1px;background:linear-gradient(90deg,var(--p-accent),#9f8cff,#f38bb8,transparent);background-size:200% 100%;animation:kyLuxeAurora 6s ease-in-out infinite}
 
@@ -125,7 +129,7 @@
 .ky-v3-badge.tpl-premium-elite-puzzle-alloy,.ky-badge-root.ky-tpl-premium-elite-puzzle-alloy{height:34px!important;min-height:34px!important;background:linear-gradient(90deg,#c5c7c8 0 24%,#9da0a2 24% 49%,#d2a587 49% 73%,#a9acad 73%)!important;color:var(--p-text)!important;border:1px solid #777b7e!important;clip-path:polygon(0 12%,13% 12%,18% 0,25% 12%,44% 12%,49% 0,56% 12%,74% 12%,79% 0,86% 12%,100% 12%,100% 88%,86% 88%,79% 100%,74% 88%,56% 88%,49% 100%,44% 88%,25% 88%,18% 100%,13% 88%,0 88%);border-radius:0!important;box-shadow:inset 0 1px #fff8,0 5px 12px #393d402e!important}
 .ky-v3-badge.tpl-premium-elite-minimal-frame,.ky-badge-root.ky-tpl-premium-elite-minimal-frame{background:#fff!important;color:var(--p-text)!important;border:1px solid var(--p-accent)!important;border-radius:0!important;box-shadow:none!important}
 .ky-v3-badge.tpl-premium-elite-minimal-frame>:first-child,.ky-badge-root.ky-tpl-premium-elite-minimal-frame>:first-child{border-right:1px solid var(--p-accent);border-radius:0!important;background:transparent}
-.ky-v3-badge.tpl-premium-elite-lenticular,.ky-badge-root.ky-tpl-premium-elite-lenticular{background:linear-gradient(110deg,#d8e8ef,var(--p-bg),#f0d9ea,#d8f1e7,#ede3c8)!important;background-size:220% 100%!important;color:var(--p-text)!important;border:1px solid #b6c4cb!important;border-radius:16px!important;box-shadow:inset 0 1px #fff,0 5px 12px #586b7428!important;animation:kyLuxeSheen 7s ease-in-out infinite!important}
+.ky-v3-badge.tpl-premium-elite-lenticular,.ky-badge-root.ky-tpl-premium-elite-lenticular{background:linear-gradient(110deg,#d8e8ef,var(--p-bg),#f0d9ea,#d8f1e7,#ede3c8)!important;background-size:220% 100%!important;color:var(--p-text)!important;border:1px solid #b6c4cb!important;border-radius:16px!important;box-shadow:inset 0 1px #fff,0 5px 12px #586b7428!important;animation:kyLuxeSheen 7s ease-in-out infinite,kyEliteBadgeAlive 2.8s ease-in-out infinite!important}
 .ky-v3-badge.tpl-premium-elite-layered-edge,.ky-badge-root.ky-tpl-premium-elite-layered-edge{height:34px!important;min-height:34px!important;background:linear-gradient(180deg,#eee7db 0 25%,#bca78d 26% 50%,#e8dcc9 51% 75%,var(--p-bg) 76%)!important;color:var(--p-text)!important;border:0!important;border-radius:2px!important;box-shadow:0 2px #8f7e68,0 5px #d9cbb7,0 8px #877762,0 12px 16px #594b392d!important}
 .ky-v3-badge.tpl-premium-elite-diamond-cut,.ky-badge-root.ky-tpl-premium-elite-diamond-cut{background:linear-gradient(115deg,#fff,var(--p-bg) 44%,#dff7ff 70%,#fff)!important;color:var(--p-text)!important;border:1px solid #9ac8d5!important;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,12px 100%,0 50%);border-radius:0!important;box-shadow:inset 0 0 0 2px #fff,0 0 12px #8ee4ff55,0 5px 12px #426b7528!important}
 .ky-v3-badge.tpl-premium-elite-wood-glass,.ky-badge-root.ky-tpl-premium-elite-wood-glass{background:linear-gradient(90deg,var(--p-accent) 0 28%,color-mix(in srgb,var(--p-bg) 78%,#fff) 28% 100%)!important;color:var(--p-text)!important;border:1px solid #9eafb0!important;border-radius:4px!important;box-shadow:inset 0 1px #fff9,0 5px 12px #4b5d5d2b!important}
@@ -137,8 +141,6 @@
 .ky-elite-template-card .ky-v3-badge[class*="tpl-premium-elite-"]>:first-child{flex-basis:19px!important;width:19px!important;height:19px!important;font-size:9px!important}
 
 @media(max-width:760px){.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{min-width:118px!important;max-width:154px!important;height:28px!important;min-height:28px!important;padding:4px 9px 4px 4px!important;gap:5px!important}.ky-v3-badge[class*="tpl-premium-elite-"]>:first-child,.ky-badge-root[class*="ky-tpl-premium-elite-"]>:first-child,.ky-badge-root[class*="ky-tpl-premium-elite-"]>:first-child{flex-basis:19px!important;width:19px!important;height:19px!important;font-size:9px!important}}
-@media(prefers-reduced-motion:reduce){.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"],.ky-v3-badge[class*="tpl-premium-elite-"]::before,.ky-badge-root[class*="ky-tpl-premium-elite-"]::before{animation:none!important}}
-
 /* Strip containers span the image; premium badges retain their own silhouette. */
 #stageCanvas .ky-focus-underbar,#stageCanvas .ky-focus-insidebar,
 #stageCanvas .ky-v3-badge-position.pos-bottom-bar,
@@ -147,8 +149,12 @@
 #stageCanvas .ky-v3-badge-position.pos-bottom-bar .ky-v3-badge[class*="tpl-premium-elite-"]{
  width:100%!important;min-width:100%!important;max-width:none!important
 }
-#stageCanvas .ky-focus-insidebar>.ky-v3-badge[class*="tpl-premium-elite-"],
-#stageCanvas .ky-v3-badge-position.pos-bottom-inside .ky-v3-badge[class*="tpl-premium-elite-"]{
+#stageCanvas .ky-focus-insidebar>.ky-v3-badge[class*="tpl-premium-elite-"]:not(.tpl-premium-elite-organic-stone):not(.tpl-premium-elite-puzzle-alloy):not(.tpl-premium-elite-layered-edge),
+#stageCanvas .ky-v3-badge-position.pos-bottom-inside .ky-v3-badge[class*="tpl-premium-elite-"]:not(.tpl-premium-elite-organic-stone):not(.tpl-premium-elite-puzzle-alloy):not(.tpl-premium-elite-layered-edge){
+ width:100%!important;min-width:100%!important;max-width:none!important
+}
+#stageCanvas .ky-focus-insidebar>.ky-v3-badge:is(.tpl-premium-elite-organic-stone,.tpl-premium-elite-puzzle-alloy,.tpl-premium-elite-layered-edge),
+#stageCanvas .ky-v3-badge-position.pos-bottom-inside .ky-v3-badge:is(.tpl-premium-elite-organic-stone,.tpl-premium-elite-puzzle-alloy,.tpl-premium-elite-layered-edge){
  width:max-content!important;min-width:132px!important;max-width:calc(100% - 12px)!important
 }
 
@@ -158,6 +164,9 @@
 .ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-"]{
  width:100%!important;min-width:100%!important;max-width:none!important
 }
-.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-"]{
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-"]:not(.ky-tpl-premium-elite-organic-stone):not(.ky-tpl-premium-elite-puzzle-alloy):not(.ky-tpl-premium-elite-layered-edge){
+ width:100%!important;min-width:100%!important;max-width:none!important
+}
+.ky-pos-bottom-full .ky-badge-root:is(.ky-tpl-premium-elite-organic-stone,.ky-tpl-premium-elite-puzzle-alloy,.ky-tpl-premium-elite-layered-edge){
  width:max-content!important;min-width:132px!important;max-width:calc(100% - 12px)!important
 }

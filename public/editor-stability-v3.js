@@ -133,17 +133,15 @@ function enforceTemplateRules(){
 
  const loc=placement();
  const strip=loc==='image_bottom_bar'||loc==='image_inside_bottom_bar';
- const entry=q('#v3Entry'),hover=q('#v3Hover');
+ const entry=q('#v3Entry');
  if(strip){
   const forced=loc==='image_bottom_bar'?'slide-down':'slide-up';
   if(entry){entry.value=forced;entry.disabled=true;entry.closest('.ky-field')?.classList.add('ky-v4-disabled')}
-  if(hover){hover.value='none';hover.disabled=true;hover.closest('.ky-field')?.classList.add('ky-v4-disabled')}
   note(q('#panelAnimation .ky-group'),'kyV4StripNote',loc==='image_bottom_bar'
-   ?'Görsel Alt Şeridi yalnızca yukarıdan aşağı iner. Başka giriş veya hover efekti uygulanmaz.'
-   :'Görsel İçinde Alt Şerit yalnızca aşağıdan yukarı çıkar. Başka giriş veya hover efekti uygulanmaz.');
+   ?'Görsel Alt Şeridi yukarıdan aşağı giriş yapar. Premium şablonların sürekli animasyonu kesilmeden devam eder.'
+   :'Görsel İçinde Alt Şerit aşağıdan yukarı giriş yapar. Uygun yatay premium şablonlar görsel genişliğine yayılır.');
  }else{
   if(entry){entry.disabled=false;entry.closest('.ky-field')?.classList.remove('ky-v4-disabled')}
-  if(hover){hover.disabled=false;hover.closest('.ky-field')?.classList.remove('ky-v4-disabled')}
   q('#kyV4StripNote')?.remove();
  }
 }
@@ -231,7 +229,8 @@ function removeBadgeEffects(badge){
  for(const cls of [...badge.classList]){
   if(cls.startsWith('ky-entry-')||cls.startsWith('ky-hover-'))badge.classList.remove(cls);
  }
- badge.style.setProperty('animation','none','important');
+ if([...badge.classList].some(cls=>cls.startsWith('tpl-premium-elite-')))badge.style.removeProperty('animation');
+ else badge.style.setProperty('animation','none','important');
  badge.style.setProperty('transition','none','important');
 }
 
@@ -577,10 +576,9 @@ function bind(){
   }
   if(id==='v3CardLocation'){
    stripPlayPending=true;
-   const loc=e.target.value,entry=q('#v3Entry'),hover=q('#v3Hover');
+   const loc=e.target.value,entry=q('#v3Entry');
    if(loc==='image_bottom_bar'||loc==='image_inside_bottom_bar'){
     if(entry)entry.value=loc==='image_bottom_bar'?'slide-down':'slide-up';
-    if(hover)hover.value='none';
    }
    setTimeout(schedule,0);return;
   }
