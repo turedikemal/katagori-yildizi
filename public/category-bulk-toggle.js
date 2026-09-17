@@ -71,12 +71,40 @@ function repairCategoryPicker(){
  }
  document.body.querySelectorAll('.ky-category-picker-menu').forEach(other=>{if(other!==menu&&!other.closest('#v3Categories'))other.remove();});
 }
+
+/* Focused preview clones badge HTML. CSS animation state does not survive a clone reliably,
+   so bind a real infinite Web Animation to every premium icon instance in the right preview. */
+const premiumPreviewAnimated=new WeakSet();
+function premiumMotionFrames(icon){
+ const cls=[...icon.classList].join(' ');
+ if(/rocket/.test(cls))return [{transform:'translate(0,0) rotate(0deg)'},{transform:'translate(3px,-4px) rotate(3deg)'},{transform:'translate(0,0) rotate(0deg)'}];
+ if(/flame/.test(cls))return [{transform:'translateY(0) scale(1)'},{transform:'translateY(-2px) scale(.96,1.08)'},{transform:'translateY(0) scale(1)'}];
+ if(/medal|bolt|check/.test(cls))return [{transform:'translateY(0) rotate(-2deg)'},{transform:'translateY(-3px) rotate(3deg)'},{transform:'translateY(0) rotate(-2deg)'}];
+ if(/diamond/.test(cls))return [{transform:'translateY(0) scale(1)'},{transform:'translateY(-2px) scale(1.08)'},{transform:'translateY(0) scale(1)'}];
+ return [{transform:'translateY(0) rotate(0deg)'},{transform:'translateY(-3px) rotate(-2deg)'},{transform:'translateY(0) rotate(0deg)'}];
+}
+function ensurePremiumPreviewMotion(){
+ document.querySelectorAll('#stageCanvas .ky-premium-icon').forEach(icon=>{
+  if(premiumPreviewAnimated.has(icon))return;
+  premiumPreviewAnimated.add(icon);
+  try{
+   const animation=icon.animate(premiumMotionFrames(icon),{duration:1450,iterations:Infinity,easing:'ease-in-out'});
+   animation.play();
+   icon._kyPreviewMotion=animation;
+  }catch{}
+ });
+}
+
 load('ky-preview-stability','/preview-stability-fix.js?v=20260914-5');
 load('ky-ui-control-tuning','/ui-control-tuning.js?v=20260915-2');
 retireBadgeHoverUI();
 guardLegacyHoverWrites();
 repairCategoryPicker();
-document.addEventListener('click',e=>{if(e.target.closest('.ky-category-picker-button'))repairCategoryPicker();},true);
+ensurePremiumPreviewMotion();
+document.addEventListener('click',e=>{
+ if(e.target.closest('.ky-category-picker-button'))repairCategoryPicker();
+ if(e.target.closest('.ky-premium-choice,.ky-icon-choice,.ky-device-btn,.ky-view-tab,[data-template]'))requestAnimationFrame(ensurePremiumPreviewMotion);
+},true);
 let scheduled=false;
 new MutationObserver(()=>{
  if(scheduled)return;
@@ -86,6 +114,7 @@ new MutationObserver(()=>{
   retireBadgeHoverUI();
   guardLegacyHoverWrites();
   repairCategoryPicker();
+  ensurePremiumPreviewMotion();
  });
 }).observe(document.body,{childList:true,subtree:true});
 })();
