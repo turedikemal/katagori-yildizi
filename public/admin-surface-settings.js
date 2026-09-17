@@ -12,7 +12,7 @@ const PATHS={
  v3Gradient:'styling.gradientEnabled',v3Grad1:'styling.gradientColor1',v3Grad2:'styling.gradientColor2',v3GradAngle:'styling.gradientAngle',
  v3BorderColor:'styling.borderColor',v3Radius:'styling.borderRadius',v3BorderWidth:'styling.borderWidth',v3Shadow:'styling.shadow',v3Opacity:'styling.opacity',
  v3PadX:'styling.paddingX',v3PadY:'styling.paddingY',v3Scale:'styling.scale',v3CardLocation:'placements.cardLocation',v3OffsetX:'placements.offsetX',v3OffsetY:'placements.offsetY',
- v3Entry:'animation.entry',v3Hover:'animation.hover',v3Duration:'animation.durationMs',v3Home:'placements.homeCards',v3Category:'placements.categoryCards',v3Search:'placements.searchResults',v3Pdp:'placements.productDetail'
+ v3Entry:'animation.entry',v3Duration:'animation.durationMs',v3Home:'placements.homeCards',v3Category:'placements.categoryCards',v3Search:'placements.searchResults',v3Pdp:'placements.productDetail'
 };
 let activeSurface='category',activeDevice='desktop',ready=false,internal=false,saveTimer=0;
 const profiles={category:{desktop:null,mobile:null},product:{desktop:null,mobile:null}};
@@ -77,3 +77,4 @@ function bind(){document.addEventListener('click',e=>{
 async function start(){style();bind();await new Promise(r=>setTimeout(r,900));await load();activeDevice=q('.ky-device-btn.active[data-device]')?.dataset.device||'desktop';activeSurface=q('.ky-view-tab.active')?.dataset.view==='pdp'?'product':'category';ready=true;injectTabs();applyProfile(activeSurface,activeDevice);for(const ms of [400,1000,2200])setTimeout(injectTabs,ms)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
+

@@ -76,6 +76,27 @@
   transform: none;
 }
 
+/* Selective premium-elite templates compatible with full-width under-image placement */
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-obsidian"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-platinum"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-emerald"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-carbon"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-marble"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-titanium"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-bronze"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-arctic"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-cobalt"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-forest"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-midnight-chrome"],
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-minimal-frame"] {
+  width: 100%;
+  min-width: 100%;
+  max-width: none;
+  justify-content: center;
+  border-radius: 0;
+  transform: none;
+}
+
 /* --------------------------------------------------------------------------
    18 TEMPLATE ARCHITECTURES
    -------------------------------------------------------------------------- */
@@ -333,6 +354,27 @@
 .ky-pos-bottom-full > .ky-offset-shell { display: flex; width: 100%; max-width: none; justify-content: center; }
 .ky-pos-bottom-full .ky-badge-root:not([class*="ky-tpl-premium-elite-"]) { width: 100%; min-width: 100%; max-width: none; justify-content: center; border-radius: 0; transform: none; }
 
+/* Selective premium-elite templates compatible with full-width inside-bottom placement */
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-obsidian"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-platinum"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-emerald"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-carbon"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-marble"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-titanium"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-bronze"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-arctic"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-cobalt"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-forest"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-midnight-chrome"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-minimal-frame"] {
+  width: 100%;
+  min-width: 100%;
+  max-width: none;
+  justify-content: center;
+  border-radius: 0;
+  transform: none;
+}
+
 /* --------------------------------------------------------------------------
    11 ANIMATIONS & HOVER EFFECTS
    -------------------------------------------------------------------------- */
@@ -373,3 +415,4 @@
     padding: calc(var(--ky-padding-y) - 1px) calc(var(--ky-padding-x) - 2px);
   }
 }
+

@@ -1,4 +1,4 @@
-/* Kategori Yildizi — minimum sales rule + hover explanation. */
+/* Kategori Yildizi — minimum sales rule. */
 (function(){
 'use strict';
 if(window.__KY_MIN_SALES_HOVER_FIX__)return;
@@ -19,8 +19,8 @@ function threshold(){
 
 function salesFromRow(row){
  const text=row?.querySelector('.ky-rank-product small')?.textContent||'';
- const m=text.match(/([\d.]+)\s*satış/i);
- return m?Number(m[1].replace(/\./g,'')):0;
+ const m=text.match(/([\\d.]+)\\s*satış/i);
+ return m?Number(m[1].replace(/\\./g,'')):0;
 }
 
 function applyMinimumSalesFilter(){
@@ -57,19 +57,6 @@ function explainMinimumSales(){
   const note=document.createElement('div');
   note.className='ky-inline-help ky-min-sales-help';
   note.textContent='Örnek: 5 yazarsanız, seçili hesaplama döneminde 5 adetten az satılan ürünler çok satan sıralamasına girmez ve rozet alamaz.';
-  field.appendChild(note);
- }
-}
-
-function explainHover(){
- const el=q('#v3Hover');if(!el)return;
- const field=el.closest('.ky-field');if(!field)return;
- const label=field.querySelector('.ky-label');
- if(label)label.textContent='Üzerine Gelme Efekti (Hover)';
- if(!field.querySelector('.ky-hover-help')){
-  const note=document.createElement('div');
-  note.className='ky-inline-help ky-hover-help';
-  note.textContent='Masaüstünde müşteri fareyi rozetin üzerine getirdiğinde çalışır. Mobil cihazlarda hover olmadığı için bu efekt uygulanmaz.';
   field.appendChild(note);
  }
 }
@@ -117,11 +104,11 @@ function bind(){
 
 function boot(){
  explainMinimumSales();
- explainHover();
  bind();
  applyMinimumSalesFilter();
- [150,450,900,1600].forEach(ms=>setTimeout(()=>{explainMinimumSales();explainHover();bind();applyMinimumSalesFilter()},ms));
+ [150,450,900,1600].forEach(ms=>setTimeout(()=>{explainMinimumSales();bind();applyMinimumSalesFilter()},ms));
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
+
