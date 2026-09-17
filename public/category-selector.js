@@ -41,6 +41,12 @@ function injectStyle(){
   .ky-category-picker-check{width:16px;flex:0 0 16px;opacity:0;font-size:11px;font-weight:900;text-align:center}
   .ky-category-picker-option[aria-selected="true"] .ky-category-picker-check{opacity:1}
   .ky-category-picker-help{margin-top:7px;color:rgba(36,58,139,.48);font-size:8.8px;line-height:1.4}
+  .ky-category-picker-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px;padding-top:9px;border-top:1px solid rgba(36,58,139,.09)}
+  .ky-category-picker-actions-label{grid-column:1/-1;color:rgba(36,58,139,.62);font-size:8.8px;font-weight:700;line-height:1.3}
+  .ky-category-picker-action{min-height:31px;border:1px solid rgba(36,58,139,.16);border-radius:8px;background:#fff;color:#243a8b;font-size:9px;font-weight:800;cursor:pointer}
+  .ky-category-picker-action:hover,.ky-category-picker-action:focus-visible{outline:0;border-color:#243a8b;background:#f2f5ff}
+  .ky-category-picker-action.primary{background:#243a8b;color:#fff;border-color:#243a8b}
+  #v3Categories.ky-category-selector-mode>.ky-category-card.ky-category-selected .ky-v4-category-bulk{display:none!important}
   @media(max-width:760px){.ky-category-picker-button{min-height:40px}.ky-category-picker-menu{max-height:270px}.ky-category-picker-name{font-size:10.4px}}
  `;
  document.head.appendChild(s);
@@ -74,7 +80,12 @@ function ensurePicker(host){
       <span class="ky-category-picker-chevron" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 7.5 5 5 5-5"/></svg></span>
     </button>
     <div class="ky-category-picker-menu" role="listbox" aria-label="Kategoriler"></div>
-    <div class="ky-category-picker-help">Bir kategori seçin; yalnızca seçilen kategorinin ürünleri aşağıda açılır.</div>`;
+    <div class="ky-category-picker-help">Bir kategori seçin; yalnızca seçilen kategorinin ürünleri aşağıda açılır.</div>
+    <div class="ky-category-picker-actions" aria-label="Seçili kategori ürünleri">
+      <span class="ky-category-picker-actions-label">Seçili kategorideki ürün rozetleri</span>
+      <button type="button" class="ky-category-picker-action primary" data-category-bulk="open">Tümünü Aç</button>
+      <button type="button" class="ky-category-picker-action" data-category-bulk="close">Tümünü Kapat</button>
+    </div>`;
   const intro=q(':scope > .ky-category-intro',host);
   if(intro)intro.insertAdjacentElement('afterend',wrap);else host.prepend(wrap);
   const btn=q('.ky-category-picker-button',wrap);
@@ -87,6 +98,13 @@ function ensurePicker(host){
     if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();opts[(i+(e.key==='ArrowDown'?1:-1)+opts.length)%opts.length].focus()}
     if(e.key==='Enter'||e.key===' '){e.preventDefault();document.activeElement?.click()}
     if(e.key==='Escape'){e.preventDefault();closePicker(wrap,true)}
+  });
+  q('.ky-category-picker-actions',wrap).addEventListener('click',e=>{
+    const action=e.target.closest('[data-category-bulk]');if(!action)return;e.preventDefault();e.stopPropagation();
+    const card=q(':scope > .ky-category-card.ky-category-selected',host);if(!card)return;
+    const selector=action.dataset.categoryBulk==='open'?'.ky-v4-bulk-open':'.ky-v4-bulk-close';
+    const trigger=()=>q(selector,card)?.click();
+    if(!q(selector,card)){window.dispatchEvent(new Event('resize'));setTimeout(trigger,90);}else trigger();
   });
  }
  return wrap;
