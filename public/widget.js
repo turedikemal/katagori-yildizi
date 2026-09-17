@@ -42,7 +42,7 @@ function injectRuntimeStyles(){
    const ls=document.createElement('link');ls.rel='stylesheet';ls.href=`${API_HOST}/legacy-templates-static.css?v=20260917-1`;ls.dataset.kyLegacyStatic='1';document.head.appendChild(ls);
  }
  if(!document.querySelector('link[data-ky-premium-icon-compat]')){
-   const pic=document.createElement('link');pic.rel='stylesheet';pic.href=`${API_HOST}/premium-icon-template-compat.css?v=20260917-1`;pic.dataset.kyPremiumIconCompat='1';document.head.appendChild(pic);
+   const pic=document.createElement('link');pic.rel='stylesheet';pic.href=`${API_HOST}/premium-icon-template-compat.css?v=20260917-2`;pic.dataset.kyPremiumIconCompat='1';document.head.appendChild(pic);
  }
  if(document.getElementById('ky-runtime-v2'))return;
  const s=document.createElement('style');s.id='ky-runtime-v2';s.textContent=`
