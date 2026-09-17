@@ -41,6 +41,9 @@ function injectRuntimeStyles(){
  if(!document.querySelector('link[data-ky-legacy-static]')){
    const ls=document.createElement('link');ls.rel='stylesheet';ls.href=`${API_HOST}/legacy-templates-static.css?v=20260917-1`;ls.dataset.kyLegacyStatic='1';document.head.appendChild(ls);
  }
+ if(!document.querySelector('link[data-ky-premium-icon-compat]')){
+   const pic=document.createElement('link');pic.rel='stylesheet';pic.href=`${API_HOST}/premium-icon-template-compat.css?v=20260917-1`;pic.dataset.kyPremiumIconCompat='1';document.head.appendChild(pic);
+ }
  if(document.getElementById('ky-runtime-v2'))return;
  const s=document.createElement('style');s.id='ky-runtime-v2';s.textContent=`
  @keyframes ky-slide-right{from{transform:translateX(-14px);opacity:0}to{transform:translateX(0);opacity:1}}
