@@ -30,7 +30,7 @@ let lastMobile=matchMedia('(max-width:768px)').matches;
 
 function injectRuntimeStyles(){
  if(!document.querySelector('link[data-ky-color-integrity]')){
-   const l=document.createElement('link');l.rel='stylesheet';l.href=`${API_HOST}/template-color-integrity.css?v=20260917-4`;l.dataset.kyColorIntegrity='1';document.head.appendChild(l);
+   const l=document.createElement('link');l.rel='stylesheet';l.href=`${API_HOST}/template-color-integrity.css?v=20260917-5`;l.dataset.kyColorIntegrity='1';document.head.appendChild(l);
  }
  if(document.getElementById('ky-runtime-v2'))return;
  const s=document.createElement('style');s.id='ky-runtime-v2';s.textContent=`
