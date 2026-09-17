@@ -68,7 +68,6 @@ function syncPlacement(){
 function cloneBadge(text){
  if(!lastBadge)return `<span class="ky-v3-badge pill" style="--badge-bg:#243a8b;--badge-text:#fff;--badge-radius:999px;--badge-px:10px;--badge-py:6px;font-size:11px"><span class="ky-badge-text">${esc(text)}</span></span>`;
  const tpl=document.createElement('template');tpl.innerHTML=lastBadge.trim();const el=tpl.content.firstElementChild;if(!el)return lastBadge;
- if(lastPlacement==='under'||lastPlacement==='inside'){el.style.setProperty('scale','1','important');el.style.setProperty('transform','none','important')}
  let label=[...el.children].reverse().find(child=>child.tagName==='SPAN'&&!/(icon|premium)/i.test(child.className));
  if(!label){label=document.createElement('span');el.appendChild(label);}label.classList.add('ky-badge-text');label.textContent=text;return el.outerHTML;
 }
@@ -98,7 +97,10 @@ function refreshPreviewOnly(){injectStyles();removeThemeControl();handleCanvasMu
 
 const observer=new MutationObserver(()=>refreshPreviewOnly());
 observer.observe(document.body,{childList:true,subtree:true});
-document.addEventListener('click',e=>{if(e.target.closest('.ky-view-tab,.ky-device-btn,[data-template],#v3TemplateEditor,.ky-slider,.ky-switch,.ky-color-row,.ky-grid-btn'))setTimeout(handleCanvasMutation,40);},true);
+document.addEventListener('click',e=>{
+ if(e.target.closest('.ky-view-tab')){setTimeout(()=>{syncPlacement();renderFocused()},40);return;}
+ if(e.target.closest('.ky-device-btn,[data-template],#v3TemplateEditor,.ky-slider,.ky-switch,.ky-color-row,.ky-grid-btn'))setTimeout(handleCanvasMutation,40);
+},true);
 document.addEventListener('input',e=>{if(e.target.closest('#panelTexts,#panelTypography,#panelIcons,#panelColors,#panelBorders,#panelSizing,#panelPosition,#panelAnimation,#panelResponsive'))setTimeout(handleCanvasMutation,40);},true);
 document.addEventListener('change',e=>{if(e.target.closest('#panelTexts,#panelPosition,#panelResponsive,#panelTemplates')){syncPlacement();setTimeout(()=>{handleCanvasMutation();renderFocused()},40);}},true);
 document.addEventListener('ky:categories-updated',e=>{if(Array.isArray(e.detail?.categories)){catalog=e.detail.categories;requestAnimationFrame(renderFocused);}});
