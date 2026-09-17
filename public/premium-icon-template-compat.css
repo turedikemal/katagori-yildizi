@@ -48,3 +48,53 @@
 :is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-diamond-shine .p-shine{animation:kyPremShine 2.4s ease-in-out infinite!important}
 :is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-rocket-rank .p-rocket{animation:kyPremRocket 1.25s ease-in-out infinite!important}
 :is(.ky-v3-badge[class*="tpl-premium-"],.ky-badge-root[class*="ky-tpl-premium-"]) .ky-premium-rocket-rank .p-flare{animation:kyPremPulse .75s ease-in-out infinite!important}
+
+/* PREMIUM-ELITE WRAPPER ANIMATION FALLBACKS
+   Guaranteed visible motion on wrapper level when SVG child animations may be visually suppressed
+   in elite templates due to DOM cloning in preview. Each icon class gets a distinct wrapper animation. */
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-crown-orbit,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-crown-orbit{animation:kyPremEliteFloat 1.8s ease-in-out infinite!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-trophy-glow,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-trophy-glow{animation:kyPremElitePulse 1.5s ease-in-out infinite!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-medal-spin,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-medal-spin{animation:kyPremEliteGentleSpin 2.8s ease-in-out infinite!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-flame-winner,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-flame-winner{animation:kyPremEliteFlameWave 0.9s ease-in-out infinite!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-diamond-shine,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-diamond-shine{animation:kyPremEliteDiamondPulse 2.0s ease-in-out infinite!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-rocket-rank,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-rocket-rank{animation:kyPremEliteLift 1.2s ease-in-out infinite!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-shield-spark,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-shield-spark{animation:kyPremElitePulse 1.45s ease-in-out infinite!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-laurel-star,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-laurel-star{animation:kyPremEliteSway 1.4s ease-in-out infinite alternate!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-bolt-ring,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-bolt-ring{animation:kyPremElitePulse 1.1s ease-in-out infinite!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-gift-pop,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-gift-pop{animation:kyPremEliteBounce 1.4s cubic-bezier(0.68,-0.55,0.265,1.55) infinite!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-heart-crown,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-heart-crown{animation:kyPremElitePulse 1.25s ease-in-out infinite!important}
+
+.ky-v3-badge[class*="tpl-premium-elite-"] > .ky-premium-check-burst,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] > .ky-premium-check-burst{animation:kyPremEliteGentleSpin 3.6s ease-in-out infinite!important}
+
+/* Elite wrapper animations keyframe definitions */
+@keyframes kyPremEliteFloat{0%{transform:translateY(0)}50%{transform:translateY(-2px)}100%{transform:translateY(0)}}
+@keyframes kyPremElitePulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes kyPremEliteGentleSpin{0%{transform:rotate(0deg)}100%{transform:rotate(180deg)}}
+@keyframes kyPremEliteFlameWave{0%{transform:scaleY(1)}50%{transform:scaleY(1.08)}100%{transform:scaleY(1)}}
+@keyframes kyPremEliteDiamondPulse{0%{opacity:1;transform:scale(1)}50%{opacity:0.95;transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
+@keyframes kyPremEliteLift{0%{transform:translateY(0)}50%{transform:translateY(-1.5px)}100%{transform:translateY(0)}}
+@keyframes kyPremEliteSway{0%{transform:rotate(-1.5deg)}100%{transform:rotate(1.5deg)}}
+@keyframes kyPremEliteBounce{0%{transform:translateY(0)}25%{transform:translateY(-1.5px)}75%{transform:translateY(0.5px)}100%{transform:translateY(0)}}
