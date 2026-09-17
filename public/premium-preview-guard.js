@@ -37,6 +37,26 @@ const DEFAULTS={
  ,'premium-elite-bordeaux':{bg:'#641e32',text:'#ffffff',accent:'#e1b28f'}
  ,'premium-elite-porcelain-blue':{bg:'#f5f7fb',text:'#203f79',accent:'#668ecf'}
  ,'premium-elite-aurora-black':{bg:'#101318',text:'#ffffff',accent:'#7ee7d7'}
+ ,'premium-elite-signature-ivory':{bg:'#f7f3e9',text:'#54462f',accent:'#b28a3f'}
+ ,'premium-elite-bevel-silver':{bg:'#c8cbd0',text:'#20242b',accent:'#6f747c'}
+ ,'premium-elite-botanical-marble':{bg:'#f5f5f0',text:'#365725',accent:'#7a9a58'}
+ ,'premium-elite-ribbon-crimson':{bg:'#8f1724',text:'#fff7f1',accent:'#d9a0a4'}
+ ,'premium-elite-carved-walnut':{bg:'#704427',text:'#fff0cc',accent:'#b57a45'}
+ ,'premium-elite-resin-glass':{bg:'#dce5eb',text:'#48515a',accent:'#ffffff'}
+ ,'premium-elite-embossed-leather':{bg:'#222326',text:'#d8d0c4',accent:'#77716a'}
+ ,'premium-elite-etched-copper':{bg:'#b96f4f',text:'#4a2117',accent:'#e8aa83'}
+ ,'premium-elite-origami-white':{bg:'#f6f6f4',text:'#32363d',accent:'#c9ccd0'}
+ ,'premium-elite-diamond-mirror':{bg:'#e5e7e8',text:'#171a1e',accent:'#ffffff'}
+ ,'premium-elite-concrete-inlay':{bg:'#b8b8b3',text:'#343431',accent:'#e5ded2'}
+ ,'premium-elite-woven-royal':{bg:'#173e92',text:'#ffe6a5',accent:'#d8a439'}
+ ,'premium-elite-gunmetal-port':{bg:'#555b5f',text:'#f5f5f2',accent:'#a7adb0'}
+ ,'premium-elite-organic-stone':{bg:'#d8c3a5',text:'#634f37',accent:'#a9845d'}
+ ,'premium-elite-puzzle-alloy':{bg:'#b6b5b2',text:'#25282c',accent:'#d49b73'}
+ ,'premium-elite-minimal-frame':{bg:'#ffffff',text:'#16191e',accent:'#16191e'}
+ ,'premium-elite-lenticular':{bg:'#e5e4ed',text:'#2d3139',accent:'#b9d9da'}
+ ,'premium-elite-layered-edge':{bg:'#c8b8a0',text:'#3e3428',accent:'#eee4d2'}
+ ,'premium-elite-diamond-cut':{bg:'#f5f4ef',text:'#2d3238',accent:'#aadbea'}
+ ,'premium-elite-wood-glass':{bg:'#d8e4e5',text:'#3e4d4c',accent:'#8a5635'}
 };
 const IDS=new Set(Object.keys(DEFAULTS));
 let raf=0,observer=null;

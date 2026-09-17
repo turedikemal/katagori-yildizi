@@ -74,7 +74,27 @@ const PREMIUM_PREVIEW_TEMPLATES=[
  ['premium-elite-forest','Orman Derisi','#243d2d','#ffffff','#c1a36d','♧'],
  ['premium-elite-bordeaux','Bordo Mühür','#641e32','#ffffff','#e1b28f','♛'],
  ['premium-elite-porcelain-blue','Porselen Mavi','#f5f7fb','#203f79','#668ecf','P'],
- ['premium-elite-aurora-black','Aurora Siyah','#101318','#ffffff','#7ee7d7','✦']
+ ['premium-elite-aurora-black','Aurora Siyah','#101318','#ffffff','#7ee7d7','✦'],
+ ['premium-elite-signature-ivory','İmza Fildişi','#f7f3e9','#54462f','#b28a3f','★'],
+ ['premium-elite-bevel-silver','Kesim Gümüş','#c8cbd0','#20242b','#6f747c','♛'],
+ ['premium-elite-botanical-marble','Botanik Mermer','#f5f5f0','#365725','#7a9a58','◖'],
+ ['premium-elite-ribbon-crimson','Kızıl Kurdele','#8f1724','#fff7f1','#d9a0a4','◆'],
+ ['premium-elite-carved-walnut','Oyma Ceviz','#704427','#fff0cc','#b57a45','♧'],
+ ['premium-elite-resin-glass','Buzlu Reçine','#dce5eb','#48515a','#ffffff','✦'],
+ ['premium-elite-embossed-leather','Kabartma Deri','#222326','#d8d0c4','#77716a','♛'],
+ ['premium-elite-etched-copper','İşlemeli Bakır','#b96f4f','#4a2117','#e8aa83','◇'],
+ ['premium-elite-origami-white','Origami Beyaz','#f6f6f4','#32363d','#c9ccd0','✦'],
+ ['premium-elite-diamond-mirror','Ayna Kesim','#e5e7e8','#171a1e','#ffffff','◆'],
+ ['premium-elite-concrete-inlay','Beton Kakma','#b8b8b3','#343431','#e5ded2','■'],
+ ['premium-elite-woven-royal','Dokuma Kraliyet','#173e92','#ffe6a5','#d8a439','♛'],
+ ['premium-elite-gunmetal-port','Delikli Gunmetal','#555b5f','#f5f5f2','#a7adb0','⌁'],
+ ['premium-elite-organic-stone','Organik Taş','#d8c3a5','#634f37','#a9845d','★'],
+ ['premium-elite-puzzle-alloy','Mozaik Alaşım','#b6b5b2','#25282c','#d49b73','◆'],
+ ['premium-elite-minimal-frame','Minimal Çerçeve','#ffffff','#16191e','#16191e','☆'],
+ ['premium-elite-lenticular','Lentiküler Cam','#e5e4ed','#2d3139','#b9d9da','★'],
+ ['premium-elite-layered-edge','Katmanlı Kenar','#c8b8a0','#3e3428','#eee4d2','≋'],
+ ['premium-elite-diamond-cut','Elmas Kesim','#f5f4ef','#2d3238','#aadbea','◇'],
+ ['premium-elite-wood-glass','Ahşap Cam','#d8e4e5','#3e4d4c','#8a5635','◆']
 ].map(([id,name,bg,text,accent,mark])=>({id,name,variant:'',bg,text,accent,mark}));
 const ACTIVE_ELITE_IDS=new Set(PREMIUM_PREVIEW_TEMPLATES.filter(t=>t.id.startsWith('premium-elite-')).map(t=>t.id));
 
