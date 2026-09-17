@@ -33,3 +33,42 @@
 .ky-badge-root.ky-tpl-gradient-pill,.ky-badge-root.ky-tpl-split-pill,.ky-badge-root.ky-tpl-modern-outline,.ky-badge-root.ky-tpl-glass-pill,.ky-badge-root.ky-tpl-arc-pill,.ky-badge-root.ky-tpl-ribbon-fold,.ky-badge-root.ky-tpl-signature-pill,.ky-badge-root.ky-tpl-ticket-line{animation:none!important}
 .ky-v3-badge.tpl-gradient-pill::after,.ky-v3-badge.tpl-split-pill::after,.ky-v3-badge.tpl-modern-outline::after,.ky-v3-badge.tpl-glass-pill::after,.ky-v3-badge.tpl-arc-pill::after,.ky-v3-badge.tpl-ribbon-fold::after,.ky-v3-badge.tpl-signature-pill::after,.ky-v3-badge.tpl-ticket-line::after,
 .ky-badge-root.ky-tpl-gradient-pill::after,.ky-badge-root.ky-tpl-split-pill::after,.ky-badge-root.ky-tpl-modern-outline::after,.ky-badge-root.ky-tpl-glass-pill::after,.ky-badge-root.ky-tpl-arc-pill::after,.ky-badge-root.ky-tpl-ribbon-fold::after,.ky-badge-root.ky-tpl-signature-pill::after,.ky-badge-root.ky-tpl-ticket-line::after{content:none!important;display:none!important}
+
+/* 2026-09-17 — premium motion / placement stabilization. */
+@keyframes kyPremiumIconAmbient{0%,100%{transform:translateY(0) scale(1);filter:brightness(1)}50%{transform:translateY(-1.5px) scale(1.035);filter:brightness(1.1)}}
+@keyframes kyEliteTextGlint{0%{background-position:180% 0;opacity:.18}45%{opacity:.72}100%{background-position:-180% 0;opacity:.18}}
+
+/* Every Premium rozet/icon remains visibly alive in gallery, preview and storefront.
+   Existing SVG part animations keep running; this is a gentle outer motion guarantee. */
+.ky-premium-icon{animation:kyPremiumIconAmbient 2.4s ease-in-out infinite!important;transform-origin:center!important;will-change:transform,filter}
+
+/* Every true premium/elite template gets a restrained glint without moving text or geometry.
+   Existing material-specific root/pseudo animations are left intact. */
+.ky-v3-badge[class*="tpl-premium-elite-"] .ky-badge-text,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] .ky-badge-text{position:relative!important}
+.ky-v3-badge[class*="tpl-premium-elite-"] .ky-badge-text::after,
+.ky-badge-root[class*="ky-tpl-premium-elite-"] .ky-badge-text::after{content:""!important;position:absolute;left:0;right:0;bottom:-2px;height:1px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--p-accent,var(--badge-accent,var(--ky-accent,#d9b45b))),#fff,var(--p-accent,var(--badge-accent,var(--ky-accent,#d9b45b))),transparent);background-size:280% 100%;animation:kyEliteTextGlint 3.8s linear infinite!important;pointer-events:none}
+
+/* Premium horizontal material templates can become a real full-width strip in BOTH
+   image-under and image-inside-bottom placements. The current elite collection is
+   deliberately horizontal, so its material silhouette is retained while width expands. */
+.ky-pos-under-full .ky-badge-root[class*="ky-tpl-premium-elite-"],
+.ky-pos-bottom-full .ky-badge-root[class*="ky-tpl-premium-elite-"]{width:100%!important;min-width:100%!important;max-width:none!important;justify-content:center!important;box-sizing:border-box!important}
+.ky-v3-badge-position.pos-bottom-bar.align-full .ky-v3-badge[class*="tpl-premium-elite-"],
+.ky-v3-badge-position.pos-bottom-inside.align-full .ky-v3-badge[class*="tpl-premium-elite-"]{width:100%!important;min-width:100%!important;max-width:none!important;justify-content:center!important;box-sizing:border-box!important}
+
+/* Hover feature is removed for badges/templates. Old saved hover values are visually ignored.
+   Admin button/menu hover states are intentionally untouched. */
+.ky-badge-root.ky-hover-scale:hover{transform:scale(var(--ky-scale,1)) rotate(var(--ky-rotation,0deg))!important}
+.ky-badge-root.ky-hover-lift:hover{transform:scale(var(--ky-scale,1)) rotate(var(--ky-rotation,0deg))!important;box-shadow:var(--ky-shadow,none)!important}
+.ky-badge-root.ky-hover-glow:hover{filter:none!important}
+.ky-badge-root.ky-hover-shadow:hover{box-shadow:var(--ky-shadow,none)!important}
+.ky-badge-root.ky-hover-tilt:hover{rotate:0deg!important;scale:1!important}
+.ky-badge-root.ky-hover-slide-left:hover,.ky-badge-root.ky-hover-slide-right:hover{translate:0 0!important}
+.ky-v3-badge.ky-hover-scale:hover,.ky-v3-badge.ky-hover-lift:hover{transform:scale(var(--badge-scale,1))!important}
+.ky-v3-badge.ky-hover-glow:hover{filter:none!important}
+.ky-v3-badge.ky-hover-shadow:hover{box-shadow:var(--badge-shadow,none)!important}
+.ky-v3-badge.ky-hover-tilt:hover{rotate:0deg!important;scale:1!important}
+.ky-v3-badge.ky-hover-slide-left:hover,.ky-v3-badge.ky-hover-slide-right:hover{translate:0 0!important}
+
+@media(prefers-reduced-motion:reduce){.ky-premium-icon,.ky-v3-badge[class*="tpl-premium-elite-"] .ky-badge-text::after,.ky-badge-root[class*="ky-tpl-premium-elite-"] .ky-badge-text::after{animation:none!important}}
