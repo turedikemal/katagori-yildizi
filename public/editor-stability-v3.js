@@ -261,6 +261,7 @@ function applyStripMotion(){
 function stylePremiumGallery(){
  for(const [type,pal] of Object.entries(PREMIUM_ICON_PALETTES)){
   const btn=q(`#v3Icons [data-icon="${CSS.escape(type)}"]`);
+  if(!btn)continue;
   const icon=q('.ky-premium-icon',btn);
   if(!icon)continue;
   icon.style.setProperty('--ky-icon-main',pal[0]);
