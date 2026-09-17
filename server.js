@@ -113,7 +113,7 @@ function getDefaultConfig() {
       color: '#ffffff',
       accentColor: '#ffd166'
     },
-    animation: { entry: 'fade', hover: 'lift', durationMs: 320 },
+    animation: { entry: 'fade', durationMs: 320 },
     responsive: {
       desktopEnabled: true,
       mobileEnabled: true,

@@ -355,14 +355,18 @@
 .ky-anim-glow       { animation: ky-glow 2s ease-in-out infinite; }
 
 /* Hover Effects */
-.ky-hover-scale:hover  { transform: scale(1.06); }
-.ky-hover-lift:hover   { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.18); }
-.ky-hover-glow:hover   { filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8)); }
-.ky-hover-shadow:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.22); }
 
 /* --------------------------------------------------------------------------
    RESPONSIVE ENFORCEMENT
    -------------------------------------------------------------------------- */
+
+/* Shared subtle material animation for premium-elite templates */
+@keyframes kyEliteMaterial{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{animation:kyEliteMaterial 8s ease-in-out infinite!important;background-size:200% 200%!important}
+.ky-v3-badge[class*="tpl-premium-elite-"]::before,.ky-badge-root[class*="ky-tpl-premium-elite-"]::before{animation:kyEliteMaterial 10s ease-in-out infinite reverse!important}
+@media(prefers-reduced-motion:reduce){.ky-v3-badge[class*="tpl-premium-elite-"],.ky-badge-root[class*="ky-tpl-premium-elite-"]{animation:none!important}
+.ky-v3-badge[class*="tpl-premium-elite-"]::before,.ky-badge-root[class*="ky-tpl-premium-elite-"]::before{animation:none!important}}
+
 @media (max-width: 768px) {
   .ky-badge-root {
     font-size: calc(var(--ky-font-size) - 1px);
